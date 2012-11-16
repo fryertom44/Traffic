@@ -7,9 +7,18 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LoginViewController.h"
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate>
+@class MasterViewController;
 
+@interface AppDelegate : UIResponder <UIApplicationDelegate, LoginViewControllerDelegate>
+{
+//    LoginViewController *loginViewController;
+//    MasterViewController *masterViewController;
+    
+}
 @property (strong, nonatomic) UIWindow *window;
-
+@property (nonatomic, retain) LoginViewController *loginViewController;
+@property (nonatomic, retain) MasterViewController *masterViewController;
+@property (nonatomic, retain) UISplitViewController *splitViewController;
 @end

@@ -7,19 +7,71 @@
 //
 
 #import "AppDelegate.h"
+#import "LoginViewController.h"
+#import "LoginOperation.h"
+#import "MasterViewController.h"
 
 @implementation AppDelegate
+
+@synthesize window;
+@synthesize loginViewController;
+@synthesize splitViewController;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
+//    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+//        UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
+//        UINavigationController *navigationController = [splitViewController.viewControllers lastObject];
+//        splitViewController.delegate = (id)navigationController.topViewController;
+//        
+//        [_window makeKeyAndVisible];
+//        UIStoryboard *storyboard = [UIApplication sharedApplication].delegate.window.rootViewController.storyboard;
+//        UIViewController *loginController = [storyboard instantiateViewControllerWithIdentifier:@"loginViewController"];
+//        [loginController setModalPresentationStyle:UIModalPresentationFullScreen];
+//        [splitViewController presentViewController:loginController animated:YES completion:NULL];
+//    }
+
+//    return YES;
+    
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-        UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
-        UINavigationController *navigationController = [splitViewController.viewControllers lastObject];
-        splitViewController.delegate = (id)navigationController.topViewController;
+        self.splitViewController = (UISplitViewController *)self.window.rootViewController;
+        UINavigationController *navigationController = [self.splitViewController.viewControllers lastObject];
+        self.splitViewController.delegate = (id)navigationController.topViewController;
+        
+        UIStoryboard *storyboard = [UIApplication sharedApplication].delegate.window.rootViewController.storyboard;
+        self.loginViewController = (LoginViewController*)[storyboard instantiateViewControllerWithIdentifier:@"loginViewController"];
+        self.loginViewController.delegate = self;
+        self.loginViewController.loginOperation = [[LoginOperation alloc] init];
+
+        // Show the window.
+        [self.window makeKeyAndVisible];
+        
+        // Show the login view modally. When the user logs in, we dismiss the modal dialog.
+        [self.loginViewController setModalPresentationStyle:UIModalPresentationFullScreen];
+        [splitViewController presentViewController:self.loginViewController animated:NO completion:NULL];
+    
     }
+
     return YES;
 }
+
+
+// Invoked when the user is successfully logged in.
+- (void)loginViewControllerLoggedIn:(LoginViewController *)loginViewController
+{
+    [self.splitViewController dismissViewControllerAnimated:YES completion:NULL];
+    
+    LoginOperation *loginOp = self.loginViewController.loginOperation;
+    
+    NSLog(@"Logged in. User Name='%@' Password='%@'",
+          loginOp.authenticatedUsername,
+          loginOp.authenticatedPassword);
+    
+    [loginOp deleteAuthenticatedData];
+    self.loginViewController = nil;
+}
+
 							
 - (void)applicationWillResignActive:(UIApplication *)application
 {

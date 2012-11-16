@@ -20,6 +20,13 @@
 		9177C25A162B4268004719B6 /* MainStoryboard_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9177C258162B4268004719B6 /* MainStoryboard_iPad.storyboard */; };
 		9177C25D162B4268004719B6 /* MasterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9177C25C162B4268004719B6 /* MasterViewController.m */; };
 		9177C260162B4268004719B6 /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9177C25F162B4268004719B6 /* DetailViewController.m */; };
+		9177C268162B450C004719B6 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9177C267162B450C004719B6 /* LoginViewController.m */; };
+		91BA647B16516A8900B91A41 /* LoadTimeEntriesCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BA647A16516A8900B91A41 /* LoadTimeEntriesCommand.m */; };
+		91BA647F16516BB400B91A41 /* ParserTimeEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BA647D16516BB300B91A41 /* ParserTimeEntry.m */; };
+		91BA648116516BDF00B91A41 /* WS_TimeEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BA648016516BDF00B91A41 /* WS_TimeEntry.m */; };
+		91BA64861653E87900B91A41 /* LoginOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BA64851653E87900B91A41 /* LoginOperation.m */; };
+		91BA648B16557C8800B91A41 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91BA648A16557C8800B91A41 /* Security.framework */; };
+		91BA648E1655A6E300B91A41 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BA648D1655A6E300B91A41 /* KeychainItemWrapper.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +49,21 @@
 		9177C25C162B4268004719B6 /* MasterViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MasterViewController.m; sourceTree = "<group>"; };
 		9177C25E162B4268004719B6 /* DetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
 		9177C25F162B4268004719B6 /* DetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
+		9177C266162B450C004719B6 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
+		9177C267162B450C004719B6 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
+		91BA647916516A8900B91A41 /* LoadTimeEntriesCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadTimeEntriesCommand.h; sourceTree = "<group>"; };
+		91BA647A16516A8900B91A41 /* LoadTimeEntriesCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadTimeEntriesCommand.m; sourceTree = "<group>"; };
+		91BA647C16516BB300B91A41 /* ParserTimeEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParserTimeEntry.h; sourceTree = "<group>"; };
+		91BA647D16516BB300B91A41 /* ParserTimeEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParserTimeEntry.m; sourceTree = "<group>"; };
+		91BA647E16516BB400B91A41 /* WS_TimeEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WS_TimeEntry.h; sourceTree = "<group>"; };
+		91BA648016516BDF00B91A41 /* WS_TimeEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WS_TimeEntry.m; sourceTree = "<group>"; };
+		91BA64821651949900B91A41 /* Money.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Money.h; sourceTree = "<group>"; };
+		91BA64831651949900B91A41 /* Money.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Money.m; sourceTree = "<group>"; };
+		91BA64841653E87900B91A41 /* LoginOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginOperation.h; sourceTree = "<group>"; };
+		91BA64851653E87900B91A41 /* LoginOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginOperation.m; sourceTree = "<group>"; };
+		91BA648A16557C8800B91A41 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		91BA648C1655A6E300B91A41 /* KeychainItemWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainItemWrapper.h; sourceTree = "<group>"; };
+		91BA648D1655A6E300B91A41 /* KeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -49,6 +71,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				91BA648B16557C8800B91A41 /* Security.framework in Frameworks */,
 				9177C23E162B4268004719B6 /* UIKit.framework in Frameworks */,
 				9177C240162B4268004719B6 /* Foundation.framework in Frameworks */,
 				9177C242162B4268004719B6 /* CoreGraphics.framework in Frameworks */,
@@ -78,6 +101,7 @@
 		9177C23C162B4268004719B6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				91BA648A16557C8800B91A41 /* Security.framework */,
 				9177C23D162B4268004719B6 /* UIKit.framework */,
 				9177C23F162B4268004719B6 /* Foundation.framework */,
 				9177C241162B4268004719B6 /* CoreGraphics.framework */,
@@ -92,6 +116,20 @@
 				9177C24D162B4268004719B6 /* AppDelegate.m */,
 				9177C255162B4268004719B6 /* MainStoryboard_iPhone.storyboard */,
 				9177C258162B4268004719B6 /* MainStoryboard_iPad.storyboard */,
+				91BA648C1655A6E300B91A41 /* KeychainItemWrapper.h */,
+				91BA648D1655A6E300B91A41 /* KeychainItemWrapper.m */,
+				91BA647916516A8900B91A41 /* LoadTimeEntriesCommand.h */,
+				91BA647A16516A8900B91A41 /* LoadTimeEntriesCommand.m */,
+				91BA64841653E87900B91A41 /* LoginOperation.h */,
+				91BA64851653E87900B91A41 /* LoginOperation.m */,
+				9177C266162B450C004719B6 /* LoginViewController.h */,
+				9177C267162B450C004719B6 /* LoginViewController.m */,
+				91BA64821651949900B91A41 /* Money.h */,
+				91BA64831651949900B91A41 /* Money.m */,
+				91BA647C16516BB300B91A41 /* ParserTimeEntry.h */,
+				91BA647D16516BB300B91A41 /* ParserTimeEntry.m */,
+				91BA647E16516BB400B91A41 /* WS_TimeEntry.h */,
+				91BA648016516BDF00B91A41 /* WS_TimeEntry.m */,
 				9177C25B162B4268004719B6 /* MasterViewController.h */,
 				9177C25C162B4268004719B6 /* MasterViewController.m */,
 				9177C25E162B4268004719B6 /* DetailViewController.h */,
@@ -186,6 +224,12 @@
 				9177C24E162B4268004719B6 /* AppDelegate.m in Sources */,
 				9177C25D162B4268004719B6 /* MasterViewController.m in Sources */,
 				9177C260162B4268004719B6 /* DetailViewController.m in Sources */,
+				9177C268162B450C004719B6 /* LoginViewController.m in Sources */,
+				91BA647B16516A8900B91A41 /* LoadTimeEntriesCommand.m in Sources */,
+				91BA647F16516BB400B91A41 /* ParserTimeEntry.m in Sources */,
+				91BA648116516BDF00B91A41 /* WS_TimeEntry.m in Sources */,
+				91BA64861653E87900B91A41 /* LoginOperation.m in Sources */,
+				91BA648E1655A6E300B91A41 /* KeychainItemWrapper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -312,6 +356,7 @@
 				9177C265162B4268004719B6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
