@@ -35,22 +35,12 @@
 //    return YES;
     
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-        self.splitViewController = (UISplitViewController *)self.window.rootViewController;
-        UINavigationController *navigationController = [self.splitViewController.viewControllers lastObject];
-        self.splitViewController.delegate = (id)navigationController.topViewController;
-        
-        UIStoryboard *storyboard = [UIApplication sharedApplication].delegate.window.rootViewController.storyboard;
-        self.loginViewController = (LoginViewController*)[storyboard instantiateViewControllerWithIdentifier:@"loginViewController"];
+        self.loginViewController = (LoginViewController *)self.window.rootViewController;
         self.loginViewController.delegate = self;
         self.loginViewController.loginOperation = [[LoginOperation alloc] init];
 
         // Show the window.
         [self.window makeKeyAndVisible];
-        
-        // Show the login view modally. When the user logs in, we dismiss the modal dialog.
-        [self.loginViewController setModalPresentationStyle:UIModalPresentationFullScreen];
-        [splitViewController presentViewController:self.loginViewController animated:NO completion:NULL];
-    
     }
 
     return YES;
@@ -60,7 +50,7 @@
 // Invoked when the user is successfully logged in.
 - (void)loginViewControllerLoggedIn:(LoginViewController *)loginViewController
 {
-    [self.splitViewController dismissViewControllerAnimated:YES completion:NULL];
+//    [self.splitViewController dismissViewControllerAnimated:YES completion:NULL];
     
     LoginOperation *loginOp = self.loginViewController.loginOperation;
     
@@ -70,9 +60,15 @@
     
     [loginOp deleteAuthenticatedData];
     self.loginViewController = nil;
+    
+    UIStoryboard *storyboard = [UIApplication sharedApplication].delegate.window.rootViewController.storyboard;
+    self.splitViewController = (UISplitViewController*)[storyboard instantiateViewControllerWithIdentifier:@"splitViewController"];
+    UINavigationController *navigationController = [self.splitViewController.viewControllers lastObject];
+    self.splitViewController.delegate = (id)navigationController.topViewController;
+    [UIApplication sharedApplication].delegate.window.rootViewController = self.splitViewController;
 }
 
-							
+
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.

@@ -10,6 +10,9 @@
 #import "DetailViewController.h"
 #import "ParserTimeEntry.h"
 #import "WS_TimeEntry.h"
+#import "TimeEntryCell.h"
+#import <QuartzCore/QuartzCore.h>
+#import "UIColor+CreateMethods.h"
 
 @implementation MasterViewController
 
@@ -56,7 +59,7 @@
     
 	responseData = [NSMutableData data];
 	
-	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://api.sohnar.com/TrafficLiteServer/openapi/timeentries?startDate=2010-01-01&endDate=2015-01-01"]];
+	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://api.sohnar.com/TrafficLiteServer/openapi/timeentries?startDate=1970-01-01&endDate=3000-01-01"]];
 	[request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
 	
 	NSURLConnection *myConnection = [NSURLConnection connectionWithRequest:request delegate:self];
@@ -124,11 +127,14 @@
     
 	NSArray *jsonObjects = [json objectForKey:@"resultList"];
 	
+    if (!timeEntries) {
+        timeEntries = [[NSMutableArray alloc] init];
+    }
 
 	for (NSDictionary *dict in jsonObjects)
 	{
 		WS_TimeEntry *timeEntry = [[WS_TimeEntry alloc] init];
-		[timeEntry setId:[[dict valueForKey:@"id"] intValue]];
+		[timeEntry setTimeEntryId:[[dict valueForKey:@"id"] intValue]];
 		[timeEntry setJobId:[[dict valueForKeyPath:@"jobId.id"]intValue]];
 		[timeEntry setJobTaskId:[[dict valueForKeyPath:@"jobTaskId.id"]intValue]];
 		[timeEntry setLockedByApproval:[dict objectForKey:@"lockedByApproval"]];
@@ -166,11 +172,10 @@
 		[timeEntries addObject:timeEntry];
 	}    
     
-    
 	if(timeEntries)
 		NSLog(@"No Errors");
 	else
-		NSLog(@"Error Error Error!!!");
+		NSLog(@"Error - no time entries were found");
 	
     	[self.tableView reloadData];
     //	[responseData release];
@@ -198,10 +203,30 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
+    static NSString *kCellIdentifier = @"Cell";
+    
+    TimeEntryCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellIdentifier forIndexPath:indexPath];
+    if (cell == nil) {
+        cell = [[TimeEntryCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kCellIdentifier];
+    }
 
+    [cell setBackgroundColor:[UIColor clearColor]];
+    
+    CAGradientLayer *grad = [CAGradientLayer layer];
+    grad.frame = cell.bounds;
+    grad.colors = [NSArray arrayWithObjects:(id)[[UIColor whiteColor] CGColor], (id)[[UIColor lightGrayColor] CGColor], nil];
+    
+    [cell setBackgroundView:[[UIView alloc] init]];
+    [cell.backgroundView.layer insertSublayer:grad atIndex:0];
+    
+
+    
     WS_TimeEntry *object = timeEntries[indexPath.row];
-    cell.textLabel.text = [object description];
+    cell.companyLabel.text = @"Company must be looked up";
+    cell.jobLabel.text = @"Job must be looked up";
+    cell.timesheetLabel.text = [object taskDescription];
+    cell.daysToDeadlineLabel.text = [[object endTime]description];
+    cell.happyRating.image = [UIImage imageNamed:@"happyRatingHappySmall320.png"];
     return cell;
 }
 
@@ -241,7 +266,7 @@
 {
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         WS_TimeEntry *object = timeEntries[indexPath.row];
-        self.detailViewController.detailItem = object.taskDescription;
+        self.detailViewController.detailItem = object;
     }
 }
 

@@ -33,7 +33,7 @@
 	for (NSDictionary *dict in jsonObjects)
 	{
 		WS_TimeEntry *timeEntry = [[WS_TimeEntry alloc] init];
-		[timeEntry setId:[[dict valueForKey:@"id"] intValue]];
+		[timeEntry setTimeEntryId:[[dict valueForKey:@"id"] intValue]];
 		[timeEntry setJobId:[[dict valueForKeyPath:@"jobId.id"]intValue]];
 		[timeEntry setJobTaskId:[[dict valueForKeyPath:@"jobTaskId.id"]intValue]];
 		[timeEntry setLockedByApproval:[dict objectForKey:@"lockedByApproval"]];

@@ -11,6 +11,15 @@
 
 @implementation WS_TimeEntry
 
-@synthesize id,jobTaskId,trafficEmployeeId,jobId,allocationGroupId,chargebandId,billable,exported,lockedByApproval,comment,endTime,minutes,taskDescription,taskRate,valueOfTimeEntry,timeEntryCost,dateModified,version;
+@synthesize timeEntryId,jobTaskId,trafficEmployeeId,jobId,allocationGroupId,chargebandId,billable,exported,lockedByApproval,comment,endTime,minutes,taskDescription,taskRate,valueOfTimeEntry,timeEntryCost,dateModified,version;
 
+@synthesize startTime = _startTime;
+
+- (NSDate *)startTime {
+    if (_startTime) {
+        return _startTime;
+    } else {
+        return [[NSDate alloc] init];
+    }
+}
 @end

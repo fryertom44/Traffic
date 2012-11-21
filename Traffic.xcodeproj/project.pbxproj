@@ -27,6 +27,25 @@
 		91BA64861653E87900B91A41 /* LoginOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BA64851653E87900B91A41 /* LoginOperation.m */; };
 		91BA648B16557C8800B91A41 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91BA648A16557C8800B91A41 /* Security.framework */; };
 		91BA648E1655A6E300B91A41 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BA648D1655A6E300B91A41 /* KeychainItemWrapper.m */; };
+		91BA64911657F99200B91A41 /* TimeEntryCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BA64901657F99100B91A41 /* TimeEntryCell.m */; };
+		91BA649316583A8E00B91A41 /* 57x57.png in Resources */ = {isa = PBXBuildFile; fileRef = 91BA649216583A8E00B91A41 /* 57x57.png */; };
+		91BA649516583A9F00B91A41 /* 114x114.png in Resources */ = {isa = PBXBuildFile; fileRef = 91BA649416583A9F00B91A41 /* 114x114.png */; };
+		91BA649716583AD300B91A41 /* Default-Portrait~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 91BA649616583AD300B91A41 /* Default-Portrait~ipad.png */; };
+		91BA649916583AF200B91A41 /* Default-Landscape~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 91BA649816583AF200B91A41 /* Default-Landscape~ipad.png */; };
+		91BA649B16583B0C00B91A41 /* Default-Portrait@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 91BA649A16583B0C00B91A41 /* Default-Portrait@2x~ipad.png */; };
+		91BA649D16583B1E00B91A41 /* Default-Landscape@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 91BA649C16583B1E00B91A41 /* Default-Landscape@2x~ipad.png */; };
+		91BA64A116583F1800B91A41 /* happyRatingCompletedSmall320.png in Resources */ = {isa = PBXBuildFile; fileRef = 91BA649E16583F1700B91A41 /* happyRatingCompletedSmall320.png */; };
+		91BA64A216583F1800B91A41 /* happyRatingHappySmall320.png in Resources */ = {isa = PBXBuildFile; fileRef = 91BA649F16583F1700B91A41 /* happyRatingHappySmall320.png */; };
+		91BA64A316583F1800B91A41 /* happyRatingSadSmall320.png in Resources */ = {isa = PBXBuildFile; fileRef = 91BA64A016583F1800B91A41 /* happyRatingSadSmall320.png */; };
+		91BA64A51658479700B91A41 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91BA64A41658479700B91A41 /* QuartzCore.framework */; };
+		91BA64AB1659927D00B91A41 /* UIColor+CreateMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BA64AA1659927D00B91A41 /* UIColor+CreateMethods.m */; };
+		91BA64B3165BDDDA00B91A41 /* NSDate+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BA64B2165BDDD900B91A41 /* NSDate+Helper.m */; };
+		91BA64B6165C3F7B00B91A41 /* PGToggleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BA64B5165C3F7A00B91A41 /* PGToggleButton.m */; };
+		91BA64BC165C42F600B91A41 /* clock320.png in Resources */ = {isa = PBXBuildFile; fileRef = 91BA64B7165C42F300B91A41 /* clock320.png */; };
+		91BA64BD165C42F600B91A41 /* cog320.png in Resources */ = {isa = PBXBuildFile; fileRef = 91BA64B8165C42F300B91A41 /* cog320.png */; };
+		91BA64BE165C42F600B91A41 /* pause320.png in Resources */ = {isa = PBXBuildFile; fileRef = 91BA64B9165C42F400B91A41 /* pause320.png */; };
+		91BA64BF165C42F600B91A41 /* play320.png in Resources */ = {isa = PBXBuildFile; fileRef = 91BA64BA165C42F400B91A41 /* play320.png */; };
+		91BA64C0165C42F600B91A41 /* stop320.png in Resources */ = {isa = PBXBuildFile; fileRef = 91BA64BB165C42F500B91A41 /* stop320.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -64,6 +83,29 @@
 		91BA648A16557C8800B91A41 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		91BA648C1655A6E300B91A41 /* KeychainItemWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainItemWrapper.h; sourceTree = "<group>"; };
 		91BA648D1655A6E300B91A41 /* KeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
+		91BA648F1657F99000B91A41 /* TimeEntryCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimeEntryCell.h; sourceTree = "<group>"; };
+		91BA64901657F99100B91A41 /* TimeEntryCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimeEntryCell.m; sourceTree = "<group>"; };
+		91BA649216583A8E00B91A41 /* 57x57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 57x57.png; sourceTree = "<group>"; };
+		91BA649416583A9F00B91A41 /* 114x114.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 114x114.png; sourceTree = "<group>"; };
+		91BA649616583AD300B91A41 /* Default-Portrait~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Portrait~ipad.png"; sourceTree = "<group>"; };
+		91BA649816583AF200B91A41 /* Default-Landscape~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape~ipad.png"; sourceTree = "<group>"; };
+		91BA649A16583B0C00B91A41 /* Default-Portrait@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Portrait@2x~ipad.png"; sourceTree = "<group>"; };
+		91BA649C16583B1E00B91A41 /* Default-Landscape@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape@2x~ipad.png"; sourceTree = "<group>"; };
+		91BA649E16583F1700B91A41 /* happyRatingCompletedSmall320.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = happyRatingCompletedSmall320.png; sourceTree = "<group>"; };
+		91BA649F16583F1700B91A41 /* happyRatingHappySmall320.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = happyRatingHappySmall320.png; sourceTree = "<group>"; };
+		91BA64A016583F1800B91A41 /* happyRatingSadSmall320.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = happyRatingSadSmall320.png; sourceTree = "<group>"; };
+		91BA64A41658479700B91A41 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		91BA64A91659927D00B91A41 /* UIColor+CreateMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+CreateMethods.h"; sourceTree = "<group>"; };
+		91BA64AA1659927D00B91A41 /* UIColor+CreateMethods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+CreateMethods.m"; sourceTree = "<group>"; };
+		91BA64B1165BDDD900B91A41 /* NSDate+Helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSDate+Helper.h"; path = "../NSDate+Helper.h"; sourceTree = "<group>"; };
+		91BA64B2165BDDD900B91A41 /* NSDate+Helper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSDate+Helper.m"; path = "../NSDate+Helper.m"; sourceTree = "<group>"; };
+		91BA64B4165C3F7900B91A41 /* PGToggleButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PGToggleButton.h; sourceTree = "<group>"; };
+		91BA64B5165C3F7A00B91A41 /* PGToggleButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PGToggleButton.m; sourceTree = "<group>"; };
+		91BA64B7165C42F300B91A41 /* clock320.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = clock320.png; sourceTree = "<group>"; };
+		91BA64B8165C42F300B91A41 /* cog320.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cog320.png; sourceTree = "<group>"; };
+		91BA64B9165C42F400B91A41 /* pause320.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pause320.png; sourceTree = "<group>"; };
+		91BA64BA165C42F400B91A41 /* play320.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = play320.png; sourceTree = "<group>"; };
+		91BA64BB165C42F500B91A41 /* stop320.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stop320.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,6 +113,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				91BA64A51658479700B91A41 /* QuartzCore.framework in Frameworks */,
 				91BA648B16557C8800B91A41 /* Security.framework in Frameworks */,
 				9177C23E162B4268004719B6 /* UIKit.framework in Frameworks */,
 				9177C240162B4268004719B6 /* Foundation.framework in Frameworks */,
@@ -84,6 +127,13 @@
 		9177C22E162B4268004719B6 = {
 			isa = PBXGroup;
 			children = (
+				91BA64A41658479700B91A41 /* QuartzCore.framework */,
+				91BA649C16583B1E00B91A41 /* Default-Landscape@2x~ipad.png */,
+				91BA649A16583B0C00B91A41 /* Default-Portrait@2x~ipad.png */,
+				91BA649816583AF200B91A41 /* Default-Landscape~ipad.png */,
+				91BA649616583AD300B91A41 /* Default-Portrait~ipad.png */,
+				91BA649416583A9F00B91A41 /* 114x114.png */,
+				91BA649216583A8E00B91A41 /* 57x57.png */,
 				9177C243162B4268004719B6 /* Traffic */,
 				9177C23C162B4268004719B6 /* Frameworks */,
 				9177C23A162B4268004719B6 /* Products */,
@@ -112,6 +162,14 @@
 		9177C243162B4268004719B6 /* Traffic */ = {
 			isa = PBXGroup;
 			children = (
+				91BA64B7165C42F300B91A41 /* clock320.png */,
+				91BA64B8165C42F300B91A41 /* cog320.png */,
+				91BA64B9165C42F400B91A41 /* pause320.png */,
+				91BA64BA165C42F400B91A41 /* play320.png */,
+				91BA64BB165C42F500B91A41 /* stop320.png */,
+				91BA649E16583F1700B91A41 /* happyRatingCompletedSmall320.png */,
+				91BA649F16583F1700B91A41 /* happyRatingHappySmall320.png */,
+				91BA64A016583F1800B91A41 /* happyRatingSadSmall320.png */,
 				9177C24C162B4268004719B6 /* AppDelegate.h */,
 				9177C24D162B4268004719B6 /* AppDelegate.m */,
 				9177C255162B4268004719B6 /* MainStoryboard_iPhone.storyboard */,
@@ -132,9 +190,17 @@
 				91BA648016516BDF00B91A41 /* WS_TimeEntry.m */,
 				9177C25B162B4268004719B6 /* MasterViewController.h */,
 				9177C25C162B4268004719B6 /* MasterViewController.m */,
+				91BA64A91659927D00B91A41 /* UIColor+CreateMethods.h */,
+				91BA64AA1659927D00B91A41 /* UIColor+CreateMethods.m */,
+				91BA64B1165BDDD900B91A41 /* NSDate+Helper.h */,
+				91BA64B2165BDDD900B91A41 /* NSDate+Helper.m */,
 				9177C25E162B4268004719B6 /* DetailViewController.h */,
 				9177C25F162B4268004719B6 /* DetailViewController.m */,
+				91BA648F1657F99000B91A41 /* TimeEntryCell.h */,
+				91BA64901657F99100B91A41 /* TimeEntryCell.m */,
 				9177C244162B4268004719B6 /* Supporting Files */,
+				91BA64B4165C3F7900B91A41 /* PGToggleButton.h */,
+				91BA64B5165C3F7A00B91A41 /* PGToggleButton.m */,
 			);
 			path = Traffic;
 			sourceTree = "<group>";
@@ -210,6 +276,20 @@
 				9177C254162B4268004719B6 /* Default-568h@2x.png in Resources */,
 				9177C257162B4268004719B6 /* MainStoryboard_iPhone.storyboard in Resources */,
 				9177C25A162B4268004719B6 /* MainStoryboard_iPad.storyboard in Resources */,
+				91BA649316583A8E00B91A41 /* 57x57.png in Resources */,
+				91BA649516583A9F00B91A41 /* 114x114.png in Resources */,
+				91BA649716583AD300B91A41 /* Default-Portrait~ipad.png in Resources */,
+				91BA649916583AF200B91A41 /* Default-Landscape~ipad.png in Resources */,
+				91BA649B16583B0C00B91A41 /* Default-Portrait@2x~ipad.png in Resources */,
+				91BA649D16583B1E00B91A41 /* Default-Landscape@2x~ipad.png in Resources */,
+				91BA64A116583F1800B91A41 /* happyRatingCompletedSmall320.png in Resources */,
+				91BA64A216583F1800B91A41 /* happyRatingHappySmall320.png in Resources */,
+				91BA64A316583F1800B91A41 /* happyRatingSadSmall320.png in Resources */,
+				91BA64BC165C42F600B91A41 /* clock320.png in Resources */,
+				91BA64BD165C42F600B91A41 /* cog320.png in Resources */,
+				91BA64BE165C42F600B91A41 /* pause320.png in Resources */,
+				91BA64BF165C42F600B91A41 /* play320.png in Resources */,
+				91BA64C0165C42F600B91A41 /* stop320.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -230,6 +310,10 @@
 				91BA648116516BDF00B91A41 /* WS_TimeEntry.m in Sources */,
 				91BA64861653E87900B91A41 /* LoginOperation.m in Sources */,
 				91BA648E1655A6E300B91A41 /* KeychainItemWrapper.m in Sources */,
+				91BA64911657F99200B91A41 /* TimeEntryCell.m in Sources */,
+				91BA64AB1659927D00B91A41 /* UIColor+CreateMethods.m in Sources */,
+				91BA64B3165BDDDA00B91A41 /* NSDate+Helper.m in Sources */,
+				91BA64B6165C3F7B00B91A41 /* PGToggleButton.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

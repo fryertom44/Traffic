@@ -11,7 +11,7 @@
 
 @interface WS_TimeEntry : NSObject {
 	
-	int id;
+	int timeEntryId;
 	int jobTaskId;
 	int trafficEmployeeId;
 	int jobId;
@@ -21,7 +21,8 @@
 	bool exported;
 	bool lockedByApproval;
 	NSString* comment;
-	NSDate* endTime;
+    NSDate *startTime;
+	NSDate *endTime;
 	int minutes;
 	NSString* taskDescription;
 	Money* taskRate;
@@ -31,7 +32,7 @@
 	int version;
 }
 
-@property int id;
+@property int timeEntryId;
 @property int jobTaskId;
 @property int trafficEmployeeId;
 @property int jobId;
@@ -41,6 +42,7 @@
 @property bool exported;
 @property bool lockedByApproval;
 @property (nonatomic, retain)NSString* comment;
+@property (nonatomic, retain)NSDate* startTime;
 @property (nonatomic, retain)NSDate* endTime;
 @property int minutes;
 @property (nonatomic, retain)NSString* taskDescription;
