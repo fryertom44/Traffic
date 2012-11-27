@@ -26,6 +26,7 @@
 {
     if (_detailItem != newDetailItem) {
         _detailItem = newDetailItem;
+        [_detailItem saveState];
         
         // Update the view.
         [self configureView];
@@ -42,10 +43,14 @@
 
     if (self.detailItem) {
         self.timesheetDescription.text = self.detailItem.taskDescription;
-        self.daysRemainingLabel.text = [NSDate stringForDisplayFromDate:self.detailItem.endTime];
+        if (self.detailItem.endTime != nil) {
+            self.daysRemainingLabel.text = [NSDate stringForDisplayFromDate:self.detailItem.endTime];
+        } else {
+            self.daysRemainingLabel.text = @"0 days remaining";
+        }
         self.billableSwitch.on = self.detailItem.billable;
-        [self.startDateButton setTitle:[NSDate stringForDisplayFromDate:self.detailItem.endTime] forState:UIControlStateNormal];
-        [self.endDateButton setTitle:[NSDate stringForDisplayFromDate:self.detailItem.endTime] forState:UIControlStateNormal];
+        [self.startTimeButton setTitle:[NSString stringWithFormat:@"Start Time %@", [NSDate stringForDisplayFromDate:self.detailItem.endTime]] forState:UIControlStateNormal];
+        [self.endTimeButton setTitle:[NSString stringWithFormat:@"End Time %@", [NSDate stringForDisplayFromDate:self.detailItem.endTime]] forState:UIControlStateNormal];
         self.timerLabel.text = @"00:00:00";
     }
 }
@@ -57,6 +62,13 @@
     [[self recordButton]setImage:[UIImage imageNamed:@"play320.png"] forState:UIControlStateNormal];
     [[self recordButton]setOffStateImage:[UIImage imageNamed:@"play320.png"]];
     [[self recordButton]setOnStateImage:[UIImage imageNamed:@"pause320.png"]];
+    UIImage *originalImage = [UIImage imageNamed:@"button_1.png"];
+
+    UIImage *stretchedBackground = [originalImage stretchableImageWithLeftCapWidth:10 topCapHeight:0];
+    [[self startTimeButton] setBackgroundImage:stretchedBackground forState:UIControlStateNormal];
+    [[self endTimeButton] setBackgroundImage:stretchedBackground forState:UIControlStateNormal];
+    [[self durationButton] setBackgroundImage:stretchedBackground forState:UIControlStateNormal];
+    [[self dateButton] setBackgroundImage:stretchedBackground forState:UIControlStateNormal];
     [self configureView];
 }
 
@@ -70,7 +82,7 @@
 
 - (void)splitViewController:(UISplitViewController *)splitController willHideViewController:(UIViewController *)viewController withBarButtonItem:(UIBarButtonItem *)barButtonItem forPopoverController:(UIPopoverController *)popoverController
 {
-    barButtonItem.title = NSLocalizedString(@"Master", @"Master");
+    barButtonItem.title = NSLocalizedString(@"List", @"List");
     [self.navigationItem setLeftBarButtonItem:barButtonItem animated:YES];
     self.masterPopoverController = popoverController;
 }

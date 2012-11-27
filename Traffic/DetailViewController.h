@@ -25,8 +25,8 @@
 @property (weak, nonatomic) IBOutlet UIProgressView *taskProgress;
 @property (weak, nonatomic) IBOutlet PGToggleButton *recordButton;
 @property (weak, nonatomic) IBOutlet UILabel *timerLabel;
-@property (weak, nonatomic) IBOutlet UIButton *startDateButton;
-@property (weak, nonatomic) IBOutlet UIButton *endDateButton;
+@property (weak, nonatomic) IBOutlet UIButton *startTimeButton;
+@property (weak, nonatomic) IBOutlet UIButton *endTimeButton;
 @property (weak, nonatomic) IBOutlet UIButton *durationButton;
 @property (weak, nonatomic) IBOutlet UIButton *dateButton;
 @property (weak, nonatomic) IBOutlet UITextView *timesheetNotes;

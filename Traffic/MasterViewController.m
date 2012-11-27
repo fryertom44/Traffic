@@ -13,6 +13,7 @@
 #import "TimeEntryCell.h"
 #import <QuartzCore/QuartzCore.h>
 #import "UIColor+CreateMethods.h"
+#import "NSDate+Helper.h"
 
 @implementation MasterViewController
 
@@ -149,7 +150,9 @@
 		[timeEntry setChargebandId:[[dict valueForKeyPath:@"chargebandId.id"]intValue]];
 		[timeEntry setComment:[dict objectForKey:@"comment"]];
 		[timeEntry setExported:[[dict objectForKey:@"exported"]boolValue]];
-		[timeEntry setEndTime:[dict objectForKey:@"endTime"]];
+        NSString *dateString = [dict objectForKey:@"endTime"];
+        NSDate *endTimeAsDate = [NSDate dateFromString:dateString];
+		[timeEntry setEndTime:endTimeAsDate];
 		[timeEntry setValueOfTimeEntry:[dict objectForKey:@"valueOfTimeEntry"]];
 		NSLog(@"%@:%@", @"id", [dict valueForKeyPath:@"id"]);
 		NSLog(@"%@:%@", @"jobId.id", [dict valueForKeyPath:@"jobId.id"]);

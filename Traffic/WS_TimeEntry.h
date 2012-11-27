@@ -8,8 +8,9 @@
 
 #import <Foundation/Foundation.h>
 #import "Money.h"
+#import "BaseObject.h"
 
-@interface WS_TimeEntry : NSObject {
+@interface WS_TimeEntry : BaseObject {
 	
 	int timeEntryId;
 	int jobTaskId;
