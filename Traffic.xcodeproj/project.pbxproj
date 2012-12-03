@@ -21,6 +21,9 @@
 		9177C25D162B4268004719B6 /* MasterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9177C25C162B4268004719B6 /* MasterViewController.m */; };
 		9177C260162B4268004719B6 /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9177C25F162B4268004719B6 /* DetailViewController.m */; };
 		9177C268162B450C004719B6 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9177C267162B450C004719B6 /* LoginViewController.m */; };
+		9185847D165D40D200A2950E /* libobjc.A.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9185847C165D40D200A2950E /* libobjc.A.dylib */; };
+		91858481165D484200A2950E /* BaseObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 91858480165D484200A2950E /* BaseObject.m */; };
+		918AD3A41663F57E00DFC21C /* button_1.png in Resources */ = {isa = PBXBuildFile; fileRef = 918AD3A31663F57E00DFC21C /* button_1.png */; };
 		91BA647B16516A8900B91A41 /* LoadTimeEntriesCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BA647A16516A8900B91A41 /* LoadTimeEntriesCommand.m */; };
 		91BA647F16516BB400B91A41 /* ParserTimeEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BA647D16516BB300B91A41 /* ParserTimeEntry.m */; };
 		91BA648116516BDF00B91A41 /* WS_TimeEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BA648016516BDF00B91A41 /* WS_TimeEntry.m */; };
@@ -70,6 +73,10 @@
 		9177C25F162B4268004719B6 /* DetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
 		9177C266162B450C004719B6 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
 		9177C267162B450C004719B6 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
+		9185847C165D40D200A2950E /* libobjc.A.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libobjc.A.dylib; path = usr/lib/libobjc.A.dylib; sourceTree = SDKROOT; };
+		9185847F165D484200A2950E /* BaseObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseObject.h; sourceTree = "<group>"; };
+		91858480165D484200A2950E /* BaseObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseObject.m; sourceTree = "<group>"; };
+		918AD3A31663F57E00DFC21C /* button_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = button_1.png; sourceTree = "<group>"; };
 		91BA647916516A8900B91A41 /* LoadTimeEntriesCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadTimeEntriesCommand.h; sourceTree = "<group>"; };
 		91BA647A16516A8900B91A41 /* LoadTimeEntriesCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadTimeEntriesCommand.m; sourceTree = "<group>"; };
 		91BA647C16516BB300B91A41 /* ParserTimeEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParserTimeEntry.h; sourceTree = "<group>"; };
@@ -113,6 +120,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9185847D165D40D200A2950E /* libobjc.A.dylib in Frameworks */,
 				91BA64A51658479700B91A41 /* QuartzCore.framework in Frameworks */,
 				91BA648B16557C8800B91A41 /* Security.framework in Frameworks */,
 				9177C23E162B4268004719B6 /* UIKit.framework in Frameworks */,
@@ -127,6 +135,7 @@
 		9177C22E162B4268004719B6 = {
 			isa = PBXGroup;
 			children = (
+				9185847C165D40D200A2950E /* libobjc.A.dylib */,
 				91BA64A41658479700B91A41 /* QuartzCore.framework */,
 				91BA649C16583B1E00B91A41 /* Default-Landscape@2x~ipad.png */,
 				91BA649A16583B0C00B91A41 /* Default-Portrait@2x~ipad.png */,
@@ -162,14 +171,15 @@
 		9177C243162B4268004719B6 /* Traffic */ = {
 			isa = PBXGroup;
 			children = (
-				91BA64B7165C42F300B91A41 /* clock320.png */,
-				91BA64B8165C42F300B91A41 /* cog320.png */,
-				91BA64B9165C42F400B91A41 /* pause320.png */,
 				91BA64BA165C42F400B91A41 /* play320.png */,
 				91BA64BB165C42F500B91A41 /* stop320.png */,
 				91BA649E16583F1700B91A41 /* happyRatingCompletedSmall320.png */,
 				91BA649F16583F1700B91A41 /* happyRatingHappySmall320.png */,
 				91BA64A016583F1800B91A41 /* happyRatingSadSmall320.png */,
+				918AD3A31663F57E00DFC21C /* button_1.png */,
+				91BA64B7165C42F300B91A41 /* clock320.png */,
+				91BA64B8165C42F300B91A41 /* cog320.png */,
+				91BA64B9165C42F400B91A41 /* pause320.png */,
 				9177C24C162B4268004719B6 /* AppDelegate.h */,
 				9177C24D162B4268004719B6 /* AppDelegate.m */,
 				9177C255162B4268004719B6 /* MainStoryboard_iPhone.storyboard */,
@@ -197,6 +207,8 @@
 				9177C25E162B4268004719B6 /* DetailViewController.h */,
 				9177C25F162B4268004719B6 /* DetailViewController.m */,
 				91BA648F1657F99000B91A41 /* TimeEntryCell.h */,
+				9185847F165D484200A2950E /* BaseObject.h */,
+				91858480165D484200A2950E /* BaseObject.m */,
 				91BA64901657F99100B91A41 /* TimeEntryCell.m */,
 				9177C244162B4268004719B6 /* Supporting Files */,
 				91BA64B4165C3F7900B91A41 /* PGToggleButton.h */,
@@ -290,6 +302,7 @@
 				91BA64BE165C42F600B91A41 /* pause320.png in Resources */,
 				91BA64BF165C42F600B91A41 /* play320.png in Resources */,
 				91BA64C0165C42F600B91A41 /* stop320.png in Resources */,
+				918AD3A41663F57E00DFC21C /* button_1.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -314,6 +327,7 @@
 				91BA64AB1659927D00B91A41 /* UIColor+CreateMethods.m in Sources */,
 				91BA64B3165BDDDA00B91A41 /* NSDate+Helper.m in Sources */,
 				91BA64B6165C3F7B00B91A41 /* PGToggleButton.m in Sources */,
+				91858481165D484200A2950E /* BaseObject.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

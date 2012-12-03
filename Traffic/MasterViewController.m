@@ -140,7 +140,7 @@
 		[timeEntry setJobTaskId:[[dict valueForKeyPath:@"jobTaskId.id"]intValue]];
 		[timeEntry setLockedByApproval:[dict objectForKey:@"lockedByApproval"]];
 		[timeEntry setMinutes:[[dict objectForKey:@"minutes"]intValue]];
-		[timeEntry setTaskDescription:[dict objectForKey:@"taskDescription"]];
+		[timeEntry setTaskDescription:[NSMutableString stringWithString:[dict objectForKey:@"taskDescription"]]];
 		[timeEntry setAllocationGroupId:[[dict valueForKeyPath:@"allocationGroupId.id"]intValue]];
 		//[timeEntry setTaskRate:[dict objectForKey:@"taskRate"]];
 		//[timeEntry setTimeEntryCost:[dict objectForKey:@"timeEntryCost"]];
@@ -154,24 +154,28 @@
         NSDate *endTimeAsDate = [NSDate dateFromString:dateString];
 		[timeEntry setEndTime:endTimeAsDate];
 		[timeEntry setValueOfTimeEntry:[dict objectForKey:@"valueOfTimeEntry"]];
-		NSLog(@"%@:%@", @"id", [dict valueForKeyPath:@"id"]);
-		NSLog(@"%@:%@", @"jobId.id", [dict valueForKeyPath:@"jobId.id"]);
-		NSLog(@"%@:%@", @"jobTaskId.id", [dict valueForKeyPath:@"jobTaskId.id"]);
-		NSLog(@"%@:%@", @"lockedByApproval", [dict valueForKey:@"lockedByApproval"]);
-		NSLog(@"%@:%@", @"minutes", [dict valueForKey:@"minutes"]);
-		NSLog(@"%@:%@", @"taskDescription", [dict valueForKey:@"taskDescription"]);
-		NSLog(@"%@:%@", @"allocationGroupId.id", [dict valueForKeyPath:@"allocationGroupId.id"]);
-		NSLog(@"%@:%@", @"taskRate", [dict valueForKey:@"taskRate"]);
-		NSLog(@"%@:%@", @"timeEntryCost", [dict valueForKey:@"timeEntryCost"]);
-		NSLog(@"%@:%@", @"trafficEmployeeId.id", [dict valueForKey:@"trafficEmployeeId.id"]);
-		NSLog(@"%@:%@", @"billable", [dict valueForKey:@"billable"]);
-		NSLog(@"%@:%@", @"version", [dict valueForKey:@"version"]);
-		NSLog(@"%@:%@", @"chargebandId.id", [dict valueForKey:@"chargebandId.id"]);
-		NSLog(@"%@:%@", @"comment", [dict valueForKey:@"comment"]);
-		NSLog(@"%@:%@", @"exported", [dict valueForKey:@"exported"]);
-		NSLog(@"%@:%@", @"endTime", [dict valueForKey:@"endTime"]);
-		NSLog(@"%@:%@", @"valueOfTimeEntry", [dict valueForKey:@"valueOfTimeEntry"]);
-        
+//		NSLog(@"%@:%@", @"id", [dict valueForKeyPath:@"id"]);
+//		NSLog(@"%@:%@", @"jobId.id", [dict valueForKeyPath:@"jobId.id"]);
+//		NSLog(@"%@:%@", @"jobTaskId.id", [dict valueForKeyPath:@"jobTaskId.id"]);
+//		NSLog(@"%@:%@", @"lockedByApproval", [dict valueForKey:@"lockedByApproval"]);
+//		NSLog(@"%@:%@", @"minutes", [dict valueForKey:@"minutes"]);
+//		NSLog(@"%@:%@", @"taskDescription", [dict valueForKey:@"taskDescription"]);
+//		NSLog(@"%@:%@", @"allocationGroupId.id", [dict valueForKeyPath:@"allocationGroupId.id"]);
+//		NSLog(@"%@:%@", @"taskRate", [dict valueForKey:@"taskRate"]);
+//		NSLog(@"%@:%@", @"timeEntryCost", [dict valueForKey:@"timeEntryCost"]);
+//		NSLog(@"%@:%@", @"trafficEmployeeId.id", [dict valueForKey:@"trafficEmployeeId.id"]);
+//		NSLog(@"%@:%@", @"billable", [dict valueForKey:@"billable"]);
+//		NSLog(@"%@:%@", @"version", [dict valueForKey:@"version"]);
+//		NSLog(@"%@:%@", @"chargebandId.id", [dict valueForKey:@"chargebandId.id"]);
+//		NSLog(@"%@:%@", @"comment", [dict valueForKey:@"comment"]);
+//		NSLog(@"%@:%@", @"exported", [dict valueForKey:@"exported"]);
+//		NSLog(@"%@:%@", @"endTime", [dict valueForKey:@"endTime"]);
+//		NSLog(@"%@:%@", @"valueOfTimeEntry", [dict valueForKey:@"valueOfTimeEntry"]);
+//        NSLog(@"Printing my dictionary out by enumerating:");
+//        [dict enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+//            NSLog(@"\tKey: %@ Value: %@", key, obj);
+//        }];
+
 		[timeEntries addObject:timeEntry];
 	}    
     
@@ -221,9 +225,7 @@
     
     [cell setBackgroundView:[[UIView alloc] init]];
     [cell.backgroundView.layer insertSublayer:grad atIndex:0];
-    
-
-    
+        
     WS_TimeEntry *object = timeEntries[indexPath.row];
     cell.companyLabel.text = @"Company must be looked up";
     cell.jobLabel.text = @"Job must be looked up";
