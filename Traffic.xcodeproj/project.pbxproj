@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		91110E49166EACDE00BBB7F8 /* GlobalModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 91110E48166EACDE00BBB7F8 /* GlobalModel.m */; };
 		9177C23E162B4268004719B6 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9177C23D162B4268004719B6 /* UIKit.framework */; };
 		9177C240162B4268004719B6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9177C23F162B4268004719B6 /* Foundation.framework */; };
 		9177C242162B4268004719B6 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9177C241162B4268004719B6 /* CoreGraphics.framework */; };
@@ -24,6 +25,9 @@
 		9185847D165D40D200A2950E /* libobjc.A.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9185847C165D40D200A2950E /* libobjc.A.dylib */; };
 		91858481165D484200A2950E /* BaseObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 91858480165D484200A2950E /* BaseObject.m */; };
 		918AD3A41663F57E00DFC21C /* button_1.png in Resources */ = {isa = PBXBuildFile; fileRef = 918AD3A31663F57E00DFC21C /* button_1.png */; };
+		918AD3B4166E464F00DFC21C /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 918AD3B3166E464E00DFC21C /* Default.png */; };
+		918AD3B6166E466A00DFC21C /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 918AD3B5166E466A00DFC21C /* Default@2x.png */; };
+		918AD3B8166E468C00DFC21C /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 918AD3B7166E468C00DFC21C /* Default-568h@2x.png */; };
 		91BA647B16516A8900B91A41 /* LoadTimeEntriesCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BA647A16516A8900B91A41 /* LoadTimeEntriesCommand.m */; };
 		91BA647F16516BB400B91A41 /* ParserTimeEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BA647D16516BB300B91A41 /* ParserTimeEntry.m */; };
 		91BA648116516BDF00B91A41 /* WS_TimeEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BA648016516BDF00B91A41 /* WS_TimeEntry.m */; };
@@ -52,6 +56,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		91110E47166EACDE00BBB7F8 /* GlobalModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GlobalModel.h; sourceTree = "<group>"; };
+		91110E48166EACDE00BBB7F8 /* GlobalModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GlobalModel.m; sourceTree = "<group>"; };
 		9177C239162B4268004719B6 /* Traffic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Traffic.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9177C23D162B4268004719B6 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		9177C23F162B4268004719B6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -77,6 +83,9 @@
 		9185847F165D484200A2950E /* BaseObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseObject.h; sourceTree = "<group>"; };
 		91858480165D484200A2950E /* BaseObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseObject.m; sourceTree = "<group>"; };
 		918AD3A31663F57E00DFC21C /* button_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = button_1.png; sourceTree = "<group>"; };
+		918AD3B3166E464E00DFC21C /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		918AD3B5166E466A00DFC21C /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		918AD3B7166E468C00DFC21C /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		91BA647916516A8900B91A41 /* LoadTimeEntriesCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadTimeEntriesCommand.h; sourceTree = "<group>"; };
 		91BA647A16516A8900B91A41 /* LoadTimeEntriesCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadTimeEntriesCommand.m; sourceTree = "<group>"; };
 		91BA647C16516BB300B91A41 /* ParserTimeEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParserTimeEntry.h; sourceTree = "<group>"; };
@@ -135,6 +144,9 @@
 		9177C22E162B4268004719B6 = {
 			isa = PBXGroup;
 			children = (
+				918AD3B7166E468C00DFC21C /* Default-568h@2x.png */,
+				918AD3B5166E466A00DFC21C /* Default@2x.png */,
+				918AD3B3166E464E00DFC21C /* Default.png */,
 				9185847C165D40D200A2950E /* libobjc.A.dylib */,
 				91BA64A41658479700B91A41 /* QuartzCore.framework */,
 				91BA649C16583B1E00B91A41 /* Default-Landscape@2x~ipad.png */,
@@ -213,6 +225,8 @@
 				9177C244162B4268004719B6 /* Supporting Files */,
 				91BA64B4165C3F7900B91A41 /* PGToggleButton.h */,
 				91BA64B5165C3F7A00B91A41 /* PGToggleButton.m */,
+				91110E47166EACDE00BBB7F8 /* GlobalModel.h */,
+				91110E48166EACDE00BBB7F8 /* GlobalModel.m */,
 			);
 			path = Traffic;
 			sourceTree = "<group>";
@@ -303,6 +317,9 @@
 				91BA64BF165C42F600B91A41 /* play320.png in Resources */,
 				91BA64C0165C42F600B91A41 /* stop320.png in Resources */,
 				918AD3A41663F57E00DFC21C /* button_1.png in Resources */,
+				918AD3B4166E464F00DFC21C /* Default.png in Resources */,
+				918AD3B6166E466A00DFC21C /* Default@2x.png in Resources */,
+				918AD3B8166E468C00DFC21C /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -328,6 +345,7 @@
 				91BA64B3165BDDDA00B91A41 /* NSDate+Helper.m in Sources */,
 				91BA64B6165C3F7B00B91A41 /* PGToggleButton.m in Sources */,
 				91858481165D484200A2950E /* BaseObject.m in Sources */,
+				91110E49166EACDE00BBB7F8 /* GlobalModel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

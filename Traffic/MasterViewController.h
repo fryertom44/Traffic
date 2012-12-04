@@ -14,7 +14,6 @@
 {
     NSMutableData *responseData;
     NSMutableArray *timeEntries;
-//    NSMutableArray *_objects;
 }
 
 @property (strong, nonatomic) DetailViewController *detailViewController;

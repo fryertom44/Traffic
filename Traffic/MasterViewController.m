@@ -227,8 +227,8 @@
     [cell.backgroundView.layer insertSublayer:grad atIndex:0];
         
     WS_TimeEntry *object = timeEntries[indexPath.row];
-    cell.companyLabel.text = @"Company must be looked up";
-    cell.jobLabel.text = @"Job must be looked up";
+    cell.companyLabel.text = @"Company Name: <lookup>";
+    cell.jobLabel.text = [NSString stringWithFormat:@"Job ID: %d",[object jobId]];
     cell.timesheetLabel.text = [object taskDescription];
     cell.daysToDeadlineLabel.text = [[object endTime]description];
     cell.happyRating.image = [UIImage imageNamed:@"happyRatingHappySmall320.png"];
