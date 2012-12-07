@@ -21,9 +21,6 @@
 
 @implementation MasterViewController
 
-@synthesize timeEntries;
-@synthesize allocatedTasks;
-
 - (void)awakeFromNib
 {
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
@@ -52,8 +49,6 @@
     [loadJobTasksCommand executeAndUpdateComponent:self.tableView
                                               page:1];
     
-    NSLog([NSString stringWithFormat:@"Allocated tasks in model: %@",[self allocatedTasks]]);
-
     [self.tableView reloadData];
     
 }
@@ -103,24 +98,15 @@
     [cell.backgroundView.layer insertSublayer:grad atIndex:0];
     
     GlobalModel* globalModel = [GlobalModel sharedInstance];
-    [globalModel printOutTasks];
-//    NSLog(@"*DEBUG*%@:%@", @"description", object.taskDescription);
-//    NSLog(@"*DEBUG*%@:%@", @"happyRating", object.happyRating);
-//    NSLog(@"*DEBUG*%@:%d", @"isTaskComplete", object.isTaskComplete);
+//    [globalModel printOutTasks];
     
-    WS_JobTask *object = globalModel.allocatedTasks[indexPath.row];
+    WS_JobTask *task = globalModel.allocatedTasks[indexPath.row];
     cell.companyLabel.text = @"Company Name: <lookup>";
     cell.jobLabel.text = @"Job Name: <lookup>";
-    cell.timesheetLabel.text = object.taskDescription;
-    cell.daysToDeadlineLabel.text = [NSString stringWithFormat:@"%d days remaining",[object daysUntilDeadline]];
-    
-    if ([@"COMPLETE" isEqualToString:object.happyRating]) {
-        cell.happyRating.image = [UIImage imageNamed:@"happyRatingCompletedSmall320.png"];
-    }else if ([@"HAPPY" isEqualToString:object.happyRating]){
-        cell.happyRating.image = [UIImage imageNamed:@"happyRatingHappySmall320.png"];
-    }else{
-        cell.happyRating.image = [UIImage imageNamed:@"happyRatingSadSmall320.png"];
-    }
+    cell.timesheetLabel.text = task.taskDescription;
+    cell.daysToDeadlineLabel.text = [NSString stringWithFormat:@"%d days remaining",[task daysUntilDeadline]];
+    cell.happyRating.image = [UIImage imageNamed:task.happyRatingImage];
+
     return cell;
 }
 
@@ -132,8 +118,10 @@
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    GlobalModel *sharedModel = [GlobalModel sharedInstance];
+
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        [allocatedTasks removeObjectAtIndex:indexPath.row];
+        [sharedModel.allocatedTasks removeObjectAtIndex:indexPath.row];
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
     } else if (editingStyle == UITableViewCellEditingStyleInsert) {
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
@@ -159,17 +147,30 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-        WS_JobTask *object = allocatedTasks[indexPath.row];
-        self.detailViewController.detailItem = object;
+        GlobalModel* globalModel = [GlobalModel sharedInstance];
+        WS_JobTask *task = globalModel.allocatedTasks[indexPath.row];
+        WS_TimeEntry *timesheet = [[WS_TimeEntry alloc]init];
+        timesheet.happyRating = task.happyRating;
+        timesheet.jobTaskId = task.jobTaskId;
+        timesheet.trafficEmployeeId = task.trafficEmployeeId;
+        self.detailViewController.task = task;
+        self.detailViewController.timesheet = timesheet;
     }
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if ([[segue identifier] isEqualToString:@"showDetail"]) {
+        GlobalModel* globalModel = [GlobalModel sharedInstance];
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-        WS_JobTask *object = allocatedTasks[indexPath.row];
-        [[segue destinationViewController] setDetailItem:object];
+        WS_JobTask *task = globalModel.allocatedTasks[indexPath.row];
+        WS_TimeEntry *timesheet = [[WS_TimeEntry alloc]init];
+        timesheet.happyRating = task.happyRating;
+        timesheet.jobTaskId = task.jobTaskId;
+        timesheet.trafficEmployeeId = task.trafficEmployeeId;
+        [[segue destinationViewController] setTask:task];
+        [[segue destinationViewController] setTimesheet:timesheet];
+
     }
 }
 
@@ -178,7 +179,7 @@
     return [sharedModel timeEntries];
 }
 
-- (NSMutableArray *)allocatedTasks {
+- (NSMutableArray*)allocatedTasks {
     GlobalModel *sharedModel = [GlobalModel sharedInstance];
     return sharedModel.allocatedTasks;
 }

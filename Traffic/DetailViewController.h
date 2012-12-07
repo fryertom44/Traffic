@@ -8,21 +8,23 @@
 
 #import <UIKit/UIKit.h>
 #import "WS_TimeEntry.h"
-#import "PGToggleButton.h"
 #import "WS_JobTask.h"
+#import "PGToggleButton.h"
 
+@class WS_TimeEntry;
 @class WS_JobTask;
 
 @interface DetailViewController : UITableViewController <UISplitViewControllerDelegate,UITextFieldDelegate>
 
-@property (strong, nonatomic) WS_JobTask *detailItem;
+@property (strong, nonatomic) WS_TimeEntry *timesheet;
+@property (strong, nonatomic) WS_JobTask *task;
 @property (weak, nonatomic) NSTimer *myTimer;
 @property (strong, nonatomic) NSDate *timerStartDate;
 @property (nonatomic) double timeElapsedInterval;
 
 @property (weak, nonatomic) IBOutlet UILabel *taskDescription;
 @property (weak, nonatomic) IBOutlet UILabel *jobTitle;
-@property (weak, nonatomic) IBOutlet UIImageView *happyRating;
+@property (weak, nonatomic) IBOutlet UILabel *progressLabel;
 @property (weak, nonatomic) IBOutlet UILabel *daysRemainingLabel;
 @property (weak, nonatomic) IBOutlet UIProgressView *taskProgress;
 @property (weak, nonatomic) IBOutlet PGToggleButton *recordButton;
@@ -35,7 +37,9 @@
 @property (weak, nonatomic) IBOutlet UITextView *dateInput;
 @property (weak, nonatomic) IBOutlet UITextView *timesheetNotes;
 @property (weak, nonatomic) IBOutlet UISwitch *billableSwitch;
+@property (weak, nonatomic) IBOutlet UIButton *happyRatingButton;
 
+-(IBAction)changeHappyRating:(id)sender;
 -(IBAction)startTimer:(id)sender;
 -(IBAction)stopTimer:(id)sender;
 @end

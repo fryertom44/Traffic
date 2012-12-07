@@ -9,6 +9,7 @@
 #import "LoadJobTasksCommand.h"
 #import "ParserJobTask.h"
 #import "GlobalModel.h"
+#import "KeychainItemWrapper.h"
 
 @implementation LoadJobTasksCommand
 @synthesize responseData;
@@ -31,8 +32,11 @@
 - (void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
     if ([challenge previousFailureCount] == 0) {
         NSLog(@"received authentication challenge");
-        NSURLCredential *newCredential = [NSURLCredential credentialWithUser:@"fryertom@gmail.com"
-                                                                    password:@"MR6gFeqG585J5SVZ7Lnv128wHhT2EBgjl5C7F2i2"
+        KeychainItemWrapper *keychainItem = [[KeychainItemWrapper alloc]initWithIdentifier:@"TrafficLogin" accessGroup:nil];
+        NSString* email = [keychainItem objectForKey:(__bridge id)(kSecValueData)];
+        NSString* apiKey = [keychainItem objectForKey:(__bridge id)(kSecAttrAccount)];
+        NSURLCredential *newCredential = [NSURLCredential credentialWithUser:email
+                                                                    password:apiKey
                                                                  persistence:NSURLCredentialPersistenceForSession];
         NSLog(@"credential created");
         [[challenge sender] useCredential:newCredential forAuthenticationChallenge:challenge];

@@ -12,25 +12,26 @@
 
 @interface WS_TimeEntry : BaseObject {
 	
-	int timeEntryId;
-	int jobTaskId;
-	int trafficEmployeeId;
-	int jobId;
-	int allocationGroupId;
-	int chargebandId;
+	 int timeEntryId;
+	 int jobTaskId;
+	 int trafficEmployeeId;
+	 int jobId;
+	 int allocationGroupId;
+	 int chargebandId;
 	bool billable;
 	bool exported;
 	bool lockedByApproval;
-	NSString* comment;
+	NSString*comment;
+    NSString*happyRating;
     NSDate *startTime;
 	NSDate *endTime;
-	int minutes;
-	NSString* taskDescription;
-	Money* taskRate;
-	Money* valueOfTimeEntry;
-	Money* timeEntryCost;
-	NSDate* dateModified;
-	int version;
+	 int minutes;
+	NSString*taskDescription;
+	Money*taskRate;
+	Money*valueOfTimeEntry;
+	Money*timeEntryCost;
+	NSDate*dateModified;
+    int version;
 }
 
 @property int timeEntryId;
@@ -42,15 +43,19 @@
 @property bool billable;
 @property bool exported;
 @property bool lockedByApproval;
-@property (nonatomic, retain)NSString* comment;
-@property (nonatomic, retain)NSDate* startTime;
-@property (nonatomic, retain)NSDate* endTime;
+@property (nonatomic, retain)NSString*comment;
+@property (nonatomic, retain)NSString*happyRating;
+@property (nonatomic, retain)NSDate*startTime;
+@property (nonatomic, retain)NSDate*endTime;
 @property int minutes;
-@property (nonatomic, retain)NSString* taskDescription;
-@property (nonatomic, retain)Money* taskRate;
-@property (nonatomic, retain)Money* valueOfTimeEntry;
-@property (nonatomic, retain)Money* timeEntryCost;
-@property (nonatomic, retain)NSDate* dateModified;
+@property (nonatomic, retain)NSString*taskDescription;
+@property (nonatomic, retain)Money*taskRate;
+@property (nonatomic, retain)Money*valueOfTimeEntry;
+@property (nonatomic, retain)Money*timeEntryCost;
+@property (nonatomic, retain)NSDate*dateModified;
 @property int version;
+
+-(NSString*)happyRatingImage;
+-(void)nextHappyRating;
 
 @end

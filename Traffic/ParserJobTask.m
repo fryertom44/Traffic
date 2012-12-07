@@ -31,15 +31,13 @@
 	for (NSDictionary *dict in jsonObjects)
 	{
 		WS_JobTask *jobTask = [[WS_JobTask alloc] init];
-//		NSLog(@"%@:%@", @"description", [dict valueForKeyPath:@"taskDescription"]);
-//		NSLog(@"%@:%@", @"happyRating", [dict valueForKeyPath:@"happyRating"]);
-//      NSLog(@"%@:%d", @"isTaskComplete", isTaskCompleteAsInt);
-        
 		[jobTask setTaskDescription:[dict valueForKeyPath:@"taskDescription"]];
         [jobTask setHappyRating:[dict valueForKeyPath:@"happyRating"]];
         [jobTask setIsTaskComplete:[[dict valueForKeyPath:@"isTaskComplete"]boolValue]];
         [jobTask setTaskDeadline:[df dateFromString:[dict valueForKeyPath:@"taskDeadline"]]];
-		
+        [jobTask setJobTaskId:[[dict valueForKey:@"jobTaskId.id"]intValue]];
+		[jobTask setTrafficEmployeeId:[[dict valueForKey:@"trafficEmployeeId.id"]intValue]];
+        
         [jobTasks addObject:jobTask];
 	}
     GlobalModel *globalModel = [GlobalModel sharedInstance];

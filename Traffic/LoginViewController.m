@@ -7,6 +7,7 @@
 //
 
 #import "LoginViewController.h"
+#import "LoginCommand.h"
 
 @implementation LoginViewController
 
@@ -71,9 +72,9 @@
     [keychainItem setObject:username forKey:(__bridge id)(kSecAttrAccount)];
     
     [self setIsWaiting:YES];
+    LoginCommand* loginCommand = [[LoginCommand alloc]init];
+    [loginCommand executeWithUsername:username password:password sender:self];
     
-    [self.loginOperation beginAuthenticateUsername:username
-                                          password:password];
 }
 
 #pragma mark - LoginOperationDelegate members

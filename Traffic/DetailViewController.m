@@ -9,6 +9,7 @@
 #import "DetailViewController.h"
 #import "WS_TimeEntry.h"
 #import "NSDate+Helper.h"
+#import "Constants.h"
 
 @interface DetailViewController ()
 @property (strong, nonatomic) UIPopoverController *masterPopoverController;
@@ -23,17 +24,16 @@ const NSTimeInterval unitOfTime=1;
 
 @synthesize myTimer;
 @synthesize timerStartDate;
-@synthesize detailItem = _detailItem;
-@synthesize happyRating = _happyRating;
+@synthesize timesheet = _timesheet;
 @synthesize startTimeInput = _startTimeInput;
 
 #pragma mark - Managing the detail item
 
-- (void)setDetailItem:(id)newDetailItem
+- (void)setTimesheet:(id)newTimesheet
 {
-    if (_detailItem != newDetailItem) {
-        _detailItem = newDetailItem;
-        [_detailItem saveState];
+    if (_timesheet != newTimesheet) {
+        _timesheet = newTimesheet;
+        [_timesheet saveState];
         
         // Update the view.
         [self configureView];
@@ -44,28 +44,29 @@ const NSTimeInterval unitOfTime=1;
     }        
 }
 
-- (WS_JobTask *)detailItem {
-    return _detailItem;
+- (WS_TimeEntry *)timesheet {
+    return _timesheet;
 }
 
 - (void)configureView
 {
     // Update the user interface for the detail item.
 
-    if (self.detailItem) {
-        self.taskDescription.text = self.detailItem.taskDescription;
+    if (self.timesheet) {
+        self.taskDescription.text = self.timesheet.taskDescription;
         self.jobTitle.text = @"Job ID Goes Here";
-        self.timesheetTitleInput.text = self.detailItem.taskDescription;
-        [[self happyRating]setImage:[UIImage imageNamed:@"happyRatingHappySmall320.png"]];
-        self.daysRemainingLabel.text = [NSString stringWithFormat:@"%d",self.detailItem.daysUntilDeadline];
-//        [[self happyRating]setImage:[UIImage imageNamed:@"happyRatingCompletedSmall320.png"]];
-//        [[self happyRating]setImage:[UIImage imageNamed:@"happyRatingSadSmall320.png"]];
-
+        [self.happyRatingButton setImage:[UIImage imageNamed:self.timesheet.happyRatingImage] forState:UIControlStateNormal];
         self.timerLabel.text = @"00:00:00";
+    }
+    
+    if(self.task) {
+        self.daysRemainingLabel.text = [NSString stringWithFormat:@"%d",self.task.daysUntilDeadline];
+        self.timesheetTitleInput.text = self.task.taskDescription;
+
     }
 }
 
-- (UIToolbar *)newKeyboardViewWithDoneMethod:(SEL)doneMethod
+- (UIToolbar *)newKeyboardViewWithDoneMethod:(SEL)doneMethod cancelMethod:(SEL)cancelMethod
 {
     UIToolbar* keyboardDoneButtonView = [[UIToolbar alloc] init];
     keyboardDoneButtonView.barStyle = UIBarStyleBlack;
@@ -75,7 +76,7 @@ const NSTimeInterval unitOfTime=1;
     UIBarButtonItem *flexSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:self action:nil];
     UIBarButtonItem* cancelButton = [[UIBarButtonItem alloc] initWithTitle:@"Cancel"
                                                                      style:UIBarButtonItemStyleBordered target:self
-                                                                    action:@selector(cancelClicked:)];
+                                                                    action:@selector(cancelMethod)];
     UIBarButtonItem* doneButton = [[UIBarButtonItem alloc] initWithTitle:@"Done"
                                                                                   style:UIBarButtonItemStyleBordered target:self
                                                                                  action:doneMethod];
@@ -88,10 +89,10 @@ const NSTimeInterval unitOfTime=1;
     [super viewDidLoad];
         
 	// Do any additional setup after loading the view, typically from a nib.
-    [[self recordButton]setImage:[UIImage imageNamed:@"play320.png"] forState:UIControlStateNormal];
-    [[self recordButton]setOffStateImage:[UIImage imageNamed:@"play320.png"]];
-    [[self recordButton]setOnStateImage:[UIImage imageNamed:@"pause320.png"]];
-    [[self stopButton]setImage:[UIImage imageNamed:@"stop320.png"] forState:UIControlStateNormal];
+    [[self recordButton]setImage:[UIImage imageNamed:kPlayButtonImage] forState:UIControlStateNormal];
+    [[self recordButton]setOffStateImage:[UIImage imageNamed:kPlayButtonImage]];
+    [[self recordButton]setOnStateImage:[UIImage imageNamed:kPauseButtonImage]];
+    [[self stopButton]setImage:[UIImage imageNamed:kStopButtonImage] forState:UIControlStateNormal];
     
     UIDatePicker *timePicker = [[UIDatePicker alloc]init];
     [timePicker setDate:[NSDate date]];
@@ -109,10 +110,10 @@ const NSTimeInterval unitOfTime=1;
     [durationPicker setDatePickerMode:UIDatePickerModeCountDownTimer];
     [self.durationInput setInputView:durationPicker];
     
-    UIToolbar *keyboardStartDoneButtonView = (UIToolbar *)[self newKeyboardViewWithDoneMethod:@selector(startTimeDoneClicked:)];
-    UIToolbar *keyboardEndTimeDoneButtonView = (UIToolbar *)[self newKeyboardViewWithDoneMethod:@selector(endTimeDoneClicked:)];
-    UIToolbar *keyboardDurationDoneButtonView = (UIToolbar *)[self newKeyboardViewWithDoneMethod:@selector(durationDoneClicked:)];
-    UIToolbar *keyboardDateDoneButtonView = (UIToolbar *)[self newKeyboardViewWithDoneMethod:@selector(dateDoneClicked:)];
+    UIToolbar *keyboardStartDoneButtonView = (UIToolbar *)[self newKeyboardViewWithDoneMethod:@selector(startTimeDoneClicked:)cancelMethod:@selector(startTimeCancelClicked:)];
+    UIToolbar *keyboardEndTimeDoneButtonView = (UIToolbar *)[self newKeyboardViewWithDoneMethod:@selector(endTimeDoneClicked:)cancelMethod:@selector(endTimeCancelClicked:)];
+    UIToolbar *keyboardDurationDoneButtonView = (UIToolbar *)[self newKeyboardViewWithDoneMethod:@selector(durationDoneClicked:)cancelMethod:@selector(durationCancelClicked:)];
+    UIToolbar *keyboardDateDoneButtonView = (UIToolbar *)[self newKeyboardViewWithDoneMethod:@selector(dateDoneClicked:)cancelMethod:@selector(dateCancelClicked:)];
 
     // Plug the keyboardDoneButtonView into the text field...
     [self.startTimeInput setInputAccessoryView:keyboardStartDoneButtonView];
@@ -169,6 +170,11 @@ const NSTimeInterval unitOfTime=1;
     
 }
 
+- (IBAction)changeHappyRating:(id)sender {
+    [self.timesheet nextHappyRating];
+    [self.happyRatingButton setImage:[UIImage imageNamed:self.timesheet.happyRatingImage] forState:UIControlStateNormal];
+}
+
 - (IBAction)startTimer:(id)sender
 {
     if(myTimer==nil){
@@ -196,39 +202,64 @@ const NSTimeInterval unitOfTime=1;
 -(void)startTimeDoneClicked:(id)sender
 {
     UIDatePicker *picker = (UIDatePicker*)self.startTimeInput.inputView;
-    self.startTimeInput.text = [NSString stringWithFormat:@"%@",picker.date];
-//    self.detailItem.startTime = picker.date;
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"HH:mm:ss"];
+    [dateFormatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0.0]];
+    self.startTimeInput.text = [dateFormatter stringFromDate:picker.date];
     [[self startTimeInput] resignFirstResponder];
 }
 
 -(void)endTimeDoneClicked:(id)sender
 {
     UIDatePicker *picker = (UIDatePicker*)self.endTimeInput.inputView;
-    self.endTimeInput.text = [NSString stringWithFormat:@"%@",picker.date];
-//    self.detailItem.endTime = picker.date;
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"HH:mm:ss"];
+    [dateFormatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0.0]];
+    self.endTimeInput.text = [dateFormatter stringFromDate:picker.date];
     [[self endTimeInput] resignFirstResponder];
 }
 
 -(void)durationDoneClicked:(id)sender
 {
     UIDatePicker *picker = (UIDatePicker*)self.durationInput.inputView;
-    self.durationInput.text = [NSString stringWithFormat:@"%@",picker.date];
-//    self.detailItem.minutes = picker.date);
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSDateComponents *components = [calendar components:(NSHourCalendarUnit | NSMinuteCalendarUnit) fromDate:picker.date];
+    NSInteger hour = [components hour];
+    NSInteger minute = [components minute];
+    self.durationInput.text = [NSString stringWithFormat:@"%d hour/s %d minute/s",hour,minute];
     [[self durationInput] resignFirstResponder];
 }
 
 -(void)dateDoneClicked:(id)sender
 {
     UIDatePicker *picker = (UIDatePicker*)self.dateInput.inputView;
-    self.dateInput.text = [NSString stringWithFormat:@"%@",picker.date];
-    //    self.detailItem.minutes = picker.date);
-    //    self.detailItem.endTime = picker.date;
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"dd-MM-YYYY"];
+    [dateFormatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0.0]];
+    self.dateInput.text = [dateFormatter stringFromDate:picker.date];
     [[self dateInput] resignFirstResponder];
 }
 
--(void)cancelClicked:(id)sender
+-(void)startTimeCancelClicked:(id)sender
 {
-    [[self startTimeInput] resignFirstResponder];
+    [self.startTimeInput resignFirstResponder];
 }
 
+
+-(void)endTimeCancelClicked:(id)sender
+{
+    [self.endTimeInput resignFirstResponder];
+}
+
+
+-(void)durationCancelClicked:(id)sender
+{
+    [self.durationInput resignFirstResponder];
+}
+
+
+-(void)dateCancelClicked:(id)sender
+{
+    [self.dateInput resignFirstResponder];
+}
 @end

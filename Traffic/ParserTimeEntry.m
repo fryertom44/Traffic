@@ -13,13 +13,6 @@
 
 @implementation ParserTimeEntry
 
-- (ParserTimeEntry *) initParser {
-	
-	self = [super init];
-
-	return self;
-}
-
 +(void)parseData:(NSData *)data{
     NSMutableArray *timeEntries = [[NSMutableArray alloc] init];
     NSDictionary* json = nil;

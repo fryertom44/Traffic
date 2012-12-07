@@ -50,11 +50,7 @@
 
 - (BOOL)authenticateImpl:(NSString *)errorMessage
 {
-//    NSLog(@"Classes derived from LoginOperation must override authenticateImpl:");
-//    return NO;
-    NSLog(@"Faked auth success. Don't forget that LoginOperation must override authenticateImpl:!");
     return YES;
-    
 }
 
 - (void)deleteAuthenticatedData

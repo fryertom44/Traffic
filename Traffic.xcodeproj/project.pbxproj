@@ -11,6 +11,8 @@
 		91110E4C166FE68D00BBB7F8 /* LoadJobTasksCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 91110E4B166FE68D00BBB7F8 /* LoadJobTasksCommand.m */; };
 		91110E4F166FEA3700BBB7F8 /* WS_JobTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 91110E4E166FEA3700BBB7F8 /* WS_JobTask.m */; };
 		91110E52166FEA9E00BBB7F8 /* ParserJobTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 91110E51166FEA9D00BBB7F8 /* ParserJobTask.m */; };
+		91110E61167262C600BBB7F8 /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 91110E60167262C600BBB7F8 /* Constants.m */; };
+		91110E6416729DBC00BBB7F8 /* LoginCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 91110E6316729DBB00BBB7F8 /* LoginCommand.m */; };
 		9177C23E162B4268004719B6 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9177C23D162B4268004719B6 /* UIKit.framework */; };
 		9177C240162B4268004719B6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9177C23F162B4268004719B6 /* Foundation.framework */; };
 		9177C242162B4268004719B6 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9177C241162B4268004719B6 /* CoreGraphics.framework */; };
@@ -67,6 +69,10 @@
 		91110E4E166FEA3700BBB7F8 /* WS_JobTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WS_JobTask.m; sourceTree = "<group>"; };
 		91110E50166FEA9D00BBB7F8 /* ParserJobTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParserJobTask.h; sourceTree = "<group>"; };
 		91110E51166FEA9D00BBB7F8 /* ParserJobTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParserJobTask.m; sourceTree = "<group>"; };
+		91110E5F167262C500BBB7F8 /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
+		91110E60167262C600BBB7F8 /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
+		91110E6216729DBB00BBB7F8 /* LoginCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginCommand.h; sourceTree = "<group>"; };
+		91110E6316729DBB00BBB7F8 /* LoginCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginCommand.m; sourceTree = "<group>"; };
 		9177C239162B4268004719B6 /* Traffic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Traffic.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9177C23D162B4268004719B6 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		9177C23F162B4268004719B6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -207,6 +213,8 @@
 				9177C258162B4268004719B6 /* MainStoryboard_iPad.storyboard */,
 				91BA648C1655A6E300B91A41 /* KeychainItemWrapper.h */,
 				91BA648D1655A6E300B91A41 /* KeychainItemWrapper.m */,
+				91110E6216729DBB00BBB7F8 /* LoginCommand.h */,
+				91110E6316729DBB00BBB7F8 /* LoginCommand.m */,
 				91110E4A166FE68C00BBB7F8 /* LoadJobTasksCommand.h */,
 				91110E4B166FE68D00BBB7F8 /* LoadJobTasksCommand.m */,
 				91BA647916516A8900B91A41 /* LoadTimeEntriesCommand.h */,
@@ -242,6 +250,8 @@
 				91BA64B5165C3F7A00B91A41 /* PGToggleButton.m */,
 				91110E47166EACDE00BBB7F8 /* GlobalModel.h */,
 				91110E48166EACDE00BBB7F8 /* GlobalModel.m */,
+				91110E5F167262C500BBB7F8 /* Constants.h */,
+				91110E60167262C600BBB7F8 /* Constants.m */,
 			);
 			path = Traffic;
 			sourceTree = "<group>";
@@ -364,6 +374,8 @@
 				91110E4C166FE68D00BBB7F8 /* LoadJobTasksCommand.m in Sources */,
 				91110E4F166FEA3700BBB7F8 /* WS_JobTask.m in Sources */,
 				91110E52166FEA9E00BBB7F8 /* ParserJobTask.m in Sources */,
+				91110E61167262C600BBB7F8 /* Constants.m in Sources */,
+				91110E6416729DBC00BBB7F8 /* LoginCommand.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

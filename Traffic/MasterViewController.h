@@ -16,7 +16,7 @@
 }
 
 @property (strong, nonatomic) DetailViewController *detailViewController;
-@property (weak, nonatomic) NSMutableArray *timeEntries;
-@property (weak, nonatomic) NSMutableArray *allocatedTasks;
+//@property (weak, nonatomic) NSMutableArray *timeEntries;
+//@property (weak, nonatomic) NSMutableArray *allocatedTasks;
 
 @end

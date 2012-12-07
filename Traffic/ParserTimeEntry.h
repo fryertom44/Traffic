@@ -8,11 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ParserTimeEntry : NSObject {
-	
-	NSMutableString* currentElementValue;
-}
+@interface ParserTimeEntry : NSObject
 
-//- (ParserTimeEntry *) initParser;
 + (void)parseData:(NSData*)data;
+
 @end

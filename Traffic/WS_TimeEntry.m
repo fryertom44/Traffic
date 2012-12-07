@@ -10,7 +10,7 @@
 
 @implementation WS_TimeEntry
 
-@synthesize timeEntryId,jobTaskId,trafficEmployeeId,jobId,allocationGroupId,chargebandId,billable,exported,lockedByApproval,comment,endTime,minutes,taskDescription,taskRate,valueOfTimeEntry,timeEntryCost,dateModified,version;
+@synthesize timeEntryId,jobTaskId,trafficEmployeeId,jobId,allocationGroupId,chargebandId,billable,exported,lockedByApproval,comment,happyRating,endTime,minutes,taskDescription,taskRate,valueOfTimeEntry,timeEntryCost,dateModified,version;
 
 @synthesize startTime = _startTime;
 
@@ -34,6 +34,7 @@
     [copiedObject setDateModified:[self dateModified]];
     [copiedObject setEndTime:[self endTime]];
     [copiedObject setExported:[self exported]];
+    [copiedObject setHappyRating:happyRating];
     [copiedObject setJobId:[self jobId]];
     [copiedObject setJobTaskId:[self jobTaskId]];
     [copiedObject setLockedByApproval:[self lockedByApproval]];
@@ -47,6 +48,27 @@
     [copiedObject setValueOfTimeEntry:[self valueOfTimeEntry]];
     [copiedObject setVersion:[self version]];
     return copiedObject;
+}
+
+-(NSString*)happyRatingImage{
+    if ([self.happyRating isEqualToString:kHappyRatingHappy]) {
+        return kHappyRatingHappyImage;
+    }else if ([self.happyRating isEqualToString:kHappyRatingSad]){
+        return kHappyRatingSadImage;
+    }else if ([self.happyRating isEqualToString:kHappyRatingCompleted]){
+        return kHappyRatingCompletedImage;
+    }
+    return kHappyRatingHappyImage;
+}
+
+-(void)nextHappyRating{
+    if ([self.happyRating isEqualToString:kHappyRatingHappy]) {
+        self.happyRating = kHappyRatingSad;
+    }else if ([self.happyRating isEqualToString:kHappyRatingSad]){
+        self.happyRating = kHappyRatingCompleted;
+    }else if ([self.happyRating isEqualToString:kHappyRatingCompleted]){
+        self.happyRating = kHappyRatingHappy;
+    }
 }
 
 @end
