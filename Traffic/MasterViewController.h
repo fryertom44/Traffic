@@ -13,9 +13,10 @@
 @interface MasterViewController : UITableViewController
 {
     NSMutableData *responseData;
-    NSMutableArray *timeEntries;
 }
 
 @property (strong, nonatomic) DetailViewController *detailViewController;
+@property (weak, nonatomic) NSMutableArray *timeEntries;
+@property (weak, nonatomic) NSMutableArray *allocatedTasks;
 
 @end

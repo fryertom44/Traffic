@@ -11,6 +11,7 @@
 @interface GlobalModel : NSObject
 
 + (GlobalModel *)sharedInstance;
+- (void)printOutTasks;
 
 @property (nonatomic,strong) NSMutableArray *timeEntries;
 @property (nonatomic,strong) NSMutableArray *allocatedTasks;

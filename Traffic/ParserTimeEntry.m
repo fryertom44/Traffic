@@ -8,6 +8,8 @@
 
 #import "ParserTimeEntry.h"
 #import "WS_TimeEntry.h"
+#import "NSDate+Helper.h"
+#import "GlobalModel.h"
 
 @implementation ParserTimeEntry
 
@@ -18,7 +20,7 @@
 	return self;
 }
 
-- (NSMutableArray*)parseData:(NSData *)data{
++(void)parseData:(NSData *)data{
     NSMutableArray *timeEntries = [[NSMutableArray alloc] init];
     NSDictionary* json = nil;
     if (data) {
@@ -38,7 +40,7 @@
 		[timeEntry setJobTaskId:[[dict valueForKeyPath:@"jobTaskId.id"]intValue]];
 		[timeEntry setLockedByApproval:[dict objectForKey:@"lockedByApproval"]];
 		[timeEntry setMinutes:[[dict objectForKey:@"minutes"]intValue]];
-		[timeEntry setTaskDescription:[dict objectForKey:@"taskDescription"]];
+		[timeEntry setTaskDescription:[NSMutableString stringWithString:[dict objectForKey:@"taskDescription"]]];
 		[timeEntry setAllocationGroupId:[[dict valueForKeyPath:@"allocationGroupId.id"]intValue]];
 		//[timeEntry setTaskRate:[dict objectForKey:@"taskRate"]];
 		//[timeEntry setTimeEntryCost:[dict objectForKey:@"timeEntryCost"]];
@@ -48,7 +50,9 @@
 		[timeEntry setChargebandId:[[dict valueForKeyPath:@"chargebandId.id"]intValue]];
 		[timeEntry setComment:[dict objectForKey:@"comment"]];
 		[timeEntry setExported:[[dict objectForKey:@"exported"]boolValue]];
-		[timeEntry setEndTime:[dict objectForKey:@"endTime"]];
+        NSString *dateString = [dict objectForKey:@"endTime"];
+        NSDate *endTimeAsDate = [NSDate dateFromString:dateString];
+		[timeEntry setEndTime:endTimeAsDate];
 		[timeEntry setValueOfTimeEntry:[dict objectForKey:@"valueOfTimeEntry"]];
 		NSLog(@"%@:%@", @"id", [dict valueForKeyPath:@"id"]);
 		NSLog(@"%@:%@", @"jobId.id", [dict valueForKeyPath:@"jobId.id"]);
@@ -70,7 +74,8 @@
         
 		[timeEntries addObject:timeEntry];
 	}
-	return timeEntries;
+    GlobalModel *globalModel = [GlobalModel sharedInstance];
+    globalModel.timeEntries = timeEntries;
 }
 
 

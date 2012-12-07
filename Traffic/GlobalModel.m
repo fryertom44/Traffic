@@ -7,6 +7,7 @@
 //
 
 #import "GlobalModel.h"
+#import "WS_JobTask.h"
 
 @implementation GlobalModel
 
@@ -44,6 +45,31 @@ static GlobalModel *sharedInstance = nil;
 // Equally, we don't want to generate multiple copies of the singleton.
 - (id)copyWithZone:(NSZone *)zone {
     return self;
+}
+
+- (NSMutableArray *)timeEntries {
+    if(_timeEntries==nil) {
+        _timeEntries = [[NSMutableArray alloc]init];
+    }
+    return _timeEntries;
+}
+
+- (NSMutableArray *)allocatedTasks {
+    if(_allocatedTasks==nil) {
+        _allocatedTasks = [[NSMutableArray alloc]init];
+    }
+    return _allocatedTasks;
+}
+
+-(void)printOutTasks{
+    for (WS_JobTask *jt in self.allocatedTasks) {
+        NSLog(@"Job Task:%@",jt);
+        NSLog(@"%@:%@", @"description", jt.taskDescription);
+        NSLog(@"%@:%@", @"happyRating", jt.happyRating);
+        NSLog(@"%@:%d", @"isTaskComplete", jt.isTaskComplete);
+        NSLog(@"%@:%@", @"taskDeadline", jt.taskDeadline);
+
+    }
 }
 
 @end

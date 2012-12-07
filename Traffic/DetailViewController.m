@@ -44,7 +44,7 @@ const NSTimeInterval unitOfTime=1;
     }        
 }
 
-- (WS_TimeEntry *)detailItem {
+- (WS_JobTask *)detailItem {
     return _detailItem;
 }
 
@@ -53,17 +53,14 @@ const NSTimeInterval unitOfTime=1;
     // Update the user interface for the detail item.
 
     if (self.detailItem) {
-        self.timesheetDescription.text = self.detailItem.taskDescription;
-        if (self.detailItem.endTime != nil) {
-            self.daysRemainingLabel.text = [NSDate stringForDisplayFromDate:self.detailItem.endTime];
-        } else {
-            self.daysRemainingLabel.text = @"0 days remaining";
-        }
+        self.taskDescription.text = self.detailItem.taskDescription;
+        self.jobTitle.text = @"Job ID Goes Here";
+        self.timesheetTitleInput.text = self.detailItem.taskDescription;
         [[self happyRating]setImage:[UIImage imageNamed:@"happyRatingHappySmall320.png"]];
+        self.daysRemainingLabel.text = [NSString stringWithFormat:@"%d",self.detailItem.daysUntilDeadline];
 //        [[self happyRating]setImage:[UIImage imageNamed:@"happyRatingCompletedSmall320.png"]];
 //        [[self happyRating]setImage:[UIImage imageNamed:@"happyRatingSadSmall320.png"]];
 
-        self.billableSwitch.on = self.detailItem.billable;
         self.timerLabel.text = @"00:00:00";
     }
 }
@@ -200,7 +197,7 @@ const NSTimeInterval unitOfTime=1;
 {
     UIDatePicker *picker = (UIDatePicker*)self.startTimeInput.inputView;
     self.startTimeInput.text = [NSString stringWithFormat:@"%@",picker.date];
-    self.detailItem.startTime = picker.date;
+//    self.detailItem.startTime = picker.date;
     [[self startTimeInput] resignFirstResponder];
 }
 
@@ -208,7 +205,7 @@ const NSTimeInterval unitOfTime=1;
 {
     UIDatePicker *picker = (UIDatePicker*)self.endTimeInput.inputView;
     self.endTimeInput.text = [NSString stringWithFormat:@"%@",picker.date];
-    self.detailItem.endTime = picker.date;
+//    self.detailItem.endTime = picker.date;
     [[self endTimeInput] resignFirstResponder];
 }
 

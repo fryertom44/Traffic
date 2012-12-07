@@ -1,29 +1,30 @@
 //
-//  LoadTimeEntriesCommand.m
+//  LoadJobTasksCommand.m
 //  Traffic
 //
 //  Created by Tom Fryer on 12/11/2012.
 //  Copyright (c) 2012 Tom Fryer. All rights reserved.
 //
 
-#import "LoadTimeEntriesCommand.h"
-#import "ParserTimeEntry.h"
+#import "LoadJobTasksCommand.h"
+#import "ParserJobTask.h"
 #import "GlobalModel.h"
 
-@implementation LoadTimeEntriesCommand
+@implementation LoadJobTasksCommand
 @synthesize responseData;
 
-- (void)executeAndUpdateComponent:(id)component {
-    
+- (void)executeAndUpdateComponent:(id)component
+                             page:(int)page{
 	responseData = [NSMutableData data];
 	componentToUpdate = component;
-	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://api.sohnar.com/TrafficLiteServer/openapi/timeentries?startDate=2010-01-01&endDate=2015-01-01"]];
+    NSString *urlString = [NSString stringWithFormat:@"https://api.sohnar.com/TrafficLiteServer/openapi/timeallocations/jobtasks?currentPage=%d",page];
+	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]];
 	[request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
 	
 	NSURLConnection *myConnection = [NSURLConnection connectionWithRequest:request delegate:self];
 	
 	[myConnection start];
-
+    
 }
 
 #pragma mark - NSURLConnection Delegates
@@ -60,18 +61,18 @@
 	//---shows the JSON ---
 	NSLog(@"%@", theJSON);
 	
-    [ParserTimeEntry parseData:responseData];
+    [ParserJobTask parseData:responseData];
     
     GlobalModel *globalModel = [GlobalModel sharedInstance];
     
-	if(globalModel.timeEntries)
+	if(globalModel.allocatedTasks)
     {
         NSLog(@"No Errors");
         [componentToUpdate reloadData];
     }
     else
-		NSLog(@"Error - there are no time entries!!!");
-
+		NSLog(@"Error - there are no job tasks!!!");
+    
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {

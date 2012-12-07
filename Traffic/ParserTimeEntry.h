@@ -13,6 +13,6 @@
 	NSMutableString* currentElementValue;
 }
 
-- (ParserTimeEntry *) initParser;
-- (NSMutableArray*)parseData:(NSData*)data;
+//- (ParserTimeEntry *) initParser;
++ (void)parseData:(NSData*)data;
 @end

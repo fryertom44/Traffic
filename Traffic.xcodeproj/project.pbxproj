@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		91110E49166EACDE00BBB7F8 /* GlobalModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 91110E48166EACDE00BBB7F8 /* GlobalModel.m */; };
+		91110E4C166FE68D00BBB7F8 /* LoadJobTasksCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 91110E4B166FE68D00BBB7F8 /* LoadJobTasksCommand.m */; };
+		91110E4F166FEA3700BBB7F8 /* WS_JobTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 91110E4E166FEA3700BBB7F8 /* WS_JobTask.m */; };
+		91110E52166FEA9E00BBB7F8 /* ParserJobTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 91110E51166FEA9D00BBB7F8 /* ParserJobTask.m */; };
 		9177C23E162B4268004719B6 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9177C23D162B4268004719B6 /* UIKit.framework */; };
 		9177C240162B4268004719B6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9177C23F162B4268004719B6 /* Foundation.framework */; };
 		9177C242162B4268004719B6 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9177C241162B4268004719B6 /* CoreGraphics.framework */; };
@@ -58,6 +61,12 @@
 /* Begin PBXFileReference section */
 		91110E47166EACDE00BBB7F8 /* GlobalModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GlobalModel.h; sourceTree = "<group>"; };
 		91110E48166EACDE00BBB7F8 /* GlobalModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GlobalModel.m; sourceTree = "<group>"; };
+		91110E4A166FE68C00BBB7F8 /* LoadJobTasksCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadJobTasksCommand.h; sourceTree = "<group>"; };
+		91110E4B166FE68D00BBB7F8 /* LoadJobTasksCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadJobTasksCommand.m; sourceTree = "<group>"; };
+		91110E4D166FEA3700BBB7F8 /* WS_JobTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WS_JobTask.h; sourceTree = "<group>"; };
+		91110E4E166FEA3700BBB7F8 /* WS_JobTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WS_JobTask.m; sourceTree = "<group>"; };
+		91110E50166FEA9D00BBB7F8 /* ParserJobTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParserJobTask.h; sourceTree = "<group>"; };
+		91110E51166FEA9D00BBB7F8 /* ParserJobTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParserJobTask.m; sourceTree = "<group>"; };
 		9177C239162B4268004719B6 /* Traffic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Traffic.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9177C23D162B4268004719B6 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		9177C23F162B4268004719B6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -198,6 +207,8 @@
 				9177C258162B4268004719B6 /* MainStoryboard_iPad.storyboard */,
 				91BA648C1655A6E300B91A41 /* KeychainItemWrapper.h */,
 				91BA648D1655A6E300B91A41 /* KeychainItemWrapper.m */,
+				91110E4A166FE68C00BBB7F8 /* LoadJobTasksCommand.h */,
+				91110E4B166FE68D00BBB7F8 /* LoadJobTasksCommand.m */,
 				91BA647916516A8900B91A41 /* LoadTimeEntriesCommand.h */,
 				91BA647A16516A8900B91A41 /* LoadTimeEntriesCommand.m */,
 				91BA64841653E87900B91A41 /* LoginOperation.h */,
@@ -206,10 +217,14 @@
 				9177C267162B450C004719B6 /* LoginViewController.m */,
 				91BA64821651949900B91A41 /* Money.h */,
 				91BA64831651949900B91A41 /* Money.m */,
+				91110E50166FEA9D00BBB7F8 /* ParserJobTask.h */,
+				91110E51166FEA9D00BBB7F8 /* ParserJobTask.m */,
 				91BA647C16516BB300B91A41 /* ParserTimeEntry.h */,
 				91BA647D16516BB300B91A41 /* ParserTimeEntry.m */,
 				91BA647E16516BB400B91A41 /* WS_TimeEntry.h */,
 				91BA648016516BDF00B91A41 /* WS_TimeEntry.m */,
+				91110E4D166FEA3700BBB7F8 /* WS_JobTask.h */,
+				91110E4E166FEA3700BBB7F8 /* WS_JobTask.m */,
 				9177C25B162B4268004719B6 /* MasterViewController.h */,
 				9177C25C162B4268004719B6 /* MasterViewController.m */,
 				91BA64A91659927D00B91A41 /* UIColor+CreateMethods.h */,
@@ -218,9 +233,9 @@
 				91BA64B2165BDDD900B91A41 /* NSDate+Helper.m */,
 				9177C25E162B4268004719B6 /* DetailViewController.h */,
 				9177C25F162B4268004719B6 /* DetailViewController.m */,
-				91BA648F1657F99000B91A41 /* TimeEntryCell.h */,
 				9185847F165D484200A2950E /* BaseObject.h */,
 				91858480165D484200A2950E /* BaseObject.m */,
+				91BA648F1657F99000B91A41 /* TimeEntryCell.h */,
 				91BA64901657F99100B91A41 /* TimeEntryCell.m */,
 				9177C244162B4268004719B6 /* Supporting Files */,
 				91BA64B4165C3F7900B91A41 /* PGToggleButton.h */,
@@ -346,6 +361,9 @@
 				91BA64B6165C3F7B00B91A41 /* PGToggleButton.m in Sources */,
 				91858481165D484200A2950E /* BaseObject.m in Sources */,
 				91110E49166EACDE00BBB7F8 /* GlobalModel.m in Sources */,
+				91110E4C166FE68D00BBB7F8 /* LoadJobTasksCommand.m in Sources */,
+				91110E4F166FEA3700BBB7F8 /* WS_JobTask.m in Sources */,
+				91110E52166FEA9E00BBB7F8 /* ParserJobTask.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

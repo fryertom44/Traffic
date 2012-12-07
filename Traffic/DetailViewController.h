@@ -9,18 +9,18 @@
 #import <UIKit/UIKit.h>
 #import "WS_TimeEntry.h"
 #import "PGToggleButton.h"
+#import "WS_JobTask.h"
 
-@class WS_TimeEntry;
+@class WS_JobTask;
 
 @interface DetailViewController : UITableViewController <UISplitViewControllerDelegate,UITextFieldDelegate>
 
-@property (strong, nonatomic) WS_TimeEntry *detailItem;
-//@property (nonatomic, retain) NSDateFormatter *dateFormatter;
+@property (strong, nonatomic) WS_JobTask *detailItem;
 @property (weak, nonatomic) NSTimer *myTimer;
 @property (strong, nonatomic) NSDate *timerStartDate;
 @property (nonatomic) double timeElapsedInterval;
 
-@property (weak, nonatomic) IBOutlet UILabel *timesheetDescription;
+@property (weak, nonatomic) IBOutlet UILabel *taskDescription;
 @property (weak, nonatomic) IBOutlet UILabel *jobTitle;
 @property (weak, nonatomic) IBOutlet UIImageView *happyRating;
 @property (weak, nonatomic) IBOutlet UILabel *daysRemainingLabel;
