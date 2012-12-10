@@ -12,12 +12,12 @@
 
 @interface WS_TimeEntry : BaseObject {
 	
-	 int timeEntryId;
-	 int jobTaskId;
-	 int trafficEmployeeId;
-	 int jobId;
-	 int allocationGroupId;
-	 int chargebandId;
+	NSNumber* timeEntryId;
+	NSNumber* jobTaskId;
+	NSNumber* trafficEmployeeId;
+	NSNumber* jobId;
+	NSNumber* allocationGroupId;
+	NSNumber* chargebandId;
 	bool billable;
 	bool exported;
 	bool lockedByApproval;
@@ -25,35 +25,35 @@
     NSString*happyRating;
     NSDate *startTime;
 	NSDate *endTime;
-	 int minutes;
+	NSNumber* minutes;
 	NSString*taskDescription;
 	Money*taskRate;
 	Money*valueOfTimeEntry;
 	Money*timeEntryCost;
 	NSDate*dateModified;
-    int version;
+    NSNumber* version;
 }
 
-@property int timeEntryId;
-@property int jobTaskId;
-@property int trafficEmployeeId;
-@property int jobId;
-@property int allocationGroupId;
-@property int chargebandId;
+@property (nonatomic, retain) NSNumber* timeEntryId;
+@property (nonatomic, retain) NSNumber* jobTaskId;
+@property (nonatomic, retain) NSNumber* trafficEmployeeId;
+@property (nonatomic, retain) NSNumber* jobId;
+@property (nonatomic, retain) NSNumber* allocationGroupId;
+@property (nonatomic, retain) NSNumber* chargebandId;
 @property bool billable;
 @property bool exported;
 @property bool lockedByApproval;
-@property (nonatomic, retain)NSString*comment;
-@property (nonatomic, retain)NSString*happyRating;
-@property (nonatomic, retain)NSDate*startTime;
-@property (nonatomic, retain)NSDate*endTime;
-@property int minutes;
-@property (nonatomic, retain)NSString*taskDescription;
-@property (nonatomic, retain)Money*taskRate;
-@property (nonatomic, retain)Money*valueOfTimeEntry;
-@property (nonatomic, retain)Money*timeEntryCost;
-@property (nonatomic, retain)NSDate*dateModified;
-@property int version;
+@property (nonatomic, retain) NSString*comment;
+@property (nonatomic, retain) NSString*happyRating;
+@property (nonatomic, retain) NSDate*startTime;
+@property (nonatomic, retain) NSDate*endTime;
+@property (nonatomic, retain) NSNumber* minutes;
+@property (nonatomic, retain) NSString*taskDescription;
+@property (nonatomic, retain) Money*taskRate;
+@property (nonatomic, retain) Money*valueOfTimeEntry;
+@property (nonatomic, retain) Money*timeEntryCost;
+@property (nonatomic, retain) NSDate*dateModified;
+@property (nonatomic, retain) NSNumber* version;
 
 -(NSString*)happyRatingImage;
 -(void)nextHappyRating;

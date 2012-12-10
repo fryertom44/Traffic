@@ -130,6 +130,14 @@ const NSTimeInterval unitOfTime=1;
     // Dispose of any resources that can be recreated.
 }
 
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([[segue identifier] isEqualToString:@"showTaskDetail"]) {
+        [[segue destinationViewController] setTask:self.task];
+        [[segue destinationViewController] setTimesheet:self.timesheet];
+    }
+}
+
 #pragma mark - Split view
 
 - (void)splitViewController:(UISplitViewController *)splitController willHideViewController:(UIViewController *)viewController withBarButtonItem:(UIBarButtonItem *)barButtonItem forPopoverController:(UIPopoverController *)popoverController

@@ -35,8 +35,9 @@
         [jobTask setHappyRating:[dict valueForKeyPath:@"happyRating"]];
         [jobTask setIsTaskComplete:[[dict valueForKeyPath:@"isTaskComplete"]boolValue]];
         [jobTask setTaskDeadline:[df dateFromString:[dict valueForKeyPath:@"taskDeadline"]]];
-        [jobTask setJobTaskId:[[dict valueForKey:@"jobTaskId.id"]intValue]];
-		[jobTask setTrafficEmployeeId:[[dict valueForKey:@"trafficEmployeeId.id"]intValue]];
+        [jobTask setJobTaskId:[NSNumber numberWithInt:[[dict valueForKeyPath:@"jobTaskId.id"]intValue]]];
+        [jobTask setJobId:[NSNumber numberWithInt:[[dict valueForKeyPath:@"jobId.id"]intValue]]];
+		[jobTask setTrafficEmployeeId:[NSNumber numberWithInt:[[dict valueForKeyPath:@"trafficEmployeeId.id"]intValue]]];
         
         [jobTasks addObject:jobTask];
 	}

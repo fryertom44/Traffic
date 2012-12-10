@@ -149,12 +149,8 @@
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         GlobalModel* globalModel = [GlobalModel sharedInstance];
         WS_JobTask *task = globalModel.allocatedTasks[indexPath.row];
-        WS_TimeEntry *timesheet = [[WS_TimeEntry alloc]init];
-        timesheet.happyRating = task.happyRating;
-        timesheet.jobTaskId = task.jobTaskId;
-        timesheet.trafficEmployeeId = task.trafficEmployeeId;
         self.detailViewController.task = task;
-        self.detailViewController.timesheet = timesheet;
+        self.detailViewController.timesheet = [self prepareNewTimesheetFromTask:task];
     }
 }
 
@@ -164,17 +160,22 @@
         GlobalModel* globalModel = [GlobalModel sharedInstance];
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
         WS_JobTask *task = globalModel.allocatedTasks[indexPath.row];
-        WS_TimeEntry *timesheet = [[WS_TimeEntry alloc]init];
-        timesheet.happyRating = task.happyRating;
-        timesheet.jobTaskId = task.jobTaskId;
-        timesheet.trafficEmployeeId = task.trafficEmployeeId;
         [[segue destinationViewController] setTask:task];
-        [[segue destinationViewController] setTimesheet:timesheet];
+        [[segue destinationViewController] setTimesheet:[self prepareNewTimesheetFromTask:task]];
 
     }
 }
 
-- (NSMutableArray *)timeEntries {
+- (WS_TimeEntry*)prepareNewTimesheetFromTask:(WS_JobTask*)task{
+    WS_TimeEntry *timesheet = [[WS_TimeEntry alloc]init];
+    timesheet.happyRating = task.happyRating;
+    timesheet.jobTaskId = task.jobTaskId;
+    timesheet.jobId = task.jobId;
+    timesheet.trafficEmployeeId = task.trafficEmployeeId;
+    return timesheet;
+}
+
+- (NSMutableArray*)timeEntries {
     GlobalModel *sharedModel = [GlobalModel sharedInstance];
     return [sharedModel timeEntries];
 }

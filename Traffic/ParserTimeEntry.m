@@ -28,24 +28,24 @@
 	for (NSDictionary *dict in jsonObjects)
 	{
 		WS_TimeEntry *timeEntry = [[WS_TimeEntry alloc] init];
-		[timeEntry setTimeEntryId:[[dict valueForKey:@"id"] intValue]];
-		[timeEntry setJobId:[[dict valueForKeyPath:@"jobId.id"]intValue]];
-		[timeEntry setJobTaskId:[[dict valueForKeyPath:@"jobTaskId.id"]intValue]];
+		[timeEntry setTimeEntryId:[NSNumber numberWithInt:[[dict valueForKey:@"id"] intValue]]];
+		[timeEntry setJobId:[NSNumber numberWithInt:[[dict valueForKeyPath:@"jobId.id"]intValue]]];
+		[timeEntry setJobTaskId:[NSNumber numberWithInt:[[dict valueForKeyPath:@"jobTaskId.id"]intValue]]];
 		[timeEntry setLockedByApproval:[dict objectForKey:@"lockedByApproval"]];
-		[timeEntry setMinutes:[[dict objectForKey:@"minutes"]intValue]];
+		[timeEntry setMinutes:[NSNumber numberWithInt:[[dict objectForKey:@"minutes"]intValue]]];
 		[timeEntry setTaskDescription:[NSMutableString stringWithString:[dict objectForKey:@"taskDescription"]]];
-		[timeEntry setAllocationGroupId:[[dict valueForKeyPath:@"allocationGroupId.id"]intValue]];
+		[timeEntry setAllocationGroupId:[NSNumber numberWithInt:[[dict valueForKeyPath:@"allocationGroupId.id"]intValue]]];
 		//[timeEntry setTaskRate:[dict objectForKey:@"taskRate"]];
-		//[timeEntry setTimeEntryCost:[dict objectForKey:@"timeEntryCost"]];
-		[timeEntry setTrafficEmployeeId:[[dict valueForKeyPath:@"trafficEmployeeId.id"]intValue]];
+		//[timeEntry setTimeEntryCost:[dict objectForKey:@"timeEntryCost"]];]
+		[timeEntry setTrafficEmployeeId:[NSNumber numberWithInt:[[dict valueForKeyPath:@"trafficEmployeeId.id"]intValue]]];
 		[timeEntry setBillable:[[dict objectForKey:@"billable"]boolValue]];
-		[timeEntry setVersion:[[dict objectForKey:@"version"]intValue]];
-		[timeEntry setChargebandId:[[dict valueForKeyPath:@"chargebandId.id"]intValue]];
+		[timeEntry setVersion:[NSNumber numberWithInt:[[dict objectForKey:@"version"]intValue]]];
+		[timeEntry setChargebandId:[NSNumber numberWithInt:[[dict valueForKeyPath:@"chargebandId.id"]intValue]]];
 		[timeEntry setComment:[dict objectForKey:@"comment"]];
 		[timeEntry setExported:[[dict objectForKey:@"exported"]boolValue]];
-        NSString *dateString = [dict objectForKey:@"endTime"];
-        NSDate *endTimeAsDate = [NSDate dateFromString:dateString];
-		[timeEntry setEndTime:endTimeAsDate];
+//        NSString *dateString = [dict objectForKey:@"endTime"];
+//        NSDate *endTimeAsDate = [NSDate dateFromString:[dict objectForKey:@"endTime"]];
+		[timeEntry setEndTime:[NSDate dateFromString:[dict objectForKey:@"endTime"]]];
 		[timeEntry setValueOfTimeEntry:[dict objectForKey:@"valueOfTimeEntry"]];
 		NSLog(@"%@:%@", @"id", [dict valueForKeyPath:@"id"]);
 		NSLog(@"%@:%@", @"jobId.id", [dict valueForKeyPath:@"jobId.id"]);

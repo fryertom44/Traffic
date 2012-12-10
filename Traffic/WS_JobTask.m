@@ -15,6 +15,7 @@
 @synthesize isTaskComplete;
 @synthesize taskDeadline;
 @synthesize jobTaskId;
+@synthesize jobId;
 @synthesize trafficEmployeeId;
 @synthesize totalTimeLoggedMinutes;
 
@@ -31,7 +32,6 @@
 }
 
 -(NSUInteger)daysUntilDeadline{
-    // get a midnight version of ourself:
 	NSDateFormatter *df = [[NSDateFormatter alloc] init];
 	[df setDateFormat:@"dd-MM-yyyy"];
 	NSDate *currentDate = [[NSDate alloc]init];
