@@ -7,12 +7,13 @@
 //
 
 #import "GlobalModel.h"
-#import "WS_JobTask.h"
+#import "WS_JobTaskAllocation.h"
 
 @implementation GlobalModel
 
 @synthesize timeEntries=_timeEntries;
-@synthesize allocatedTasks=_allocatedTasks;
+@synthesize taskAllocations=_allocatedTasks;
+@synthesize selectedJobTask=_selectedJobTask;
 
 static GlobalModel *sharedInstance = nil;
 
@@ -54,16 +55,16 @@ static GlobalModel *sharedInstance = nil;
     return _timeEntries;
 }
 
-- (NSMutableArray *)allocatedTasks {
+- (NSMutableArray *)taskAllocations {
     if(_allocatedTasks==nil) {
         _allocatedTasks = [[NSMutableArray alloc]init];
     }
     return _allocatedTasks;
 }
 
--(void)printOutTasks{
-    for (WS_JobTask *jt in self.allocatedTasks) {
-        NSLog(@"Job Task:%@",jt);
+-(void)printOutTaskAllocations{
+    for (WS_JobTaskAllocation *jt in self.taskAllocations) {
+        NSLog(@"Task Allocation:%@",jt);
         NSLog(@"%@:%@", @"description", jt.taskDescription);
         NSLog(@"%@:%@", @"happyRating", jt.happyRating);
         NSLog(@"%@:%d", @"isTaskComplete", jt.isTaskComplete);

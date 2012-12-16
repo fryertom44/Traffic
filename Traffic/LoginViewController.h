@@ -21,7 +21,7 @@
 
 @end
 
-@interface LoginViewController : UIViewController <LoginOperationDelegate, UITextFieldDelegate> {
+@interface LoginViewController : UITableViewController <LoginOperationDelegate, UITextFieldDelegate> {
     
 }
 
@@ -34,7 +34,6 @@
 @property (nonatomic, retain) IBOutlet UITextField              *passwordTextField;
 @property (nonatomic, retain) IBOutlet UIButton                 *submitButton;
 @property (nonatomic, retain) IBOutlet UIActivityIndicatorView  *waitIndicator;
-@property (nonatomic, retain) IBOutlet UITextView               *errorMessageTextView;
 
 // Actions
 - (IBAction)submit:(id)sender;

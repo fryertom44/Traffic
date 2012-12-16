@@ -7,7 +7,6 @@
 //
 
 #import "TaskDetailViewController.h"
-#import "LoadJobCommand.h"
 #import "LoadJobDetailCommand.h"
 #import "LoadTrafficEmployeeCommand.h"
 #import "LoadProjectCommand.h"
@@ -42,8 +41,7 @@
  
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-
-    [self.tableView reloadData];
+    [self configureView];
 }
 
 - (void)didReceiveMemoryWarning
@@ -56,22 +54,16 @@
 {
     if (_timesheet != newTimesheet) {
         _timesheet = newTimesheet;
-        [_timesheet saveState];
         
         // Update the view.
         [self configureViewWithTimesheetDetails];
-        
-        LoadJobCommand *loadJobCommand = [[LoadJobCommand alloc]init];
-        [loadJobCommand executeAndUpdateComponent:self
-                                            jobId:self.timesheet.jobId];
     }
 }
 
-- (void)setTask:(WS_JobTask*)newTask
+- (void)setTask:(WS_JobTask *)task
 {
-    if (_task != newTask) {
-        _task = newTask;
-        [_task saveState];
+    if (_task != task) {
+        _task = task;
         
         // Update the view.
         [self configureViewWithTaskDetails];
@@ -82,13 +74,9 @@
 {
     if (_job != newJob) {
         _job = newJob;
-//        [_job saveState];
         
         // Update the view.
         [self configureViewWithJobDetails];
-        LoadJobDetailCommand *loadJobDetailCommand = [[LoadJobDetailCommand alloc]init];
-        [loadJobDetailCommand executeAndUpdateComponent:self
-                                             jobDetailId:self.job.jobDetailId];
     }
 }
 
@@ -96,7 +84,6 @@
 {
     if (_jobDetail != newJobDetail) {
         _jobDetail = newJobDetail;
-//        [_jobDetail saveState];
         
         // Update the view.
         [self configureViewWithJobDetailDetails];
@@ -112,60 +99,76 @@
 {
     if (_employee != newEmployee) {
         _employee = newEmployee;
-        //        [newEmployee saveState];
         
         // Update the view.
         [self configureViewWithEmployeeDetails];
     }
 }
 
+- (void)setProject:(WS_Project*)newProject
+{
+    if (_project != newProject) {
+        _project = newProject;
+        
+        // Update the view.
+        [self configureViewWithProjectDetails];
+    }
+}
+
+- (void)configureView
+{
+    [self configureViewWithTaskDetails];
+    [self configureViewWithTimesheetDetails];
+    [self configureViewWithEmployeeDetails];
+    [self configureViewWithJobDetailDetails];
+    [self configureViewWithJobDetails];
+    [self configureViewWithProjectDetails];
+    [self.tableView reloadData];
+}
+
 - (void)configureViewWithTimesheetDetails
 {
-    
-    if (self.timesheet) {
-        self.jobNoLabel.text = [NSString stringWithFormat:@"%@",self.timesheet.jobId.stringValue];
-        [self.tableView reloadData];
+    if (self.timesheet!=nil) {
+        //update view with timesheet infos
     }
 }
 
 - (void)configureViewWithTaskDetails
 {
-    if(self.task) {
-        self.taskDeadlineLabel.text = [NSString stringWithFormat:@"%d",self.task.daysUntilDeadline];
-        self.taskDescriptionLabel.text = self.task.taskDescription;
-        [self.tableView reloadData];
+    if(self.task!=nil) {
+        self.taskDeadlineLabel.text = [NSString stringWithFormat:@"%@",self.task.taskDeadline];
+        self.taskDescriptionLabel.text = self.task.jobTaskDescription;
+        self.taskNotesLabel.text = self.task.internalNote;
+        self.stageLabel.text = self.task.jobStageDescription;
     }
 }
 
 - (void)configureViewWithJobDetails
 {
-    if(self.job) {
+    if(self.job!=nil) {
+        self.jobNoLabel.text = self.job.jobNumber;
         self.jobDeadlineLabel.text = [NSString stringWithFormat:@"%@",self.job.jobDeadline];
-        [self.tableView reloadData];
     }
 }
 
 - (void)configureViewWithJobDetailDetails
 {
-    if(self.jobDetail) {
+    if(self.jobDetail!=nil) {
         self.jobNameLabel.text = [NSString stringWithFormat:@"%@",self.jobDetail.jobTitle];
-        [self.tableView reloadData];
     }
 }
 
-- (void) configureViewWithEmployeeDetails
+- (void)configureViewWithEmployeeDetails
 {
-    if (self.employee) {
+    if (self.employee!=nil) {
         self.ownerLabel.text = [NSString stringWithFormat:@"%@ %@",self.employee.firstName,self.employee.lastName];
-        [self.tableView reloadData];
     }
 }
 
-- (void) configureViewWithProjectDetails
+- (void)configureViewWithProjectDetails
 {
-    if(self.project){
+    if(self.project!=nil){
         self.projectLabel.text = [NSString stringWithFormat:@"%@",self.project.projectName];
-        [self.tableView reloadData];
     }
 }
 

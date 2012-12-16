@@ -24,14 +24,14 @@
 @property (strong,nonatomic) WS_Project *project;
 @property (strong,nonatomic) WS_Client *client;
 
-@property (weak, nonatomic) IBOutlet UITextField *jobNoLabel;
-@property (weak, nonatomic) IBOutlet UITextField *clientLabel;
-@property (weak, nonatomic) IBOutlet UITextField *projectLabel;
-@property (weak, nonatomic) IBOutlet UITextField *stageLabel;
-@property (weak, nonatomic) IBOutlet UITextField *jobNameLabel;
-@property (weak, nonatomic) IBOutlet UITextField *jobDeadlineLabel;
-@property (weak, nonatomic) IBOutlet UITextField *taskDeadlineLabel;
-@property (weak, nonatomic) IBOutlet UITextField *ownerLabel;
+@property (weak, nonatomic) IBOutlet UILabel *jobNoLabel;
+@property (weak, nonatomic) IBOutlet UILabel *clientLabel;
+@property (weak, nonatomic) IBOutlet UILabel *projectLabel;
+@property (weak, nonatomic) IBOutlet UILabel *stageLabel;
+@property (weak, nonatomic) IBOutlet UILabel *jobNameLabel;
+@property (weak, nonatomic) IBOutlet UILabel *jobDeadlineLabel;
+@property (weak, nonatomic) IBOutlet UILabel *taskDeadlineLabel;
+@property (weak, nonatomic) IBOutlet UILabel *ownerLabel;
 @property (weak, nonatomic) IBOutlet UILabel *taskDescriptionLabel;
 @property (weak, nonatomic) IBOutlet UILabel *taskNotesLabel;
 @property (weak, nonatomic) IBOutlet UILabel *briefLabel;

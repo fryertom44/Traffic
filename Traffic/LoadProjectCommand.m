@@ -72,22 +72,14 @@
                 JSONObjectWithData:responseData
                 options:kNilOptions
                 error:nil];
-    }
-    NSArray *jsonObjects = [json objectForKey:@"resultList"];
-	
-    NSDateFormatter* df = [[NSDateFormatter alloc]init];
-    [df setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSSZ"];
-    
-	for (NSDictionary *dict in jsonObjects)
-	{
-		WS_Project *project = [[WS_Project alloc] init];
-		[project setProjectId:[NSNumber numberWithInt:[[dict valueForKeyPath:@"id"]intValue]]];
-        [project setProjectName:[dict valueForKeyPath:@"name"]];
+        
+        WS_Project *project = [[WS_Project alloc] init];
+		[project setProjectId:[NSNumber numberWithInt:[[json valueForKeyPath:@"id"]intValue]]];
+        [project setProjectName:[json valueForKeyPath:@"name"]];
         
         TaskDetailViewController *tdvc = (TaskDetailViewController*)componentToUpdate;
         [tdvc setProject:project];
-	}
-    
+    }
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {

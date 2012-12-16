@@ -10,6 +10,8 @@
 #import "WS_TimeEntry.h"
 #import "NSDate+Helper.h"
 #import "Constants.h"
+#import "LoadJobCommand.h"
+#import "LoadJobDetailCommand.h"
 
 @interface DetailViewController ()
 @property (strong, nonatomic) UIPopoverController *masterPopoverController;
@@ -25,48 +27,151 @@ const NSTimeInterval unitOfTime=1;
 @synthesize myTimer;
 @synthesize timerStartDate;
 @synthesize timesheet = _timesheet;
+@synthesize taskAllocation=_taskAllocation;
+@synthesize job=_job;
+@synthesize jobDetail=_jobDetail;
+@synthesize task=_task;
 @synthesize startTimeInput = _startTimeInput;
 
 #pragma mark - Managing the detail item
 
-- (void)setTimesheet:(id)newTimesheet
+- (void)setTimesheet:(WS_TimeEntry*)newTimesheet
 {
     if (_timesheet != newTimesheet) {
         _timesheet = newTimesheet;
-        [_timesheet saveState];
+        //[_timesheet saveState];
         
         // Update the view.
-        [self configureView];
+        [self displayTimesheetDetails];
     }
 
     if (self.masterPopoverController != nil) {
         [self.masterPopoverController dismissPopoverAnimated:YES];
-    }        
+    }
 }
 
-- (WS_TimeEntry *)timesheet {
-    return _timesheet;
+- (void)setTaskAllocation:(WS_JobTaskAllocation*)newTask
+{
+    if (_taskAllocation != newTask) {
+        _taskAllocation = newTask;
+        //[_taskAllocation saveState];
+        
+        // Update the view.
+        [self displayTaskAllocationDetails];
+        
+        LoadJobCommand *loadJobCommand = [[LoadJobCommand alloc]init];
+        [loadJobCommand executeAndUpdateComponent:self
+                                            jobId:_taskAllocation.jobId
+                                        optionalJobTaskId:_taskAllocation.jobTaskId];
+    }
+    
+    if (self.masterPopoverController != nil) {
+        [self.masterPopoverController dismissPopoverAnimated:YES];
+    }
+}
+
+
+- (void)setJob:(WS_Job*)newJob
+{
+    if (_job != newJob) {
+        _job = newJob;
+        //[_job saveState];
+        
+        // Update the view.
+        [self displayJobDetails];
+        LoadJobDetailCommand *loadJobDetailCommand = [[LoadJobDetailCommand alloc]init];
+        [loadJobDetailCommand executeAndUpdateComponent:self
+                                            jobDetailId:self.job.jobDetailId];
+    }
+    
+    if (self.masterPopoverController != nil) {
+        [self.masterPopoverController dismissPopoverAnimated:YES];
+    }
+}
+
+- (void)setTask:(WS_JobTask *)newTask
+{
+    if (_task != newTask) {
+        _task = newTask;
+        
+        // Update the view.
+        [self displayTaskDetails];
+    }
+    
+    if (self.masterPopoverController != nil) {
+        [self.masterPopoverController dismissPopoverAnimated:YES];
+    }
+}
+
+- (void)setJobDetail:(WS_JobDetail *)jobDetail
+{
+    if (_jobDetail != jobDetail) {
+        _jobDetail = jobDetail;
+        
+        // Update the view.
+        [self displayJobDetailsDetails];
+    }
+    
+    if (self.masterPopoverController != nil) {
+        [self.masterPopoverController dismissPopoverAnimated:YES];
+    }
+}
+
+- (void)displayTimesheetDetails
+{
+    // Update the user interface for the detail item.
+    
+    if (self.timesheet!=nil) {
+        [self.happyRatingButton setImage:[UIImage imageNamed:self.timesheet.happyRatingImage] forState:UIControlStateNormal];
+        self.timerLabel.text = @"00:00:00";
+    }
+}
+
+-(void)displayJobDetails
+{
+    if(self.job!=nil){
+        //Anything to do here?
+    }
+    
+}
+
+-(void)displayJobDetailsDetails
+{
+    if(self.jobDetail!=nil){
+        self.jobTitle.text = [NSString stringWithFormat:@"%@:%@",self.job.jobNumber,self.jobDetail.jobTitle];
+    }
+}
+
+- (void)displayTaskAllocationDetails
+{
+    if(self.taskAllocation!=nil) {
+        self.daysRemainingLabel.text = [NSString stringWithFormat:@"%d",self.taskAllocation.daysUntilDeadline];
+    }
+}
+
+- (void)displayTaskDetails
+{
+    if(self.task!=nil) {
+        NSNumber *totalLoggedMinutes = [NSNumber numberWithFloat:self.task.totalTimeLoggedMinutes.floatValue + self.task.totalTimeLoggedBillableMinutes.floatValue];
+        float progressAsFloat = totalLoggedMinutes.floatValue / self.task.totalTimeAllocatedMinutes.floatValue;
+        [self.taskProgress setProgress:progressAsFloat animated:YES];
+        self.progressLabel.text = [NSString stringWithFormat:@"%@ of %@",totalLoggedMinutes,self.task.totalTimeAllocatedMinutes];
+        
+        if(self.task.jobTaskDescription!=nil)
+            self.taskDescription.text = self.task.jobTaskDescription;
+    }
 }
 
 - (void)configureView
 {
-    // Update the user interface for the detail item.
-
-    if (self.timesheet) {
-        self.taskDescription.text = self.timesheet.taskDescription;
-        self.jobTitle.text = @"Job ID Goes Here";
-        [self.happyRatingButton setImage:[UIImage imageNamed:self.timesheet.happyRatingImage] forState:UIControlStateNormal];
-        self.timerLabel.text = @"00:00:00";
-    }
-    
-    if(self.task) {
-        self.daysRemainingLabel.text = [NSString stringWithFormat:@"%d",self.task.daysUntilDeadline];
-        self.timesheetTitleInput.text = self.task.taskDescription;
-
-    }
+    [self displayTimesheetDetails];
+    [self displayTaskAllocationDetails];
+    [self displayTaskDetails];
+    [self displayJobDetails];
+    [self displayJobDetailsDetails];
 }
 
-- (UIToolbar *)newKeyboardViewWithDoneMethod:(SEL)doneMethod cancelMethod:(SEL)cancelMethod
+- (UIToolbar *)newKeyboardViewWithDoneMethod:(SEL)doneMethod cancelMethod:(SEL)cancelMethod forComponent:(id)component
 {
     UIToolbar* keyboardDoneButtonView = [[UIToolbar alloc] init];
     keyboardDoneButtonView.barStyle = UIBarStyleBlack;
@@ -96,7 +201,7 @@ const NSTimeInterval unitOfTime=1;
     
     UIDatePicker *timePicker = [[UIDatePicker alloc]init];
     [timePicker setDate:[NSDate date]];
-    [timePicker setDatePickerMode:UIDatePickerModeTime];
+    [timePicker setDatePickerMode:UIDatePickerModeDateAndTime];
     [self.startTimeInput setInputView:timePicker];
     [self.endTimeInput setInputView:timePicker];
     
@@ -109,17 +214,12 @@ const NSTimeInterval unitOfTime=1;
     [durationPicker setDate:[NSDate date]];
     [durationPicker setDatePickerMode:UIDatePickerModeCountDownTimer];
     [self.durationInput setInputView:durationPicker];
-    
-    UIToolbar *keyboardStartDoneButtonView = (UIToolbar *)[self newKeyboardViewWithDoneMethod:@selector(startTimeDoneClicked:)cancelMethod:@selector(startTimeCancelClicked:)];
-    UIToolbar *keyboardEndTimeDoneButtonView = (UIToolbar *)[self newKeyboardViewWithDoneMethod:@selector(endTimeDoneClicked:)cancelMethod:@selector(endTimeCancelClicked:)];
-    UIToolbar *keyboardDurationDoneButtonView = (UIToolbar *)[self newKeyboardViewWithDoneMethod:@selector(durationDoneClicked:)cancelMethod:@selector(durationCancelClicked:)];
-    UIToolbar *keyboardDateDoneButtonView = (UIToolbar *)[self newKeyboardViewWithDoneMethod:@selector(dateDoneClicked:)cancelMethod:@selector(dateCancelClicked:)];
 
     // Plug the keyboardDoneButtonView into the text field...
-    [self.startTimeInput setInputAccessoryView:keyboardStartDoneButtonView];
-    [self.endTimeInput setInputAccessoryView:keyboardEndTimeDoneButtonView];
-    [self.durationInput setInputAccessoryView:keyboardDurationDoneButtonView];
-    [self.dateInput setInputAccessoryView:keyboardDateDoneButtonView];
+    [self.startTimeInput setInputAccessoryView:(UIToolbar *)[self newKeyboardViewWithDoneMethod:@selector(startTimeDoneClicked:)cancelMethod:@selector(startTimeCancelClicked:)forComponent:self.startTimeInput]];
+    [self.endTimeInput setInputAccessoryView:(UIToolbar *)[self newKeyboardViewWithDoneMethod:@selector(endTimeDoneClicked:)cancelMethod:@selector(endTimeCancelClicked:)forComponent:self.endTimeInput]];
+    [self.durationInput setInputAccessoryView:(UIToolbar *)[self newKeyboardViewWithDoneMethod:@selector(durationDoneClicked:)cancelMethod:@selector(durationCancelClicked:)forComponent:self.durationInput]];
+     [self.dateInput setInputAccessoryView:(UIToolbar *)[self newKeyboardViewWithDoneMethod:@selector(dateDoneClicked:)cancelMethod:@selector(dateCancelClicked:)forComponent:self.dateInput]];
 
     [self configureView];
 }
@@ -133,8 +233,10 @@ const NSTimeInterval unitOfTime=1;
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if ([[segue identifier] isEqualToString:@"showTaskDetail"]) {
-        [[segue destinationViewController] setTask:self.task];
         [[segue destinationViewController] setTimesheet:self.timesheet];
+        [[segue destinationViewController] setJob:self.job];
+        [[segue destinationViewController] setJobDetail:self.jobDetail];
+        [[segue destinationViewController] setTask:self.task];
     }
 }
 
@@ -161,9 +263,6 @@ const NSTimeInterval unitOfTime=1;
     {
         self.timeElapsedInterval=self.timeElapsedInterval+unitOfTime;
         [self updateTimerDisplay];
-    }
-    else{
-        //It's paused, so do nothing
     }
 }
 

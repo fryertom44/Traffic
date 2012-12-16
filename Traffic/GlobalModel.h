@@ -7,13 +7,17 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "WS_TrafficEmployee.h"
+#import "WS_JobTask.h"
 
 @interface GlobalModel : NSObject
 
 + (GlobalModel *)sharedInstance;
-- (void)printOutTasks;
+- (void)printOutTaskAllocations;
 
 @property (nonatomic,strong) NSMutableArray *timeEntries;
-@property (nonatomic,strong) NSMutableArray *allocatedTasks;
-
+@property (nonatomic,strong) NSMutableArray *taskAllocations;
+@property (nonatomic,strong) WS_TrafficEmployee *loggedInEmployee;
+@property (nonatomic,strong) WS_JobTask *selectedJobTask;
+@property (nonatomic,strong) NSMutableData *selectedJobAsData;
 @end

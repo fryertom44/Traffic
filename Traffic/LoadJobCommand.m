@@ -9,16 +9,20 @@
 #import "LoadJobCommand.h"
 #import "KeychainItemWrapper.h"
 #import "WS_Job.h"
-#import "TaskDetailViewController.h"
+#import "DetailViewController.h"
+#import "GlobalModel.h"
+#import "ParseJobTaskFromJobData.h"
 
 @implementation LoadJobCommand
 
 @synthesize responseData;
 
 - (void)executeAndUpdateComponent:(id)component
-                             jobId:(NSNumber*)jobId{
+                            jobId:(NSNumber*)jobId
+                        optionalJobTaskId:(NSNumber*)optionalJobTaskId{
 	responseData = [NSMutableData data];
 	componentToUpdate = component;
+    jobTaskId = optionalJobTaskId;
     NSString *urlString = [NSString stringWithFormat:@"https://api.sohnar.com/TrafficLiteServer/openapi/job/%@",jobId.stringValue];
 	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]];
 	[request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
@@ -57,6 +61,9 @@
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+    //HACK: Store raw data in model, so that job task parser can extract job tasks from it
+    GlobalModel *sharedModel = [GlobalModel sharedInstance];
+    sharedModel.selectedJobAsData = responseData;
     
 	NSLog(@"DONE. Received Bytes: %d", [responseData length]);
 	NSString *theJSON = [[NSString alloc]
@@ -65,6 +72,8 @@
 						 encoding:NSUTF8StringEncoding];
 	//---shows the JSON ---
 	NSLog(@"%@", theJSON);
+    NSDateFormatter* df = [[NSDateFormatter alloc]init];
+    [df setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSSZ"];
     
     NSDictionary* json = nil;
     if (responseData) {
@@ -72,22 +81,20 @@
                 JSONObjectWithData:responseData
                 options:kNilOptions
                 error:nil];
-    }
-    NSArray *jsonObjects = [json objectForKey:@"resultList"];
-	
-    NSDateFormatter* df = [[NSDateFormatter alloc]init];
-    [df setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSSZ"];
-    
-	for (NSDictionary *dict in jsonObjects)
-	{
-		WS_Job *job = [[WS_Job alloc] init];
-		[job setJobId:[NSNumber numberWithInt:[[dict valueForKeyPath:@"id.id"]intValue]]];
-        [job setJobDetailId:[NSNumber numberWithInt:[[dict valueForKeyPath:@"jobDetail.id"]intValue]]];
-        [job setJobDeadline:[df dateFromString:[dict valueForKeyPath:@"internalDeadline"]]];
-        TaskDetailViewController *tdvc = (TaskDetailViewController*)componentToUpdate;
-        [tdvc setJob:job];
-	}
-    
+        
+        WS_Job *job = [[WS_Job alloc] init];
+        [job setJobId:[NSNumber numberWithInt:[[json valueForKeyPath:@"id"]intValue]]];
+        [job setJobDetailId:[NSNumber numberWithInt:[[json valueForKeyPath:@"jobDetailId"]intValue]]];
+        [job setJobDeadline:[df dateFromString:[json valueForKeyPath:@"internalDeadline"]]];
+        [job setJobNumber:[json valueForKeyPath:@"jobNumber"]];
+        DetailViewController *dvc = (DetailViewController*)componentToUpdate;
+        [dvc setJob:job];
+        
+        if(jobTaskId){
+           [dvc setTask:[ParseJobTaskFromJobData parseData:responseData fetchJobTaskWithId:jobTaskId]];
+        }
+        
+    }    
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {

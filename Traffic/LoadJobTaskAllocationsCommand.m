@@ -1,25 +1,25 @@
 //
-//  LoadTrafficEmployee.m
+//  LoadJobTasksCommand.m
 //  Traffic
 //
-//  Created by Tom Fryer on 09/12/2012.
+//  Created by Tom Fryer on 12/11/2012.
 //  Copyright (c) 2012 Tom Fryer. All rights reserved.
 //
 
-#import "LoadTrafficEmployeeCommand.h"
+#import "LoadJobTaskAllocationsCommand.h"
+#import "ParserJobTaskAllocation.h"
+#import "GlobalModel.h"
 #import "KeychainItemWrapper.h"
-#import "WS_TrafficEmployee.h"
-#import "TaskDetailViewController.h"
 
-@implementation LoadTrafficEmployeeCommand
-
+@implementation LoadJobTaskAllocationsCommand
 @synthesize responseData;
 
 - (void)executeAndUpdateComponent:(id)component
-                      trafficEmployeeId:(NSNumber*)trafficEmployeeId{
+                             page:(int)page{
 	responseData = [NSMutableData data];
 	componentToUpdate = component;
-    NSString *urlString = [NSString stringWithFormat:@"https://api.sohnar.com/TrafficLiteServer/openapi/staff/employee/%@",trafficEmployeeId.stringValue];
+    GlobalModel *globalModel = [GlobalModel sharedInstance];
+    NSString *urlString = [NSString stringWithFormat:@"https://api.sohnar.com/TrafficLiteServer/openapi/staff/employee/%@/jobtaskallocations?currentPage=%d",globalModel.loggedInEmployee.trafficEmployeeId,page];
 	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]];
 	[request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
 	
@@ -65,22 +65,19 @@
 						 encoding:NSUTF8StringEncoding];
 	//---shows the JSON ---
 	NSLog(@"%@", theJSON);
+	
+    [ParserJobTaskAllocation parseData:responseData];
     
-    NSDictionary* json = nil;
-    if (responseData) {
-        json = [NSJSONSerialization
-                JSONObjectWithData:responseData
-                options:kNilOptions
-                error:nil];
-        
-        WS_TrafficEmployee *employee = [[WS_TrafficEmployee alloc] init];
-		[employee setFirstName:[json valueForKeyPath:@"employeeDetails.personalDetails.firstName"]];
-        [employee setLastName:[json valueForKeyPath:@"employeeDetails.personalDetails.lastName"]];
-        
-        TaskDetailViewController *tdvc = (TaskDetailViewController*)componentToUpdate;
-        [tdvc setEmployee:employee];
-
+    GlobalModel *globalModel = [GlobalModel sharedInstance];
+    
+	if(globalModel.taskAllocations)
+    {
+        NSLog(@"No Errors");
+        [componentToUpdate reloadData];
     }
+    else
+		NSLog(@"Error - there are no job tasks!!!");
+    
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {

@@ -11,9 +11,12 @@
 @interface LoadJobCommand : NSObject
 {
     id componentToUpdate;
+    NSNumber* jobTaskId;
 }
 @property (nonatomic, retain) NSMutableData *responseData;
 
--(void)executeAndUpdateComponent:(id)sender jobId:(NSNumber*)jobId;
+- (void)executeAndUpdateComponent:(id)component
+                            jobId:(NSNumber*)jobId
+                optionalJobTaskId:(NSNumber*)optionalJobTaskId;
 
 @end

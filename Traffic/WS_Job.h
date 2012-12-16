@@ -10,11 +10,13 @@
 
 @interface WS_Job : BaseObject
 {
-    NSNumber*jobId;
-    NSNumber*jobDetailId;
+    NSNumber *jobId;
+    NSNumber *jobDetailId;
     NSDate *jobDeadline;
+    NSString *jobNumber;
 }
 @property (nonatomic,retain) NSNumber*jobId;
 @property (nonatomic,retain) NSNumber*jobDetailId;
 @property (nonatomic,retain) NSDate* jobDeadline;
+@property (nonatomic,retain) NSString* jobNumber;
 @end

@@ -9,7 +9,8 @@
 #import "LoadJobDetailCommand.h"
 #import "KeychainItemWrapper.h"
 #import "WS_JobDetail.h"
-#import "TaskDetailViewController.h"
+#import "DetailViewController.h"
+#import "NSDictionary+Helper.h"
 
 @implementation LoadJobDetailCommand
 
@@ -19,7 +20,7 @@
                             jobDetailId:(NSNumber*)jobDetailId{
 	responseData = [NSMutableData data];
 	componentToUpdate = component;
-    NSString *urlString = [NSString stringWithFormat:@"https://api.sohnar.com/TrafficLiteServer/openapi/jobDetail/%@",jobDetailId.stringValue];
+    NSString *urlString = [NSString stringWithFormat:@"https://api.sohnar.com/TrafficLiteServer/openapi/jobdetail/%@",jobDetailId.stringValue];
 	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]];
 	[request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
 	
@@ -66,32 +67,27 @@
 	//---shows the JSON ---
 	NSLog(@"%@", theJSON);
     
+    NSDateFormatter* df = [[NSDateFormatter alloc]init];
+    [df setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSSZ"];
+    
     NSDictionary* json = nil;
     if (responseData) {
         json = [NSJSONSerialization
                 JSONObjectWithData:responseData
                 options:kNilOptions
                 error:nil];
+        
+        WS_JobDetail *jobDetail = [[WS_JobDetail alloc] init];
+		[jobDetail setJobContactId:[NSNumber numberWithInt:[[json valueForKeyPath:@"jobContactId"]intValue]]];
+        [jobDetail setJobDetailId:[NSNumber numberWithInt:[[json valueForKeyPath:@"jobDetail.id"]intValue]]];
+        [jobDetail setJobDescription:[json getStringUsingkey:@"description" fallback:@""]];
+        [jobDetail setJobTitle:[json getStringUsingkey:@"name" fallback:@""]];
+        [jobDetail setAccountManagerId:[NSNumber numberWithInt:[[json valueForKeyPath:@"accountManagerId"]intValue]]];
+        [jobDetail setOwnerProjectId:[NSNumber numberWithInt:[[json valueForKeyPath:@"ownerProjectId"]intValue]]];
+        
+        DetailViewController *dvc = (DetailViewController*)componentToUpdate;
+        [dvc setJobDetail:jobDetail];
     }
-    NSArray *jsonObjects = [json objectForKey:@"resultList"];
-	
-    NSDateFormatter* df = [[NSDateFormatter alloc]init];
-    [df setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSSZ"];
-    
-	for (NSDictionary *dict in jsonObjects)
-	{
-		WS_JobDetail *jobDetail = [[WS_JobDetail alloc] init];
-		[jobDetail setJobContactId:[NSNumber numberWithInt:[[dict valueForKeyPath:@"jobContactId"]intValue]]];
-        [jobDetail setJobDetailId:[NSNumber numberWithInt:[[dict valueForKeyPath:@"jobDetail.id"]intValue]]];
-        [jobDetail setJobDescription:[dict valueForKeyPath:@"description"]];
-        [jobDetail setJobTitle:[dict valueForKeyPath:@"name"]];
-        [jobDetail setAccountManagerId:[NSNumber numberWithInt:[[dict valueForKeyPath:@"accountManagerId"]intValue]]];
-        [jobDetail setOwnerProjectId:[NSNumber numberWithInt:[[dict valueForKeyPath:@"ownerProjectId"]intValue]]];
-
-        TaskDetailViewController *tdvc = (TaskDetailViewController*)componentToUpdate;
-        [tdvc setJobDetail:jobDetail];
-	}
-    
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {

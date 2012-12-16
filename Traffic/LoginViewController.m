@@ -17,7 +17,6 @@
 @synthesize passwordTextField=_passwordTextField;
 @synthesize submitButton=_submitButton;
 @synthesize waitIndicator=_waitIndicator;
-@synthesize errorMessageTextView=_errorMessageTextView;
 
 // Custom setter, which sets the 'delegate' property of the login operation
 @synthesize loginOperation=_loginOperation;
@@ -36,7 +35,6 @@
     self.passwordTextField = nil;
     self.submitButton = nil;
     self.waitIndicator = nil;
-    self.errorMessageTextView = nil;
 }
 
 - (void)setIsWaiting:(BOOL)waiting
@@ -44,11 +42,13 @@
     if (waiting)
     {
         [self.waitIndicator startAnimating];
+        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
         self.submitButton.enabled = NO;
     }
     else
     {
         [self.waitIndicator stopAnimating];
+        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
         self.submitButton.enabled = YES;
     }
 }
@@ -85,15 +85,18 @@
     [self setIsWaiting:NO];
     
     if (successfulLogin)
-    {
-        self.errorMessageTextView.text = nil;
-        
+    {        
         // Let this object's delegate know that the login was a success.
         [self.delegate loginViewControllerLoggedIn:self];
     }
     else
     {
-        self.errorMessageTextView.text = errorMessage;
+        UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Login Failure"
+                                                          message:errorMessage
+                                                         delegate:nil
+                                                cancelButtonTitle:@"OK"
+                                                otherButtonTitles:nil];
+        [message show];
     }
 }
 
@@ -119,16 +122,16 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"login_background_landscape.png"]];
+    [self.tableView setBackgroundView:imageView];
     self.passwordTextField.secureTextEntry = TRUE;
     KeychainItemWrapper *keychainItem = [[KeychainItemWrapper alloc]initWithIdentifier:@"TrafficLogin" accessGroup:nil];
     self.passwordTextField.text = [keychainItem objectForKey:(__bridge id)(kSecValueData)];
     self.usernameTextField.text = [keychainItem objectForKey:(__bridge id)(kSecAttrAccount)];
-
-    // Get rid of any design-time placeholder text.
-    self.errorMessageTextView.text = nil;
     
     // Configure the animated icon that is displayed
     // while the user's credentials are being verified.
+    [self setIsWaiting:NO];
     self.waitIndicator.hidden = YES;
     self.waitIndicator.hidesWhenStopped = YES;
     

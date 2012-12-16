@@ -13,4 +13,5 @@
 @synthesize jobId;
 @synthesize jobDeadline;
 @synthesize jobDetailId;
+@synthesize jobNumber;
 @end

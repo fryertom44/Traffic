@@ -10,12 +10,12 @@
 
 @interface WS_TrafficEmployee : BaseObject
 {
-    id trafficEmployeeId;
+    NSNumber *trafficEmployeeId;
     NSString *firstName;
     NSString *lastName;
 }
 
-@property id trafficEmployeeId;
+@property (nonatomic,retain) NSNumber *trafficEmployeeId;
 @property (nonatomic,retain) NSString *firstName;
 @property (nonatomic,retain) NSString *lastName;
 @end

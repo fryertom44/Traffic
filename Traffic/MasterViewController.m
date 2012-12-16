@@ -10,13 +10,14 @@
 #import "DetailViewController.h"
 #import "ParserTimeEntry.h"
 #import "WS_TimeEntry.h"
-#import "WS_JobTask.h"
+#import "WS_JobTaskAllocation.h"
 #import "TimeEntryCell.h"
 #import <QuartzCore/QuartzCore.h>
 #import "UIColor+CreateMethods.h"
 //#import "NSDate+Helper.h"
 #import "LoadTimeEntriesCommand.h"
-#import "LoadJobTasksCommand.h"
+#import "LoadJobTaskAllocationsCommand.h"
+#import "LoadJobCommand.h"
 #import "GlobalModel.h"
 
 @implementation MasterViewController
@@ -34,18 +35,11 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.    
-    
-//    self.navigationItem.leftBarButtonItem = self.editButtonItem;
-
-//    UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject:)];
-//    self.navigationItem.rightBarButtonItem = addButton;
     self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
-    
-//    LoadTimeEntriesCommand *loadTimeEntriesCommand = [[LoadTimeEntriesCommand alloc]init];
-//    [loadTimeEntriesCommand executeAndUpdateComponent:self.tableView];
-//    
-//    NSLog([NSString stringWithFormat:@"Model time entries: %@",[self timeEntries]]);
-    LoadJobTasksCommand *loadJobTasksCommand = [[LoadJobTasksCommand alloc]init];
+//    UIStoryboard *storyboard = [UIApplication sharedApplication].delegate.window.rootViewController.storyboard;
+//    UIViewController *nothingSelectedController = [storyboard instantiateViewControllerWithIdentifier:@"nothingSelectedView"];
+//    self.detailViewController = nothingSelectedController;
+    LoadJobTaskAllocationsCommand *loadJobTasksCommand = [[LoadJobTaskAllocationsCommand alloc]init];
     [loadJobTasksCommand executeAndUpdateComponent:self.tableView
                                               page:1];
     
@@ -61,7 +55,7 @@
 
 - (void)insertNewObject:(id)sender
 {
-    [[self allocatedTasks] insertObject:[[WS_JobTask alloc] init] atIndex:0];
+    [[self allocatedTasks] insertObject:[[WS_JobTaskAllocation alloc] init] atIndex:0];
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
     [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
     
@@ -98,9 +92,8 @@
     [cell.backgroundView.layer insertSublayer:grad atIndex:0];
     
     GlobalModel* globalModel = [GlobalModel sharedInstance];
-//    [globalModel printOutTasks];
-    
-    WS_JobTask *task = globalModel.allocatedTasks[indexPath.row];
+
+    WS_JobTaskAllocation *task = globalModel.taskAllocations[indexPath.row];
     cell.companyLabel.text = @"Company Name: <lookup>";
     cell.jobLabel.text = @"Job Name: <lookup>";
     cell.timesheetLabel.text = task.taskDescription;
@@ -121,7 +114,7 @@
     GlobalModel *sharedModel = [GlobalModel sharedInstance];
 
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        [sharedModel.allocatedTasks removeObjectAtIndex:indexPath.row];
+        [sharedModel.taskAllocations removeObjectAtIndex:indexPath.row];
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
     } else if (editingStyle == UITableViewCellEditingStyleInsert) {
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
@@ -148,8 +141,8 @@
 {
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         GlobalModel* globalModel = [GlobalModel sharedInstance];
-        WS_JobTask *task = globalModel.allocatedTasks[indexPath.row];
-        self.detailViewController.task = task;
+        WS_JobTaskAllocation *task = globalModel.taskAllocations[indexPath.row];
+        self.detailViewController.taskAllocation = task;
         self.detailViewController.timesheet = [self prepareNewTimesheetFromTask:task];
     }
 }
@@ -159,14 +152,14 @@
     if ([[segue identifier] isEqualToString:@"showDetail"]) {
         GlobalModel* globalModel = [GlobalModel sharedInstance];
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-        WS_JobTask *task = globalModel.allocatedTasks[indexPath.row];
-        [[segue destinationViewController] setTask:task];
+        WS_JobTaskAllocation *task = globalModel.taskAllocations[indexPath.row];
+        [[segue destinationViewController] setTaskAllocation:task];
         [[segue destinationViewController] setTimesheet:[self prepareNewTimesheetFromTask:task]];
 
     }
 }
 
-- (WS_TimeEntry*)prepareNewTimesheetFromTask:(WS_JobTask*)task{
+- (WS_TimeEntry*)prepareNewTimesheetFromTask:(WS_JobTaskAllocation*)task{
     WS_TimeEntry *timesheet = [[WS_TimeEntry alloc]init];
     timesheet.happyRating = task.happyRating;
     timesheet.jobTaskId = task.jobTaskId;
@@ -182,7 +175,7 @@
 
 - (NSMutableArray*)allocatedTasks {
     GlobalModel *sharedModel = [GlobalModel sharedInstance];
-    return sharedModel.allocatedTasks;
+    return sharedModel.taskAllocations;
 }
 
 @end
