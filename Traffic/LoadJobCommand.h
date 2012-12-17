@@ -9,14 +9,9 @@
 #import <Foundation/Foundation.h>
 
 @interface LoadJobCommand : NSObject
-{
-    id componentToUpdate;
-    NSNumber* jobTaskId;
-}
+
 @property (nonatomic, retain) NSMutableData *responseData;
 
-- (void)executeAndUpdateComponent:(id)component
-                            jobId:(NSNumber*)jobId
-                optionalJobTaskId:(NSNumber*)optionalJobTaskId;
+- (void)executeWithJobId:(NSNumber*)jobId;
 
 @end

@@ -15,6 +15,6 @@
     NSMutableData *responseData;
 }
 
-@property (strong, nonatomic) UIViewController *detailViewController;
+@property (strong, nonatomic) DetailViewController *detailViewController;
 
 @end

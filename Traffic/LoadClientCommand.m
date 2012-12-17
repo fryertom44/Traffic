@@ -9,16 +9,14 @@
 #import "LoadClientCommand.h"
 #import "KeychainItemWrapper.h"
 #import "WS_Client.h"
-#import "TaskDetailViewController.h"
+#import "GlobalModel.h"
 
 @implementation LoadClientCommand
 
 @synthesize responseData;
 
-- (void)executeAndUpdateComponent:(id)component
-                        clientCRMId:(NSNumber*)clientCRMId{
+- (void)executeWithClientCRMId:(NSNumber*)clientCRMId{
 	responseData = [NSMutableData data];
-	componentToUpdate = component;
     NSString *urlString = [NSString stringWithFormat:@"https://api.sohnar.com/TrafficLiteServer/openapi/crm/client/%@",clientCRMId.stringValue];
 	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]];
 	[request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
@@ -83,15 +81,17 @@
 		WS_Client *client = [[WS_Client alloc] init];
 		[client setClientId:[NSNumber numberWithInt:[[dict valueForKeyPath:@"id"]intValue]]];
         [client setClientName:[dict valueForKeyPath:@"name"]];
-        
-        TaskDetailViewController *tdvc = (TaskDetailViewController*)componentToUpdate;
-        [tdvc setClient:client];
+
+        self.sharedModel.selectedClient = client;
 	}
-    
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
     NSLog(@"Error during connection: %@", [error description]);
+}
+
+-(GlobalModel*)sharedModel{
+    return [GlobalModel sharedInstance];
 }
 
 @end

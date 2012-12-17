@@ -9,11 +9,9 @@
 #import <Foundation/Foundation.h>
 
 @interface LoadClientCommand : NSObject
-{
-    id componentToUpdate;
-}
+
 @property (nonatomic, retain) NSMutableData *responseData;
 
-- (void)executeAndUpdateComponent:(id)component clientCRMId:(NSNumber*)clientCRMId;
+- (void)executeWithClientCRMId:(NSNumber*)clientCRMId;
 
 @end

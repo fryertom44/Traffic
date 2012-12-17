@@ -17,12 +17,9 @@
 
 @synthesize responseData;
 
-- (void)executeAndUpdateComponent:(id)component
-                            jobId:(NSNumber*)jobId
-                        optionalJobTaskId:(NSNumber*)optionalJobTaskId{
+- (void)executeWithJobId:(NSNumber*)jobId{
+    
 	responseData = [NSMutableData data];
-	componentToUpdate = component;
-    jobTaskId = optionalJobTaskId;
     NSString *urlString = [NSString stringWithFormat:@"https://api.sohnar.com/TrafficLiteServer/openapi/job/%@",jobId.stringValue];
 	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]];
 	[request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
@@ -62,8 +59,7 @@
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
     //HACK: Store raw data in model, so that job task parser can extract job tasks from it
-    GlobalModel *sharedModel = [GlobalModel sharedInstance];
-    sharedModel.selectedJobAsData = responseData;
+    self.sharedModel.selectedJobAsData = responseData;
     
 	NSLog(@"DONE. Received Bytes: %d", [responseData length]);
 	NSString *theJSON = [[NSString alloc]
@@ -87,18 +83,17 @@
         [job setJobDetailId:[NSNumber numberWithInt:[[json valueForKeyPath:@"jobDetailId"]intValue]]];
         [job setJobDeadline:[df dateFromString:[json valueForKeyPath:@"internalDeadline"]]];
         [job setJobNumber:[json valueForKeyPath:@"jobNumber"]];
-        DetailViewController *dvc = (DetailViewController*)componentToUpdate;
-        [dvc setJob:job];
-        
-        if(jobTaskId){
-           [dvc setTask:[ParseJobTaskFromJobData parseData:responseData fetchJobTaskWithId:jobTaskId]];
-        }
-        
-    }    
+
+        self.sharedModel.selectedJob = job;
+    }
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
     NSLog(@"Error during connection: %@", [error description]);
+}
+
+- (GlobalModel*)sharedModel{
+    return [GlobalModel sharedInstance];
 }
 
 @end

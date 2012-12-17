@@ -10,15 +10,14 @@
 #import "KeychainItemWrapper.h"
 #import "WS_Project.h"
 #import "TaskDetailViewController.h"
+#import "GlobalModel.h"
 
 @implementation LoadProjectCommand
 
 @synthesize responseData;
 
-- (void)executeAndUpdateComponent:(id)component
-                      projectId:(NSNumber*)projectId{
+- (void)executeWithProjectId:(NSNumber*)projectId{
 	responseData = [NSMutableData data];
-	componentToUpdate = component;
     NSString *urlString = [NSString stringWithFormat:@"https://api.sohnar.com/TrafficLiteServer/openapi/project/%@",projectId.stringValue];
 	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]];
 	[request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
@@ -77,13 +76,16 @@
 		[project setProjectId:[NSNumber numberWithInt:[[json valueForKeyPath:@"id"]intValue]]];
         [project setProjectName:[json valueForKeyPath:@"name"]];
         
-        TaskDetailViewController *tdvc = (TaskDetailViewController*)componentToUpdate;
-        [tdvc setProject:project];
+        self.sharedModel.selectedProject = project;
     }
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
     NSLog(@"Error during connection: %@", [error description]);
+}
+
+-(GlobalModel*)sharedModel{
+    return [GlobalModel sharedInstance];
 }
 
 @end

@@ -7,24 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "WS_TimeEntry.h"
-#import "WS_JobTaskAllocation.h"
-#import "WS_JobTask.h"
-#import "WS_Job.h"
-#import "WS_JobDetail.h"
 #import "PGToggleButton.h"
-
-@class WS_TimeEntry;
-@class WS_JobTaskAllocation;
-@class WS_Job;
 
 @interface DetailViewController : UITableViewController <UISplitViewControllerDelegate,UITextFieldDelegate>
 
-@property (strong, nonatomic) WS_TimeEntry *timesheet;
-@property (strong, nonatomic) WS_JobTaskAllocation *taskAllocation;
-@property (strong, nonatomic) WS_JobTask *task;
-@property (strong,nonatomic) WS_Job *job;
-@property (strong,nonatomic) WS_JobDetail *jobDetail;
 @property (weak, nonatomic) NSTimer *myTimer;
 @property (strong, nonatomic) NSDate *timerStartDate;
 @property (nonatomic) double timeElapsedInterval;

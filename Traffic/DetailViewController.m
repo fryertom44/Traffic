@@ -7,9 +7,10 @@
 //
 
 #import "DetailViewController.h"
-#import "WS_TimeEntry.h"
 #import "NSDate+Helper.h"
 #import "Constants.h"
+#import "GlobalModel.h"
+#import "ParseJobTaskFromJobData.h"
 #import "LoadJobCommand.h"
 #import "LoadJobDetailCommand.h"
 
@@ -26,173 +27,20 @@ const NSTimeInterval unitOfTime=1;
 
 @synthesize myTimer;
 @synthesize timerStartDate;
-@synthesize timesheet = _timesheet;
-@synthesize taskAllocation=_taskAllocation;
-@synthesize job=_job;
-@synthesize jobDetail=_jobDetail;
-@synthesize task=_task;
 @synthesize startTimeInput = _startTimeInput;
-
-#pragma mark - Managing the detail item
-
-- (void)setTimesheet:(WS_TimeEntry*)newTimesheet
-{
-    if (_timesheet != newTimesheet) {
-        _timesheet = newTimesheet;
-        //[_timesheet saveState];
-        
-        // Update the view.
-        [self displayTimesheetDetails];
-    }
-
-    if (self.masterPopoverController != nil) {
-        [self.masterPopoverController dismissPopoverAnimated:YES];
-    }
-}
-
-- (void)setTaskAllocation:(WS_JobTaskAllocation*)newTask
-{
-    if (_taskAllocation != newTask) {
-        _taskAllocation = newTask;
-        //[_taskAllocation saveState];
-        
-        // Update the view.
-        [self displayTaskAllocationDetails];
-        
-        LoadJobCommand *loadJobCommand = [[LoadJobCommand alloc]init];
-        [loadJobCommand executeAndUpdateComponent:self
-                                            jobId:_taskAllocation.jobId
-                                        optionalJobTaskId:_taskAllocation.jobTaskId];
-    }
-    
-    if (self.masterPopoverController != nil) {
-        [self.masterPopoverController dismissPopoverAnimated:YES];
-    }
-}
-
-
-- (void)setJob:(WS_Job*)newJob
-{
-    if (_job != newJob) {
-        _job = newJob;
-        //[_job saveState];
-        
-        // Update the view.
-        [self displayJobDetails];
-        LoadJobDetailCommand *loadJobDetailCommand = [[LoadJobDetailCommand alloc]init];
-        [loadJobDetailCommand executeAndUpdateComponent:self
-                                            jobDetailId:self.job.jobDetailId];
-    }
-    
-    if (self.masterPopoverController != nil) {
-        [self.masterPopoverController dismissPopoverAnimated:YES];
-    }
-}
-
-- (void)setTask:(WS_JobTask *)newTask
-{
-    if (_task != newTask) {
-        _task = newTask;
-        
-        // Update the view.
-        [self displayTaskDetails];
-    }
-    
-    if (self.masterPopoverController != nil) {
-        [self.masterPopoverController dismissPopoverAnimated:YES];
-    }
-}
-
-- (void)setJobDetail:(WS_JobDetail *)jobDetail
-{
-    if (_jobDetail != jobDetail) {
-        _jobDetail = jobDetail;
-        
-        // Update the view.
-        [self displayJobDetailsDetails];
-    }
-    
-    if (self.masterPopoverController != nil) {
-        [self.masterPopoverController dismissPopoverAnimated:YES];
-    }
-}
-
-- (void)displayTimesheetDetails
-{
-    // Update the user interface for the detail item.
-    
-    if (self.timesheet!=nil) {
-        [self.happyRatingButton setImage:[UIImage imageNamed:self.timesheet.happyRatingImage] forState:UIControlStateNormal];
-        self.timerLabel.text = @"00:00:00";
-    }
-}
-
--(void)displayJobDetails
-{
-    if(self.job!=nil){
-        //Anything to do here?
-    }
-    
-}
-
--(void)displayJobDetailsDetails
-{
-    if(self.jobDetail!=nil){
-        self.jobTitle.text = [NSString stringWithFormat:@"%@:%@",self.job.jobNumber,self.jobDetail.jobTitle];
-    }
-}
-
-- (void)displayTaskAllocationDetails
-{
-    if(self.taskAllocation!=nil) {
-        self.daysRemainingLabel.text = [NSString stringWithFormat:@"%d",self.taskAllocation.daysUntilDeadline];
-    }
-}
-
-- (void)displayTaskDetails
-{
-    if(self.task!=nil) {
-        NSNumber *totalLoggedMinutes = [NSNumber numberWithFloat:self.task.totalTimeLoggedMinutes.floatValue + self.task.totalTimeLoggedBillableMinutes.floatValue];
-        float progressAsFloat = totalLoggedMinutes.floatValue / self.task.totalTimeAllocatedMinutes.floatValue;
-        [self.taskProgress setProgress:progressAsFloat animated:YES];
-        self.progressLabel.text = [NSString stringWithFormat:@"%@ of %@",totalLoggedMinutes,self.task.totalTimeAllocatedMinutes];
-        
-        if(self.task.jobTaskDescription!=nil)
-            self.taskDescription.text = self.task.jobTaskDescription;
-    }
-}
-
-- (void)configureView
-{
-    [self displayTimesheetDetails];
-    [self displayTaskAllocationDetails];
-    [self displayTaskDetails];
-    [self displayJobDetails];
-    [self displayJobDetailsDetails];
-}
-
-- (UIToolbar *)newKeyboardViewWithDoneMethod:(SEL)doneMethod cancelMethod:(SEL)cancelMethod forComponent:(id)component
-{
-    UIToolbar* keyboardDoneButtonView = [[UIToolbar alloc] init];
-    keyboardDoneButtonView.barStyle = UIBarStyleBlack;
-    keyboardDoneButtonView.translucent = YES;
-    keyboardDoneButtonView.tintColor = nil;
-    [keyboardDoneButtonView sizeToFit];
-    UIBarButtonItem *flexSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:self action:nil];
-    UIBarButtonItem* cancelButton = [[UIBarButtonItem alloc] initWithTitle:@"Cancel"
-                                                                     style:UIBarButtonItemStyleBordered target:self
-                                                                    action:@selector(cancelMethod)];
-    UIBarButtonItem* doneButton = [[UIBarButtonItem alloc] initWithTitle:@"Done"
-                                                                                  style:UIBarButtonItemStyleBordered target:self
-                                                                                 action:doneMethod];
-    [keyboardDoneButtonView setItems:[NSArray arrayWithObjects:flexSpace,cancelButton,doneButton, nil]];
-    return keyboardDoneButtonView;
-}
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-        
+    [self.sharedModel addObserver:self forKeyPath:@"selectedJobAsData" options:NSKeyValueObservingOptionNew context:NULL];
+    [self.sharedModel addObserver:self forKeyPath:@"selectedJob" options:NSKeyValueObservingOptionNew context:NULL];
+    [self.sharedModel addObserver:self forKeyPath:@"selectedJobDetail" options:NSKeyValueObservingOptionNew context:NULL];
+    [self.sharedModel addObserver:self forKeyPath:@"selectedClient" options:NSKeyValueObservingOptionNew context:NULL];
+    [self.sharedModel addObserver:self forKeyPath:@"selectedJobTaskAllocation" options:NSKeyValueObservingOptionNew context:NULL];
+    [self.sharedModel addObserver:self forKeyPath:@"selectedJobTask" options:NSKeyValueObservingOptionNew context:NULL];
+    [self.sharedModel addObserver:self forKeyPath:@"selectedJobAsData" options:NSKeyValueObservingOptionNew context:NULL];
+    [self.sharedModel addObserver:self forKeyPath:@"timesheet" options:NSKeyValueObservingOptionNew context:NULL];
+
 	// Do any additional setup after loading the view, typically from a nib.
     [[self recordButton]setImage:[UIImage imageNamed:kPlayButtonImage] forState:UIControlStateNormal];
     [[self recordButton]setOffStateImage:[UIImage imageNamed:kPlayButtonImage]];
@@ -224,6 +72,47 @@ const NSTimeInterval unitOfTime=1;
     [self configureView];
 }
 
+
+- (void)observeValueForKeyPath:(NSString *)keyPath
+                      ofObject:(id)object
+                        change:(NSDictionary *)change
+                       context:(void *)context {
+    if ([keyPath isEqual:@"selectedJobAsData"]) {
+        self.sharedModel.selectedJobTask = [ParseJobTaskFromJobData parseData:[change objectForKey:NSKeyValueChangeNewKey] fetchJobTaskWithId:self.sharedModel.timesheet.jobTaskId];
+        NSLog(@"selectedJobData has been observed!");
+    }
+    if ([keyPath isEqual:@"selectedJob"]) {
+        [self displayJobDetails];
+        LoadJobDetailCommand *loadJobDetailCommand = [[LoadJobDetailCommand alloc]init];
+        [loadJobDetailCommand executeWithJobDetailId:self.sharedModel.selectedJob.jobDetailId];
+        NSLog(@"selectedJob has been observed!");
+    }
+    if ([keyPath isEqual:@"selectedJobDetail"]) {
+        [self displayJobDetailsDetails];
+        NSLog(@"selectedJobDetail has been observed!");
+    }
+    if ([keyPath isEqual:@"selectedClient"]) {
+        NSLog(@"selectedClient has been observed!");
+    }
+    if ([keyPath isEqual:@"selectedJobTask"]) {
+        [self displayTaskDetails];
+        NSLog(@"selectedJobTask has been observed!");
+    }
+    if ([keyPath isEqual:@"selectedJobTaskAllocation"]) {
+        [self displayTaskAllocationDetails];
+        LoadJobCommand *loadJobCommand = [[LoadJobCommand alloc]init];
+        [loadJobCommand executeWithJobId:self.sharedModel.selectedJobTaskAllocation.jobId];
+        NSLog(@"selectedJobTaskAllocation has been observed!");
+    }
+    if ([keyPath isEqual:@"timesheet"]) {
+        [self displayTimesheetDetails];
+        NSLog(@"timesheet has been observed!");
+    }
+    if (self.masterPopoverController != nil) {
+        [self.masterPopoverController dismissPopoverAnimated:YES];
+    }
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -233,11 +122,89 @@ const NSTimeInterval unitOfTime=1;
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if ([[segue identifier] isEqualToString:@"showTaskDetail"]) {
-        [[segue destinationViewController] setTimesheet:self.timesheet];
-        [[segue destinationViewController] setJob:self.job];
-        [[segue destinationViewController] setJobDetail:self.jobDetail];
-        [[segue destinationViewController] setTask:self.task];
+//        [[segue destinationViewController] setTimesheet:self.timesheet];
+//        [[segue destinationViewController] setJob:self.job];
+//        [[segue destinationViewController] setJobDetail:self.jobDetail];
+//        [[segue destinationViewController] setTask:self.task];
     }
+}
+
+#pragma mark - Managing the detail item
+
+- (GlobalModel*)sharedModel{
+    return [GlobalModel sharedInstance];
+}
+
+- (void)displayTimesheetDetails
+{
+    // Update the user interface for the detail item.
+    
+    if (self.sharedModel.timesheet!=nil) {
+        [self.happyRatingButton setImage:[UIImage imageNamed:self.sharedModel.timesheet.happyRatingImage] forState:UIControlStateNormal];
+        self.timerLabel.text = @"00:00:00";
+    }
+}
+
+-(void)displayJobDetails
+{
+    if(self.sharedModel.selectedJob!=nil){
+        //Anything to do here?
+    }
+    
+}
+
+-(void)displayJobDetailsDetails
+{
+    if(self.sharedModel.selectedJobDetail!=nil){
+        self.jobTitle.text = [NSString stringWithFormat:@"%@:%@",self.sharedModel.selectedJob.jobNumber,self.sharedModel.selectedJobDetail.jobTitle];
+    }
+}
+
+- (void)displayTaskAllocationDetails
+{
+    if(self.sharedModel.selectedJobTaskAllocation!=nil) {
+        self.daysRemainingLabel.text = [NSString stringWithFormat:@"%d",self.sharedModel.selectedJobTaskAllocation.daysUntilDeadline];
+    }
+}
+
+- (void)displayTaskDetails
+{
+    if(self.sharedModel.selectedJobTask!=nil) {
+        NSNumber *totalLoggedMinutes = [NSNumber numberWithFloat:self.sharedModel.selectedJobTask.totalTimeLoggedMinutes.floatValue + self.sharedModel.selectedJobTask.totalTimeLoggedBillableMinutes.floatValue];
+        float progressAsFloat = totalLoggedMinutes.floatValue / self.sharedModel.selectedJobTask.totalTimeAllocatedMinutes.floatValue;
+        [self.taskProgress setProgress:progressAsFloat animated:YES];
+        self.progressLabel.text = [NSString stringWithFormat:@"%@ of %@",totalLoggedMinutes,self.sharedModel.selectedJobTask.totalTimeAllocatedMinutes];
+        
+        if(self.sharedModel.selectedJobTask.jobTaskDescription!=nil)
+            self.taskDescription.text = self.sharedModel.selectedJobTask.jobTaskDescription;
+    }
+}
+
+- (void)configureView
+{
+    [self displayTimesheetDetails];
+    [self displayTaskAllocationDetails];
+    [self displayTaskDetails];
+    [self displayJobDetails];
+    [self displayJobDetailsDetails];
+}
+
+- (UIToolbar *)newKeyboardViewWithDoneMethod:(SEL)doneMethod cancelMethod:(SEL)cancelMethod forComponent:(id)component
+{
+    UIToolbar* keyboardDoneButtonView = [[UIToolbar alloc] init];
+    keyboardDoneButtonView.barStyle = UIBarStyleBlack;
+    keyboardDoneButtonView.translucent = YES;
+    keyboardDoneButtonView.tintColor = nil;
+    [keyboardDoneButtonView sizeToFit];
+    UIBarButtonItem *flexSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:self action:nil];
+    UIBarButtonItem* cancelButton = [[UIBarButtonItem alloc] initWithTitle:@"Cancel"
+                                                                     style:UIBarButtonItemStyleBordered target:self
+                                                                    action:@selector(cancelMethod)];
+    UIBarButtonItem* doneButton = [[UIBarButtonItem alloc] initWithTitle:@"Done"
+                                                                   style:UIBarButtonItemStyleBordered target:self
+                                                                  action:doneMethod];
+    [keyboardDoneButtonView setItems:[NSArray arrayWithObjects:flexSpace,cancelButton,doneButton, nil]];
+    return keyboardDoneButtonView;
 }
 
 #pragma mark - Split view
@@ -278,8 +245,8 @@ const NSTimeInterval unitOfTime=1;
 }
 
 - (IBAction)changeHappyRating:(id)sender {
-    [self.timesheet nextHappyRating];
-    [self.happyRatingButton setImage:[UIImage imageNamed:self.timesheet.happyRatingImage] forState:UIControlStateNormal];
+    [self.sharedModel.timesheet nextHappyRating];
+    [self.happyRatingButton setImage:[UIImage imageNamed:self.sharedModel.timesheet.happyRatingImage] forState:UIControlStateNormal];
 }
 
 - (IBAction)startTimer:(id)sender

@@ -10,18 +10,15 @@
 #import "LoadJobDetailCommand.h"
 #import "LoadTrafficEmployeeCommand.h"
 #import "LoadProjectCommand.h"
+#import "GlobalModel.h"
+#import "ParseJobTaskFromJobData.h"
+#import "LoadJobCommand.h"
 
 @interface TaskDetailViewController ()
 
 @end
 
 @implementation TaskDetailViewController
-@synthesize timesheet=_timesheet;
-@synthesize task=_task;
-@synthesize job=_job;
-@synthesize project=_project;
-@synthesize client=_client;
-@synthesize employee=_employee;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -41,6 +38,17 @@
  
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    
+    [self.sharedModel addObserver:self forKeyPath:@"selectedJobAsData" options:NSKeyValueObservingOptionNew context:NULL];
+    [self.sharedModel addObserver:self forKeyPath:@"selectedJob" options:NSKeyValueObservingOptionNew context:NULL];
+    [self.sharedModel addObserver:self forKeyPath:@"selectedJobDetail" options:NSKeyValueObservingOptionNew context:NULL];
+    [self.sharedModel addObserver:self forKeyPath:@"selectedClient" options:NSKeyValueObservingOptionNew context:NULL];
+    [self.sharedModel addObserver:self forKeyPath:@"selectedJobTaskAllocation" options:NSKeyValueObservingOptionNew context:NULL];
+    [self.sharedModel addObserver:self forKeyPath:@"selectedJobTask" options:NSKeyValueObservingOptionNew context:NULL];
+    [self.sharedModel addObserver:self forKeyPath:@"selectedJobAsData" options:NSKeyValueObservingOptionNew context:NULL];
+    [self.sharedModel addObserver:self forKeyPath:@"selectedProject" options:NSKeyValueObservingOptionNew context:NULL];
+    [self.sharedModel addObserver:self forKeyPath:@"selectedOwner" options:NSKeyValueObservingOptionNew context:NULL];
+    [self.sharedModel addObserver:self forKeyPath:@"timesheet" options:NSKeyValueObservingOptionNew context:NULL];
     [self configureView];
 }
 
@@ -50,68 +58,52 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)setTimesheet:(WS_TimeEntry*)newTimesheet
-{
-    if (_timesheet != newTimesheet) {
-        _timesheet = newTimesheet;
-        
-        // Update the view.
-        [self configureViewWithTimesheetDetails];
+- (void)observeValueForKeyPath:(NSString *)keyPath
+                      ofObject:(id)object
+                        change:(NSDictionary *)change
+                       context:(void *)context {
+    if ([keyPath isEqual:@"selectedJobAsData"]) {
+        self.sharedModel.selectedJobTask = [ParseJobTaskFromJobData parseData:[change objectForKey:NSKeyValueChangeNewKey] fetchJobTaskWithId:self.sharedModel.timesheet.jobTaskId];
+        NSLog(@"selectedJobData has been observed!");
     }
-}
-
-- (void)setTask:(WS_JobTask *)task
-{
-    if (_task != task) {
-        _task = task;
-        
-        // Update the view.
-        [self configureViewWithTaskDetails];
-    }
-}
-
-- (void)setJob:(WS_Job*)newJob
-{
-    if (_job != newJob) {
-        _job = newJob;
-        
-        // Update the view.
+    if ([keyPath isEqual:@"selectedJob"]) {
         [self configureViewWithJobDetails];
+        LoadJobDetailCommand *loadJobDetailCommand = [[LoadJobDetailCommand alloc]init];
+        [loadJobDetailCommand executeWithJobDetailId:self.sharedModel.selectedJob.jobDetailId];
+        NSLog(@"selectedJob has been observed!");
     }
-}
-
-- (void)setJobDetail:(WS_JobDetail*)newJobDetail
-{
-    if (_jobDetail != newJobDetail) {
-        _jobDetail = newJobDetail;
-        
-        // Update the view.
+    if ([keyPath isEqual:@"selectedJobDetail"]) {
         [self configureViewWithJobDetailDetails];
         LoadProjectCommand *loadProjectCommand = [[LoadProjectCommand alloc]init];
-        [loadProjectCommand executeAndUpdateComponent:self
-                                            projectId:self.jobDetail.ownerProjectId];
+        [loadProjectCommand executeAndUpdateComponent:self projectId:self.sharedModel.selectedJobDetail.ownerProjectId];
         LoadTrafficEmployeeCommand *loadTrafficEmployeeCommand = [[LoadTrafficEmployeeCommand alloc]init];
-        [loadTrafficEmployeeCommand executeAndUpdateComponent:self trafficEmployeeId:self.jobDetail.accountManagerId];
-    }
-}
+        [loadTrafficEmployeeCommand executeWithTrafficEmployeeId:self.sharedModel.selectedJobDetail.accountManagerId];
 
-- (void)setEmployee:(WS_TrafficEmployee*)newEmployee
-{
-    if (_employee != newEmployee) {
-        _employee = newEmployee;
-        
-        // Update the view.
-        [self configureViewWithEmployeeDetails];
+        NSLog(@"selectedJobDetail has been observed!");
     }
-}
-
-- (void)setProject:(WS_Project*)newProject
-{
-    if (_project != newProject) {
-        _project = newProject;
-        
-        // Update the view.
+    if ([keyPath isEqual:@"selectedClient"]) {
+        NSLog(@"selectedClient has been observed!");
+    }
+    if ([keyPath isEqual:@"selectedJobTask"]) {
+        [self configureViewWithTaskDetails];
+        NSLog(@"selectedJobTask has been observed!");
+    }
+    if ([keyPath isEqual:@"selectedJobTaskAllocation"]) {
+        LoadJobCommand *loadJobCommand = [[LoadJobCommand alloc]init];
+        [loadJobCommand executeWithJobId:self.sharedModel.selectedJobTaskAllocation.jobId];
+        NSLog(@"selectedJobTaskAllocation has been observed!");
+    }
+    if ([keyPath isEqual:@"timesheet"]) {
+        [self configureViewWithTimesheetDetails];
+        NSLog(@"timesheet has been observed!");
+    }
+    if ([keyPath isEqual:@"selectedProject"]) {
         [self configureViewWithProjectDetails];
+        NSLog(@"selectedProject has been observed!");
+    }
+    if ([keyPath isEqual:@"selectedOwner"]) {
+        [self configureViewWithEmployeeDetails];
+        NSLog(@"selectedOwner has been observed!");
     }
 }
 
@@ -128,48 +120,52 @@
 
 - (void)configureViewWithTimesheetDetails
 {
-    if (self.timesheet!=nil) {
-        //update view with timesheet infos
+    if (self.sharedModel.timesheet!=nil) {
+        //update view with timesheet info
     }
 }
 
 - (void)configureViewWithTaskDetails
 {
-    if(self.task!=nil) {
-        self.taskDeadlineLabel.text = [NSString stringWithFormat:@"%@",self.task.taskDeadline];
-        self.taskDescriptionLabel.text = self.task.jobTaskDescription;
-        self.taskNotesLabel.text = self.task.internalNote;
-        self.stageLabel.text = self.task.jobStageDescription;
+    if(self.sharedModel.selectedJobTask!=nil) {
+        self.taskDeadlineLabel.text = [NSString stringWithFormat:@"%@",self.sharedModel.selectedJobTask.taskDeadline];
+        self.taskDescriptionLabel.text = self.sharedModel.selectedJobTask.jobTaskDescription;
+        self.taskNotesLabel.text = self.sharedModel.selectedJobTask.internalNote;
+        self.stageLabel.text = self.sharedModel.selectedJobTask.jobStageDescription;
     }
 }
 
 - (void)configureViewWithJobDetails
 {
-    if(self.job!=nil) {
-        self.jobNoLabel.text = self.job.jobNumber;
-        self.jobDeadlineLabel.text = [NSString stringWithFormat:@"%@",self.job.jobDeadline];
+    if(self.sharedModel.selectedJob!=nil) {
+        self.jobNoLabel.text = self.sharedModel.selectedJob.jobNumber;
+        self.jobDeadlineLabel.text = [NSString stringWithFormat:@"%@",self.sharedModel.selectedJob.jobDeadline];
     }
 }
 
 - (void)configureViewWithJobDetailDetails
 {
-    if(self.jobDetail!=nil) {
-        self.jobNameLabel.text = [NSString stringWithFormat:@"%@",self.jobDetail.jobTitle];
+    if(self.sharedModel.selectedJobDetail!=nil) {
+        self.jobNameLabel.text = [NSString stringWithFormat:@"%@",self.sharedModel.selectedJobDetail.jobTitle];
     }
 }
 
 - (void)configureViewWithEmployeeDetails
 {
-    if (self.employee!=nil) {
-        self.ownerLabel.text = [NSString stringWithFormat:@"%@ %@",self.employee.firstName,self.employee.lastName];
+    if (self.sharedModel.selectedOwner!=nil) {
+        self.ownerLabel.text = [NSString stringWithFormat:@"%@ %@",self.sharedModel.selectedOwner.firstName,self.sharedModel.selectedOwner.lastName];
     }
 }
 
 - (void)configureViewWithProjectDetails
 {
-    if(self.project!=nil){
-        self.projectLabel.text = [NSString stringWithFormat:@"%@",self.project.projectName];
+    if(self.sharedModel.selectedProject!=nil){
+        self.projectLabel.text = [NSString stringWithFormat:@"%@",self.sharedModel.selectedProject.projectName];
     }
+}
+
+- (GlobalModel*)sharedModel{
+    return [GlobalModel sharedInstance];
 }
 
 @end

@@ -10,15 +10,14 @@
 #import "KeychainItemWrapper.h"
 #import "WS_TrafficEmployee.h"
 #import "TaskDetailViewController.h"
+#import "GlobalModel.h"
 
 @implementation LoadTrafficEmployeeCommand
 
 @synthesize responseData;
 
-- (void)executeAndUpdateComponent:(id)component
-                      trafficEmployeeId:(NSNumber*)trafficEmployeeId{
+- (void)executeWithTrafficEmployeeId:(NSNumber*)trafficEmployeeId{
 	responseData = [NSMutableData data];
-	componentToUpdate = component;
     NSString *urlString = [NSString stringWithFormat:@"https://api.sohnar.com/TrafficLiteServer/openapi/staff/employee/%@",trafficEmployeeId.stringValue];
 	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]];
 	[request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
@@ -77,14 +76,18 @@
 		[employee setFirstName:[json valueForKeyPath:@"employeeDetails.personalDetails.firstName"]];
         [employee setLastName:[json valueForKeyPath:@"employeeDetails.personalDetails.lastName"]];
         
-        TaskDetailViewController *tdvc = (TaskDetailViewController*)componentToUpdate;
-        [tdvc setEmployee:employee];
+        self.sharedModel.selectedOwner = employee;
 
     }
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
     NSLog(@"Error during connection: %@", [error description]);
+}
+
+
+-(GlobalModel*)sharedModel{
+    return [GlobalModel sharedInstance];
 }
 
 @end

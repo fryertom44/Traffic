@@ -9,11 +9,9 @@
 #import <Foundation/Foundation.h>
 
 @interface LoadTrafficEmployeeCommand : NSObject
-{
-    id componentToUpdate;
-}
+
 @property (nonatomic, retain) NSMutableData *responseData;
 
-- (void)executeAndUpdateComponent:(id)component trafficEmployeeId:(NSNumber*)trafficEmployeeId;
+- (void)executeWithTrafficEmployeeId:(NSNumber*)trafficEmployeeId;
 
 @end

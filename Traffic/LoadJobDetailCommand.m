@@ -11,15 +11,14 @@
 #import "WS_JobDetail.h"
 #import "DetailViewController.h"
 #import "NSDictionary+Helper.h"
+#import "GlobalModel.h"
 
 @implementation LoadJobDetailCommand
 
 @synthesize responseData;
 
-- (void)executeAndUpdateComponent:(id)component
-                            jobDetailId:(NSNumber*)jobDetailId{
+- (void)executeWithJobDetailId:(NSNumber*)jobDetailId{
 	responseData = [NSMutableData data];
-	componentToUpdate = component;
     NSString *urlString = [NSString stringWithFormat:@"https://api.sohnar.com/TrafficLiteServer/openapi/jobdetail/%@",jobDetailId.stringValue];
 	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]];
 	[request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
@@ -85,13 +84,16 @@
         [jobDetail setAccountManagerId:[NSNumber numberWithInt:[[json valueForKeyPath:@"accountManagerId"]intValue]]];
         [jobDetail setOwnerProjectId:[NSNumber numberWithInt:[[json valueForKeyPath:@"ownerProjectId"]intValue]]];
         
-        DetailViewController *dvc = (DetailViewController*)componentToUpdate;
-        [dvc setJobDetail:jobDetail];
+        self.sharedModel.selectedJobDetail = jobDetail;
     }
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
     NSLog(@"Error during connection: %@", [error description]);
+}
+
+-(GlobalModel*)sharedModel{
+    return [GlobalModel sharedInstance];
 }
 
 @end
