@@ -11,10 +11,6 @@
 
 @interface DetailViewController : UITableViewController <UISplitViewControllerDelegate,UITextFieldDelegate>
 
-@property (weak, nonatomic) NSTimer *myTimer;
-@property (strong, nonatomic) NSDate *timerStartDate;
-@property (nonatomic) double timeElapsedInterval;
-
 @property (weak, nonatomic) IBOutlet UILabel *taskDescription;
 @property (weak, nonatomic) IBOutlet UILabel *jobTitle;
 @property (weak, nonatomic) IBOutlet UILabel *progressLabel;
@@ -23,15 +19,21 @@
 @property (weak, nonatomic) IBOutlet PGToggleButton *recordButton;
 @property (weak, nonatomic) IBOutlet UIButton *stopButton;
 @property (weak, nonatomic) IBOutlet UILabel *timerLabel;
-@property (weak, nonatomic) IBOutlet UITextView *startTimeInput;
-@property (weak, nonatomic) IBOutlet UITextView *endTimeInput;
-@property (weak, nonatomic) IBOutlet UITextView *durationInput;
-@property (weak, nonatomic) IBOutlet UITextView *dateInput;
+@property (weak, nonatomic) IBOutlet UITextField *startTimeInput;
+@property (weak, nonatomic) IBOutlet UITextField *endTimeInput;
+@property (weak, nonatomic) IBOutlet UITextField *durationInput;
+@property (weak, nonatomic) IBOutlet UITextField *dateInput;
 @property (weak, nonatomic) IBOutlet UITextView *timesheetNotes;
 @property (weak, nonatomic) IBOutlet UISwitch *billableSwitch;
 @property (weak, nonatomic) IBOutlet UIButton *happyRatingButton;
 
+@property (nonatomic,retain) UIView *subview;
+-(IBAction)goToSettings:(id)sender;
 -(IBAction)changeHappyRating:(id)sender;
 -(IBAction)startTimer:(id)sender;
 -(IBAction)stopTimer:(id)sender;
+- (IBAction)billableValueChanged:(id)sender;
+-(IBAction)onSave:(id)sender;
+-(IBAction)onCancel:(id)sender;
+
 @end

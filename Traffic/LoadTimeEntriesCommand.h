@@ -7,15 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "AbstractServiceCallCommand.h"
 
-@interface LoadTimeEntriesCommand : NSObject
-{
-    //Whichever component called this command 
-    id componentToUpdate;
-}
+@interface LoadTimeEntriesCommand : AbstractServiceCallCommand
 
 @property (nonatomic, retain) NSMutableArray *timeEntries;
-@property (nonatomic, retain) NSMutableData *responseData;
 
--(void)executeAndUpdateComponent:(id)sender;
+-(void)execute;
 @end

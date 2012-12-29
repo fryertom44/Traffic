@@ -10,5 +10,5 @@
 
 @implementation WS_JobTask
 
-@synthesize jobTaskId,version,jobTaskDescription,internalNote,quantity,chargeBandId,jobId,jobTaskCompletionDate,studioAllocationMinutes,taskDeadline,taskStartDate,jobStageDescription,durationMinutes,totalTimeLoggedMinutes,totalTimeLoggedBillableMinutes,totalTimeAllocatedMinutes;
+@synthesize jobTaskId,version,jobTaskDescription,internalNote,quantity,chargeBandId,jobId,jobTaskCompletionDate,studioAllocationMinutes,taskDeadline,taskStartDate,jobStageDescription,durationMinutes,totalTimeLoggedMinutes,totalTimeLoggedBillableMinutes,totalTimeAllocatedMinutes,cost,rate, rateOtherCurrency, billableNet;
 @end

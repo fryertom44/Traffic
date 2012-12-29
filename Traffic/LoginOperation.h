@@ -12,14 +12,14 @@
 @class LoginOperation;
 
 // Delegate that responds to completion of a login attempt.
-@protocol LoginOperationDelegate <NSObject>
-
-// Invoked after a login attempt completes.
-- (void)loginOperationCompleted:(LoginOperation *)loginOperation 
-                     withResult:(BOOL)successfulLogin 
-                   errorMessage:(NSString *)errorMessage;
-
-@end 
+//@protocol LoginOperationDelegate <NSObject>
+//
+//// Invoked after a login attempt completes.
+//- (void)loginOperationCompleted:(LoginOperation *)loginOperation 
+//                     withResult:(BOOL)successfulLogin 
+//                   errorMessage:(NSString *)errorMessage;
+//
+//@end 
 
 
 // Base class for an operation that asynchronously 
@@ -36,7 +36,7 @@
 }
 
 // An object that is informed when an attempt to log in completes.
-@property (nonatomic, assign) id<LoginOperationDelegate> delegate;
+//@property (nonatomic, assign) id<LoginOperationDelegate> delegate;
 
 // Returns the username that was successfully authenticated.
 @property (nonatomic, copy, readonly) NSString *authenticatedUsername;

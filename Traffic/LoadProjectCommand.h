@@ -7,13 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "AbstractServiceCallCommand.h"
 
-@interface LoadProjectCommand : NSObject
-{
-    id componentToUpdate;
-}
-@property (nonatomic, retain) NSMutableData *responseData;
+@interface LoadProjectCommand : AbstractServiceCallCommand
 
-- (void)executeAndUpdateComponent:(id)component projectId:(NSNumber*)projectId;
+- (void)executeWithProjectId:(NSNumber*)projectId;
 
 @end

@@ -8,15 +8,14 @@
 
 #import "MasterViewController.h"
 #import "DetailViewController.h"
-#import "ParserTimeEntry.h"
 #import "WS_TimeEntry.h"
 #import "WS_JobTaskAllocation.h"
-#import "TimeEntryCell.h"
+#import "TaskAllocationCell.h"
 #import <QuartzCore/QuartzCore.h>
 #import "UIColor+CreateMethods.h"
-//#import "NSDate+Helper.h"
 #import "LoadTimeEntriesCommand.h"
 #import "LoadJobTaskAllocationsCommand.h"
+#import "RefreshJobTaskAllocationsCommand.h"
 #import "GlobalModel.h"
 
 @implementation MasterViewController
@@ -33,17 +32,28 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
 	// Do any additional setup after loading the view, typically from a nib.
-    self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
-//    UIStoryboard *storyboard = [UIApplication sharedApplication].delegate.window.rootViewController.storyboard;
-//    UIViewController *nothingSelectedController = [storyboard instantiateViewControllerWithIdentifier:@"nothingSelectedView"];
-//    self.detailViewController = nothingSelectedController;
-    LoadJobTaskAllocationsCommand *loadJobTasksCommand = [[LoadJobTaskAllocationsCommand alloc]init];
-    [loadJobTasksCommand executeAndUpdateComponent:self.tableView
-                                              page:1];
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+        self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
+    }
+    UIRefreshControl *refreshControl = [[UIRefreshControl alloc]
+                                        init];
+    [refreshControl addTarget:self action:@selector(refreshList:) forControlEvents:UIControlEventValueChanged];
+    self.refreshControl = refreshControl;
+
+    [self loadTaskAllocationsWithPageNumber:self.sharedModel.pageNumber andWindowSize:10];
     
     [self.tableView reloadData];
-    
+
+}
+
+-(void)viewDidAppear:(BOOL)animated{
+    [self.sharedModel addObserver:self forKeyPath:@"taskAllocations" options:NSKeyValueObservingOptionNew context:NULL];
+}
+
+-(void)viewDidDisappear:(BOOL)animated{
+        [self.sharedModel removeObserver:self forKeyPath:@"taskAllocations"];
 }
 
 - (void)didReceiveMemoryWarning
@@ -76,9 +86,9 @@
 {
     static NSString *kCellIdentifier = @"Cell";
     
-    TimeEntryCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellIdentifier forIndexPath:indexPath];
+    TaskAllocationCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellIdentifier forIndexPath:indexPath];
     if (cell == nil) {
-        cell = [[TimeEntryCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kCellIdentifier];
+        cell = [[TaskAllocationCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kCellIdentifier];
     }
 
     [cell setBackgroundColor:[UIColor clearColor]];
@@ -90,8 +100,6 @@
     [cell setBackgroundView:[[UIView alloc] init]];
     [cell.backgroundView.layer insertSublayer:grad atIndex:0];
     
-//    GlobalModel* globalModel = [GlobalModel sharedInstance];
-
     WS_JobTaskAllocation *task = self.sharedModel.taskAllocations[indexPath.row];
     cell.companyLabel.text = @"Company Name: <lookup>";
     cell.jobLabel.text = @"Job Name: <lookup>";
@@ -137,41 +145,56 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-//        GlobalModel* globalModel = [GlobalModel sharedInstance];
-        WS_JobTaskAllocation *taskAllocation = self.sharedModel.taskAllocations[indexPath.row];
-//        self.detailViewController.taskAllocation = task;
-//        self.detailViewController.timesheet = [self prepareNewTimesheetFromTask:task];
-        self.sharedModel.selectedJobTaskAllocation = taskAllocation;
-        self.sharedModel.timesheet = [self prepareNewTimesheetFromTaskAllocation:taskAllocation];
+    WS_JobTaskAllocation *taskAllocation = self.sharedModel.taskAllocations[indexPath.row];
+    self.sharedModel.selectedJobTaskAllocation = taskAllocation;
+    self.sharedModel.timesheet = [self prepareNewTimesheetFromTaskAllocation:taskAllocation];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath
+                      ofObject:(id)object
+                        change:(NSDictionary *)change
+                       context:(void *)context {
+
+    if ([keyPath isEqual:@"taskAllocations"]) {
+        [self.tableView reloadData];
+        [self.refreshControl endRefreshing];
     }
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if ([[segue identifier] isEqualToString:@"showDetail"]) {
-//        GlobalModel* globalModel = [GlobalModel sharedInstance];
-        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-        WS_JobTaskAllocation *taskAllocation = self.sharedModel.taskAllocations[indexPath.row];
-//        [[segue destinationViewController] setTaskAllocation:task];
-//        [[segue destinationViewController] setTimesheet:[self prepareNewTimesheetFromTaskAllocation:task]];
-        self.sharedModel.selectedJobTaskAllocation = taskAllocation;
-        self.sharedModel.timesheet = [self prepareNewTimesheetFromTaskAllocation:taskAllocation];
-
+        //Do any necessary config here
     }
 }
 
-- (WS_TimeEntry*)prepareNewTimesheetFromTaskAllocation:(WS_JobTaskAllocation*)task{
+- (WS_TimeEntry*)prepareNewTimesheetFromTaskAllocation:(WS_JobTaskAllocation*)allocation{
     WS_TimeEntry *timesheet = [[WS_TimeEntry alloc]init];
-    timesheet.happyRating = task.happyRating;
-    timesheet.jobTaskId = task.jobTaskId;
-    timesheet.jobId = task.jobId;
-    timesheet.trafficEmployeeId = task.trafficEmployeeId;
+    timesheet.jobTaskId = allocation.jobTaskId;
+    timesheet.jobId = allocation.jobId;
+    timesheet.trafficEmployeeId = allocation.trafficEmployeeId;
+    timesheet.allocationGroupId = allocation.jobTaskAllocationGroupId;
     return timesheet;
 }
 
 - (GlobalModel*)sharedModel{
     return [GlobalModel sharedInstance];
+}
+
+- (void)loadTaskAllocationsWithPageNumber:(int)page andWindowSize:(int)windowSize
+{
+    LoadJobTaskAllocationsCommand *loadJobTaskAllocationsCommand = [[LoadJobTaskAllocationsCommand alloc]init];
+    [loadJobTaskAllocationsCommand executeWithPageNumber:page windowSize:windowSize];
+}
+
+- (IBAction)onLoadMoreSelected:(id)sender {
+    [self loadTaskAllocationsWithPageNumber:self.sharedModel.pageNumber+1 andWindowSize:10];
+}
+
+-(void)refreshList:(id)sender{
+    int rowCount = [self.sharedModel.taskAllocations count];
+    RefreshJobTaskAllocationsCommand *refreshAllocationsCommand = [[RefreshJobTaskAllocationsCommand alloc]init];
+    [refreshAllocationsCommand executeWithWindowSize:rowCount];
 }
 
 @end

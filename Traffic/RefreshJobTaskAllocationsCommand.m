@@ -1,19 +1,23 @@
 //
-//  LoadJobTasksCommand.m
+//  RefreshJobTaskAllocationsCommand.m
 //  Traffic
 //
-//  Created by Tom Fryer on 12/11/2012.
+//  Created by Tom Fryer on 23/12/2012.
 //  Copyright (c) 2012 Tom Fryer. All rights reserved.
 //
 
-#import "LoadJobTaskAllocationsCommand.h"
+#import "RefreshJobTaskAllocationsCommand.h"
+#import "ParserJobTaskAllocation.h"
 #import "NSDictionary+Helper.h"
 
-@implementation LoadJobTaskAllocationsCommand
+@implementation RefreshJobTaskAllocationsCommand
 
--(void)executeWithPageNumber:(int)page windowSize:(int)windowSize{
+- (void)executeWithWindowSize:(int)windowSize{
 	super.responseData = [NSMutableData data];
-    NSString *urlString = [NSString stringWithFormat:@"https://api.sohnar.com/TrafficLiteServer/openapi/staff/employee/%@/jobtaskallocations?currentPage=%d&windowSize=%d",super.sharedModel.loggedInEmployee.trafficEmployeeId,page, windowSize];
+    if(!windowSize){
+        windowSize=5;
+    }
+    NSString *urlString = [NSString stringWithFormat:@"https://api.sohnar.com/TrafficLiteServer/openapi/staff/employee/%@/jobtaskallocations?currentPage=%d&windowSize=%d",super.sharedModel.loggedInEmployee.trafficEmployeeId,1,windowSize];
 	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]];
 	[request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
 	
@@ -25,7 +29,7 @@
 
 #pragma mark - NSURLConnection Delegates
 
--(void)connectionDidFinishLoading:(NSURLConnection *)connection {
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
     
 	NSLog(@"DONE. Received Bytes: %d", [super.responseData length]);
 	NSString *theJSON = [[NSString alloc]
@@ -34,26 +38,17 @@
 						 encoding:NSUTF8StringEncoding];
 	//---shows the JSON ---
 	NSLog(@"%@", theJSON);
-
-    NSMutableArray *allocations = [[NSMutableArray alloc]init];
-    if(super.sharedModel.taskAllocations){
-        [allocations addObjectsFromArray:super.sharedModel.taskAllocations];
+    NSDictionary* dict = nil;
+    if (super.responseData) {
+        dict = [NSJSONSerialization
+                JSONObjectWithData:super.responseData
+                options:kNilOptions
+                error:nil];
+        
+        self.sharedModel.taskAllocations = [self parseData:super.responseData];
     }
-    
-    NSMutableArray *parsedAllocations = [self parseData:super.responseData];
-    
-    if ([parsedAllocations count] > 0) {
-        [allocations addObjectsFromArray:parsedAllocations];
-    }
-    
-    //Re-trigger change event in model
-    super.sharedModel.taskAllocations = nil;
-    super.sharedModel.taskAllocations = allocations;
-    
-	if(super.sharedModel.taskAllocations)
-    {
+	if(self.sharedModel.taskAllocations)
         NSLog(@"No Errors");
-    }
     else
 		NSLog(@"Error - there are no job tasks!!!");
     
@@ -90,7 +85,8 @@
         
         [taskAllocations addObject:allocation];
 	}
-
+    
     return taskAllocations;
 }
+
 @end

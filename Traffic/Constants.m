@@ -22,4 +22,5 @@ NSString *const kHappyRatingHappyImage = @"happyRatingHappySmall320.png";
 NSString *const kHappyRatingSadImage = @"happyRatingSadSmall320.png";
 NSString *const kHappyRatingCompletedImage = @"happyRatingCompletedSmall320.png";
 
+NSString *const kJSONDateFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSSZ";
 @end

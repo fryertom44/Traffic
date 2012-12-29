@@ -249,6 +249,11 @@
 	return endOfWeek;
 }
 
++ (NSString *)timeStringFromMinutes:(int)minutes{
+    NSString *theString = [NSString stringWithFormat:@"%02d:%02d", (minutes / 60), (minutes % 60)];
+    return theString;
+}
+
 + (NSString *)dateFormatString {
 	return @"yyyy-MM-dd";
 }

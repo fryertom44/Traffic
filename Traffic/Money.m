@@ -13,11 +13,4 @@
 
 @synthesize currencyType,amount;
 
-//+(Money *)initWithAmount:(NSDecimalNumber *)amount currencyType:(NSString *)currencyType{
-//	[super init];
-//
-//	self.amount = amount;
-//	self.currencyType = currencyType;
-//}
-
 @end

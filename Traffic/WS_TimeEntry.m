@@ -10,16 +10,31 @@
 
 @implementation WS_TimeEntry
 
-@synthesize timeEntryId,jobTaskId,trafficEmployeeId,jobId,allocationGroupId,chargebandId,billable,exported,lockedByApproval,comment,happyRating,endTime,minutes,taskDescription,taskRate,valueOfTimeEntry,timeEntryCost,dateModified,version;
+@synthesize timeEntryId,jobTaskId,trafficEmployeeId,jobId,allocationGroupId,chargebandId,billable,exported,lockedByApproval,comment,endTime,startTime,minutes,taskDescription,taskRate,valueOfTimeEntry,timeEntryCost,timeEntryPersonalRate,dateModified,version;
 
-@synthesize startTime = _startTime;
+//@synthesize startTime = _startTime;
+//
+//- (NSDate *)startTime {
+//    if (_startTime) {
+//        return _startTime;
+//    } else {
+//        return [[NSDate alloc] init];
+//    }
+//}
 
-- (NSDate *)startTime {
-    if (_startTime) {
-        return _startTime;
-    } else {
-        return [[NSDate alloc] init];
+- (id)init{
+    self = [super init];
+    
+    if(self){
+        billable = true;
+        exported = false;
+        lockedByApproval = false;
+        comment = @"";
+        taskDescription = @"";
+        timeEntryId = [NSNumber numberWithInt:-1];
+        version = [NSNumber numberWithInt:-1];
     }
+    return self;
 }
 
 #pragma mark - NSCopying protocol implementation
@@ -34,7 +49,6 @@
     [copiedObject setDateModified:[self dateModified]];
     [copiedObject setEndTime:[self endTime]];
     [copiedObject setExported:[self exported]];
-    [copiedObject setHappyRating:happyRating];
     [copiedObject setJobId:[self jobId]];
     [copiedObject setJobTaskId:[self jobTaskId]];
     [copiedObject setLockedByApproval:[self lockedByApproval]];
@@ -43,6 +57,7 @@
     [copiedObject setTaskDescription:[self taskDescription]];
     [copiedObject setTaskRate:[self taskRate]];
     [copiedObject setTimeEntryCost:[self timeEntryCost]];
+    [copiedObject setTimeEntryPersonalRate:[self timeEntryPersonalRate]];
     [copiedObject setTimeEntryId:[self timeEntryId]];
     [copiedObject setTrafficEmployeeId:[self trafficEmployeeId]];
     [copiedObject setValueOfTimeEntry:[self valueOfTimeEntry]];
@@ -50,25 +65,5 @@
     return copiedObject;
 }
 
--(NSString*)happyRatingImage{
-    if ([self.happyRating isEqualToString:kHappyRatingHappy]) {
-        return kHappyRatingHappyImage;
-    }else if ([self.happyRating isEqualToString:kHappyRatingSad]){
-        return kHappyRatingSadImage;
-    }else if ([self.happyRating isEqualToString:kHappyRatingCompleted]){
-        return kHappyRatingCompletedImage;
-    }
-    return kHappyRatingHappyImage;
-}
-
--(void)nextHappyRating{
-    if ([self.happyRating isEqualToString:kHappyRatingHappy]) {
-        self.happyRating = kHappyRatingSad;
-    }else if ([self.happyRating isEqualToString:kHappyRatingSad]){
-        self.happyRating = kHappyRatingCompleted;
-    }else if ([self.happyRating isEqualToString:kHappyRatingCompleted]){
-        self.happyRating = kHappyRatingHappy;
-    }
-}
 
 @end

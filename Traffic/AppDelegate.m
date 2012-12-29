@@ -8,8 +8,9 @@
 
 #import "AppDelegate.h"
 #import "LoginViewController.h"
-#import "LoginOperation.h"
+//#import "LoginOperation.h"
 #import "MasterViewController.h"
+#import "GlobalModel.h"
 
 @implementation AppDelegate
 
@@ -34,14 +35,12 @@
 
 //    return YES;
     
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-        self.loginViewController = (LoginViewController *)self.window.rootViewController;
-        self.loginViewController.delegate = self;
-        self.loginViewController.loginOperation = [[LoginOperation alloc] init];
+    self.loginViewController = (LoginViewController *)self.window.rootViewController;
+    self.loginViewController.delegate = self;
+//    self.loginViewController.loginOperation = [[LoginOperation alloc] init];
 
-        // Show the window.
-        [self.window makeKeyAndVisible];
-    }
+    // Show the window.
+    [self.window makeKeyAndVisible];
 
     return YES;
 }
@@ -51,21 +50,29 @@
 - (void)loginViewControllerLoggedIn:(LoginViewController *)loginViewController
 {
 //    [self.splitViewController dismissViewControllerAnimated:YES completion:NULL];
+//    
+//    LoginOperation *loginOp = self.loginViewController.loginOperation;
+//    
+//    NSLog(@"Logged in. User Name='%@' Password='%@'",
+//          loginOp.authenticatedUsername,
+//          loginOp.authenticatedPassword);
     
-    LoginOperation *loginOp = self.loginViewController.loginOperation;
-    
-    NSLog(@"Logged in. User Name='%@' Password='%@'",
-          loginOp.authenticatedUsername,
-          loginOp.authenticatedPassword);
-    
-    [loginOp deleteAuthenticatedData];
+//    [loginOp deleteAuthenticatedData];
     self.loginViewController = nil;
     
-    UIStoryboard *storyboard = [UIApplication sharedApplication].delegate.window.rootViewController.storyboard;
-    self.splitViewController = (UISplitViewController*)[storyboard instantiateViewControllerWithIdentifier:@"splitViewController"];
-    UINavigationController *navigationController = [self.splitViewController.viewControllers lastObject];
-    self.splitViewController.delegate = (id)navigationController.topViewController;
-    [UIApplication sharedApplication].delegate.window.rootViewController = self.splitViewController;
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+        UIStoryboard *storyboard = [UIApplication sharedApplication].delegate.window.rootViewController.storyboard;
+        self.splitViewController = (UISplitViewController*)[storyboard instantiateViewControllerWithIdentifier:@"splitViewController"];
+        UINavigationController *navigationController = [self.splitViewController.viewControllers lastObject];
+        self.splitViewController.delegate = (id)navigationController.topViewController;
+        [UIApplication sharedApplication].delegate.window.rootViewController = self.splitViewController;
+    }
+    else if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone){
+        UIStoryboard *storyboard = [UIApplication sharedApplication].delegate.window.rootViewController.storyboard;
+        UINavigationController *navigationController = [storyboard instantiateViewControllerWithIdentifier:@"rootNav"];
+        [UIApplication sharedApplication].delegate.window.rootViewController = navigationController;
+
+    }
 }
 
 
@@ -79,6 +86,9 @@
 {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+//    if(self.sharedModel.isRecordingTime){
+//        self.sharedModel.timerStartDate = [NSDate date];
+//    }
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
@@ -89,11 +99,18 @@
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    if(self.sharedModel.isRecordingTime){
+        self.sharedModel.timeElapsedInterval=[[NSDate date] timeIntervalSinceDate:self.sharedModel.timerStartDate];
+    }
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+-(GlobalModel*)sharedModel{
+    return [GlobalModel sharedInstance];
 }
 
 @end

@@ -22,4 +22,5 @@ extern NSString *const kHappyRatingHappyImage;
 extern NSString *const kHappyRatingSadImage;
 extern NSString *const kHappyRatingCompletedImage;
 
+extern NSString *const kJSONDateFormat;
 @end

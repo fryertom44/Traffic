@@ -38,7 +38,6 @@
         [jobTask setJobId:[NSNumber numberWithInt:[[dict valueForKeyPath:@"jobId"]intValue]]];
         
         if([dict respondsToSelector:NSSelectorFromString(@"jobTaskCompletionDate")]){
-            NSString *completionDateString = [dict valueForKeyPath:@"jobTaskCompletionDate"];
             [jobTask setJobTaskCompletionDate:[df dateFromString:[dict valueForKeyPath:@"jobTaskCompletionDate"]]];
         }
         [jobTask setStudioAllocationMinutes:[NSNumber numberWithFloat:[[dict valueForKeyPath:@"studioAllocationMinutes"]floatValue]]];
@@ -56,6 +55,7 @@
         }
         
 	}
+    return nil;
 }
 
 @end

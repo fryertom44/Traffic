@@ -7,10 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "AbstractServiceCallCommand.h"
 
-@interface LoadTrafficEmployeeCommand : NSObject
-
-@property (nonatomic, retain) NSMutableData *responseData;
+@interface LoadTrafficEmployeeCommand : AbstractServiceCallCommand
 
 - (void)executeWithTrafficEmployeeId:(NSNumber*)trafficEmployeeId;
 

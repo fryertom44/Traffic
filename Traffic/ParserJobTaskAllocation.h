@@ -10,5 +10,5 @@
 
 @interface ParserJobTaskAllocation : NSObject
 
-+ (void)parseData:(NSData*)data;
++ (NSMutableArray*)parseData:(NSData*)data;
 @end

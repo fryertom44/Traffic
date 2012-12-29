@@ -16,5 +16,6 @@
 }
 
 @property (strong, nonatomic) DetailViewController *detailViewController;
+- (IBAction)onLoadMoreSelected:(id)sender;
 
 @end

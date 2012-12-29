@@ -8,25 +8,26 @@
 
 #import "LoginViewController.h"
 #import "LoginCommand.h"
+#import "GlobalModel.h"
 
 @implementation LoginViewController
 
 #pragma mark - Properties
-@synthesize delegate=_delegate;
+//@synthesize delegate=_delegate;
 @synthesize usernameTextField=_usernameTextField;
 @synthesize passwordTextField=_passwordTextField;
 @synthesize submitButton=_submitButton;
 @synthesize waitIndicator=_waitIndicator;
 
 // Custom setter, which sets the 'delegate' property of the login operation
-@synthesize loginOperation=_loginOperation;
-- (void) setLoginOperation:(LoginOperation *)loginOperation
-{
-    _loginOperation = loginOperation;
-    
-    if (_loginOperation)
-        _loginOperation.delegate = self;
-}
+//@synthesize loginOperation=_loginOperation;
+//- (void) setLoginOperation:(LoginOperation *)loginOperation
+//{
+//    _loginOperation = loginOperation;
+//    
+//    if (_loginOperation)
+//        _loginOperation.delegate = self;
+//}
 
 #pragma mark - Helper methods
 - (void)releaseOutlets
@@ -56,8 +57,8 @@
 #pragma mark - Actions
 - (IBAction)submit:(id)sender
 {
-    if (!self.loginOperation)
-        return;
+//    if (!self.loginOperation)
+//        return;
     
     NSString *username = self.usernameTextField.text;
     if (!username || [username length] == 0)
@@ -73,19 +74,19 @@
     
     [self setIsWaiting:YES];
     LoginCommand* loginCommand = [[LoginCommand alloc]init];
-    [loginCommand executeWithUsername:username password:password sender:self];
+    [loginCommand executeWithUsername:username password:password delegate:self];
     
 }
 
 #pragma mark - LoginOperationDelegate members
-- (void)loginOperationCompleted:(LoginOperation *)loginOperation
+- (void)loginOperationCompleted:(LoginCommand *)loginOperation
                      withResult:(BOOL)successfulLogin
                    errorMessage:(NSString *)errorMessage
 {
     [self setIsWaiting:NO];
     
     if (successfulLogin)
-    {        
+    {
         // Let this object's delegate know that the login was a success.
         [self.delegate loginViewControllerLoggedIn:self];
     }
@@ -156,6 +157,5 @@
 {
 	return UIInterfaceOrientationIsPortrait(interfaceOrientation);
 }
-
 
 @end

@@ -9,14 +9,9 @@
 #import <Foundation/Foundation.h>
 
 
-@interface Money : NSDecimalNumber {
-	NSString* amount;
-	NSString* currencyType;
-}
+@interface Money : NSNumber
 
-@property (nonatomic, retain) NSString* amount;
+@property (nonatomic, retain) NSNumber* amount;
 @property (nonatomic, retain) NSString* currencyType;
-
-+ (Money *)initWithAmount:(NSDecimalNumber *)amount currencyType:(NSString *)currencyType;
 
 @end

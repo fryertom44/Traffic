@@ -7,16 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "AbstractServiceCallCommand.h"
 
-@interface LoadJobTaskAllocationsCommand : NSObject
-{
-    //Whichever component called this command
-    id componentToUpdate;
-}
+@interface LoadJobTaskAllocationsCommand : AbstractServiceCallCommand
 
-@property (nonatomic, retain) NSMutableArray *timeEntries;
-@property (nonatomic, retain) NSMutableData *responseData;
+//@property (nonatomic, retain) NSMutableArray *timeEntries;
 
--(void)executeAndUpdateComponent:(id)sender page:(int)page;
+-(void)executeWithPageNumber:(int)page windowSize:(int)windowSize;
 
 @end

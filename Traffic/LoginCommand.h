@@ -8,12 +8,12 @@
 
 #import <Foundation/Foundation.h>
 #import "LoginViewController.h"
+#import "AbstractServiceCallCommand.h"
 
-@interface LoginCommand : NSObject
+@interface LoginCommand : AbstractServiceCallCommand
 
-@property (nonatomic, retain) NSMutableData *responseData;
-@property (nonatomic) LoginViewController *loginViewController;
-
--(void)executeWithUsername:(NSString*)username password:(NSString*)password sender:(id)sender;
+//@property (nonatomic) LoginViewController *loginViewController;
+@property (nonatomic) id <LoginOperationDelegate> delegate;
+-(void)executeWithUsername:(NSString*)username password:(NSString*)password delegate:(id)delegate;
 
 @end

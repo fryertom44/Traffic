@@ -18,7 +18,7 @@
 
 @implementation LoginOperation
 
-@synthesize delegate=_delegate;
+//@synthesize delegate=_delegate;
 @synthesize authenticatedUsername=_authenticatedUsername;
 @synthesize authenticatedPassword=_authenticatedPassword;
 
@@ -90,9 +90,9 @@
         self.authenticatedPassword = _password;
     }
     
-    [self.delegate loginOperationCompleted:self 
-                                withResult:_result 
-                              errorMessage:_errorMessage];
+//    [self.delegate loginOperationCompleted:self
+//                                withResult:_result
+//                              errorMessage:_errorMessage];
     
     [self releaseReferences];
 }

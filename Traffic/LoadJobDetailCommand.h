@@ -7,10 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "AbstractServiceCallCommand.h"
 
-@interface LoadJobDetailCommand : NSObject
-
-@property (nonatomic, retain) NSMutableData *responseData;
+@interface LoadJobDetailCommand : AbstractServiceCallCommand
 
 - (void)executeWithJobDetailId:(NSNumber*)jobDetailId;
 

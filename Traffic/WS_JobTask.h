@@ -7,11 +7,10 @@
 //
 
 #import "BaseObject.h"
+#import "Money.h"
 
 @interface WS_JobTask : BaseObject
-{
-    
-}
+
 @property (nonatomic,retain) NSNumber* jobTaskId;
 @property (nonatomic,retain) NSNumber* version;
 @property (nonatomic,retain) NSString* jobTaskDescription;
@@ -28,4 +27,9 @@
 @property (nonatomic,retain) NSNumber* totalTimeLoggedMinutes;
 @property (nonatomic,retain) NSNumber* totalTimeLoggedBillableMinutes;
 @property (nonatomic,retain) NSNumber* totalTimeAllocatedMinutes;
+@property (nonatomic,retain) Money* cost;
+@property (nonatomic,retain) Money* rate;
+@property (nonatomic,retain) Money* rateOtherCurrency;
+@property (nonatomic,retain) Money* billableNet;
+
 @end

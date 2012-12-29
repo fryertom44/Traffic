@@ -7,17 +7,12 @@
 //
 
 #import "LoadTrafficEmployeeCommand.h"
-#import "KeychainItemWrapper.h"
 #import "WS_TrafficEmployee.h"
-#import "TaskDetailViewController.h"
-#import "GlobalModel.h"
 
 @implementation LoadTrafficEmployeeCommand
 
-@synthesize responseData;
-
 - (void)executeWithTrafficEmployeeId:(NSNumber*)trafficEmployeeId{
-	responseData = [NSMutableData data];
+	super.responseData = [NSMutableData data];
     NSString *urlString = [NSString stringWithFormat:@"https://api.sohnar.com/TrafficLiteServer/openapi/staff/employee/%@",trafficEmployeeId.stringValue];
 	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]];
 	[request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
@@ -29,65 +24,31 @@
 }
 
 #pragma mark - NSURLConnection Delegates
-- (void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
-    if ([challenge previousFailureCount] == 0) {
-        NSLog(@"received authentication challenge");
-        KeychainItemWrapper *keychainItem = [[KeychainItemWrapper alloc]initWithIdentifier:@"TrafficLogin" accessGroup:nil];
-        NSString* email = [keychainItem objectForKey:(__bridge id)(kSecValueData)];
-        NSString* apiKey = [keychainItem objectForKey:(__bridge id)(kSecAttrAccount)];
-        NSURLCredential *newCredential = [NSURLCredential credentialWithUser:email
-                                                                    password:apiKey
-                                                                 persistence:NSURLCredentialPersistenceForSession];
-        NSLog(@"credential created");
-        [[challenge sender] useCredential:newCredential forAuthenticationChallenge:challenge];
-        NSLog(@"responded to authentication challenge");
-    }
-    else {
-        NSLog(@"previous authentication failure");
-    }
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
-    [responseData setLength:0];
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
-    [responseData appendData:data];
-}
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
     
-	NSLog(@"DONE. Received Bytes: %d", [responseData length]);
+	NSLog(@"DONE. Received Bytes: %d", [super.responseData length]);
 	NSString *theJSON = [[NSString alloc]
-						 initWithBytes: [responseData mutableBytes]
-						 length:[responseData length]
+						 initWithBytes: [super.responseData mutableBytes]
+						 length:[super.responseData length]
 						 encoding:NSUTF8StringEncoding];
 	//---shows the JSON ---
 	NSLog(@"%@", theJSON);
     
     NSDictionary* json = nil;
-    if (responseData) {
+    if (super.responseData) {
         json = [NSJSONSerialization
-                JSONObjectWithData:responseData
+                JSONObjectWithData:super.responseData
                 options:kNilOptions
                 error:nil];
         
         WS_TrafficEmployee *employee = [[WS_TrafficEmployee alloc] init];
 		[employee setFirstName:[json valueForKeyPath:@"employeeDetails.personalDetails.firstName"]];
         [employee setLastName:[json valueForKeyPath:@"employeeDetails.personalDetails.lastName"]];
-        
+        [employee setCostPerHour:[self newMoneyFromDict:[json valueForKeyPath:@"employeeDetails.costPerHour"]]];
         self.sharedModel.selectedOwner = employee;
 
     }
-}
-
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-    NSLog(@"Error during connection: %@", [error description]);
-}
-
-
--(GlobalModel*)sharedModel{
-    return [GlobalModel sharedInstance];
 }
 
 @end

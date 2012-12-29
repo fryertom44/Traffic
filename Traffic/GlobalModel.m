@@ -11,10 +11,6 @@
 
 @implementation GlobalModel
 
-@synthesize timeEntries=_timeEntries;
-@synthesize taskAllocations=_allocatedTasks;
-@synthesize selectedJobTask=_selectedJobTask;
-
 static GlobalModel *sharedInstance = nil;
 
 // Get the shared instance and create it if necessary.
@@ -32,7 +28,7 @@ static GlobalModel *sharedInstance = nil;
     self = [super init];
     
     if (self) {
-        // Work your initialising magic here as you normally would
+        self.pageNumber=1;
     }
     
     return self;
@@ -46,20 +42,6 @@ static GlobalModel *sharedInstance = nil;
 // Equally, we don't want to generate multiple copies of the singleton.
 - (id)copyWithZone:(NSZone *)zone {
     return self;
-}
-
-- (NSMutableArray *)timeEntries {
-    if(_timeEntries==nil) {
-        _timeEntries = [[NSMutableArray alloc]init];
-    }
-    return _timeEntries;
-}
-
-- (NSMutableArray *)taskAllocations {
-    if(_allocatedTasks==nil) {
-        _allocatedTasks = [[NSMutableArray alloc]init];
-    }
-    return _allocatedTasks;
 }
 
 -(void)printOutTaskAllocations{

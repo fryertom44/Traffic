@@ -57,6 +57,7 @@
 + (NSString *)dateFormatString;
 + (NSString *)timeFormatString;
 + (NSString *)timestampFormatString;
++ (NSString *)timeStringFromMinutes:(int)minutes;
 + (NSString *)dbFormatString;
 
 @end

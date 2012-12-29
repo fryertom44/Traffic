@@ -23,16 +23,23 @@
 
 @property (nonatomic,strong) NSMutableArray *timeEntries;
 @property (nonatomic,strong) NSMutableArray *taskAllocations;
-@property (nonatomic,strong) NSMutableData *selectedJobAsData;
+@property (nonatomic) int pageNumber;
+
+//@property (nonatomic,strong) NSMutableData *selectedJobAsData;
 
 @property (nonatomic,strong) WS_TrafficEmployee *loggedInEmployee;
 @property (nonatomic,strong) WS_TrafficEmployee *selectedOwner;
 @property (nonatomic,strong) WS_JobTask *selectedJobTask;
-@property (nonatomic,strong) WS_JobTaskAllocation *selectedJobTaskAllocation;
+@property (nonatomic,retain) WS_JobTaskAllocation *selectedJobTaskAllocation;
 @property (nonatomic,strong) WS_Client *selectedClient;
 @property (nonatomic,strong) WS_Job *selectedJob;
 @property (nonatomic,strong) WS_JobDetail *selectedJobDetail;
 @property (nonatomic,strong) WS_Project *selectedProject;
 @property (nonatomic,strong) WS_TimeEntry *timesheet;
 
+#pragma mark - Timer
+@property (weak, nonatomic) NSTimer *myTimer;
+@property (strong, nonatomic) NSDate *timerStartDate;
+@property (nonatomic) double timeElapsedInterval;
+@property BOOL isRecordingTime;
 @end

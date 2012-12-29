@@ -10,8 +10,4 @@
 
 @implementation WS_Project
 
-@synthesize projectId=_projectId;
-@synthesize clientCRMEntryId=_clientCRMEntryId;
-@synthesize projectName=_projectName;
-
 @end

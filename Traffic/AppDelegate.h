@@ -11,12 +11,13 @@
 
 @class MasterViewController;
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate, LoginViewControllerDelegate>
+@interface AppDelegate : UIResponder <UIApplicationDelegate,LoginViewControllerDelegate>
 {
 //    LoginViewController *loginViewController;
 //    MasterViewController *masterViewController;
     
 }
+
 @property (strong, nonatomic) UIWindow *window;
 @property (nonatomic, retain) LoginViewController *loginViewController;
 @property (nonatomic, retain) MasterViewController *masterViewController;

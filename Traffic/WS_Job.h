@@ -9,12 +9,7 @@
 #import "BaseObject.h"
 
 @interface WS_Job : BaseObject
-{
-    NSNumber *jobId;
-    NSNumber *jobDetailId;
-    NSDate *jobDeadline;
-    NSString *jobNumber;
-}
+
 @property (nonatomic,retain) NSNumber*jobId;
 @property (nonatomic,retain) NSNumber*jobDetailId;
 @property (nonatomic,retain) NSDate* jobDeadline;

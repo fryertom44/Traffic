@@ -7,10 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "AbstractServiceCallCommand.h"
 
-@interface LoadClientCommand : NSObject
-
-@property (nonatomic, retain) NSMutableData *responseData;
+@interface LoadClientCommand : AbstractServiceCallCommand
 
 - (void)executeWithClientCRMId:(NSNumber*)clientCRMId;
 

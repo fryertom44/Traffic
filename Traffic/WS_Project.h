@@ -9,11 +9,6 @@
 #import "BaseObject.h"
 
 @interface WS_Project : BaseObject
-{
-    NSNumber*projectId;
-    NSNumber*clientCRMEntryId;
-    NSString *projectName;
-}
 
 @property (nonatomic,retain) NSString *projectName;
 @property NSNumber*clientCRMEntryId;

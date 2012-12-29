@@ -10,6 +10,7 @@
 #import "LoadJobDetailCommand.h"
 #import "LoadTrafficEmployeeCommand.h"
 #import "LoadProjectCommand.h"
+#import "LoadClientCommand.h"
 #import "GlobalModel.h"
 #import "ParseJobTaskFromJobData.h"
 #import "LoadJobCommand.h"
@@ -39,6 +40,12 @@
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
+    [self configureView];
+    [self loadProject];
+    [self loadEmployee];
+}
+
+-(void)viewWillAppear:(BOOL)animated{
     [self.sharedModel addObserver:self forKeyPath:@"selectedJobAsData" options:NSKeyValueObservingOptionNew context:NULL];
     [self.sharedModel addObserver:self forKeyPath:@"selectedJob" options:NSKeyValueObservingOptionNew context:NULL];
     [self.sharedModel addObserver:self forKeyPath:@"selectedJobDetail" options:NSKeyValueObservingOptionNew context:NULL];
@@ -49,13 +56,68 @@
     [self.sharedModel addObserver:self forKeyPath:@"selectedProject" options:NSKeyValueObservingOptionNew context:NULL];
     [self.sharedModel addObserver:self forKeyPath:@"selectedOwner" options:NSKeyValueObservingOptionNew context:NULL];
     [self.sharedModel addObserver:self forKeyPath:@"timesheet" options:NSKeyValueObservingOptionNew context:NULL];
-    [self configureView];
+    
+    [super viewWillAppear:animated];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [self.sharedModel removeObserver:self forKeyPath:@"selectedJobAsData"];
+    [self.sharedModel removeObserver:self forKeyPath:@"selectedJob"];
+    [self.sharedModel removeObserver:self forKeyPath:@"selectedJobDetail"];
+    [self.sharedModel removeObserver:self forKeyPath:@"selectedClient"];
+    [self.sharedModel removeObserver:self forKeyPath:@"selectedJobTaskAllocation"];
+    [self.sharedModel removeObserver:self forKeyPath:@"selectedJobTask"];
+    [self.sharedModel removeObserver:self forKeyPath:@"selectedJobAsData"];
+    [self.sharedModel removeObserver:self forKeyPath:@"selectedProject"];
+    [self.sharedModel removeObserver:self forKeyPath:@"selectedOwner"];
+    [self.sharedModel removeObserver:self forKeyPath:@"timesheet"];
+    
+    [super viewWillDisappear:animated];
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)loadProject
+{
+    if (self.sharedModel.selectedJobDetail) {
+        LoadProjectCommand *loadProjectCommand = [[LoadProjectCommand alloc]init];
+        [loadProjectCommand executeWithProjectId:self.sharedModel.selectedJobDetail.ownerProjectId];
+    }
+}
+
+- (void)loadJob
+{
+    if (self.sharedModel.selectedJobTaskAllocation) {
+        LoadJobCommand *loadJobCommand = [[LoadJobCommand alloc]init];
+        [loadJobCommand executeWithJobId:self.sharedModel.selectedJobTaskAllocation.jobId];
+    }
+}
+
+- (void)loadEmployee
+{
+    if (self.sharedModel.selectedJobDetail!=nil) {
+        LoadTrafficEmployeeCommand *loadTrafficEmployeeCommand = [[LoadTrafficEmployeeCommand alloc]init];
+        [loadTrafficEmployeeCommand executeWithTrafficEmployeeId:self.sharedModel.selectedJobDetail.accountManagerId];
+    }
+}
+
+- (void)loadClient
+{
+    if (self.sharedModel.selectedProject!=nil) {
+        LoadClientCommand *loadClientCommand = [[LoadClientCommand alloc]init];
+        [loadClientCommand executeWithClientCRMId:self.sharedModel.selectedProject.clientCRMEntryId];
+    }
+}
+
+- (void)loadJobDetail
+{
+    LoadJobDetailCommand *loadJobDetailCommand = [[LoadJobDetailCommand alloc]init];
+    [loadJobDetailCommand executeWithJobDetailId:self.sharedModel.selectedJob.jobDetailId];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath
@@ -68,20 +130,18 @@
     }
     if ([keyPath isEqual:@"selectedJob"]) {
         [self configureViewWithJobDetails];
-        LoadJobDetailCommand *loadJobDetailCommand = [[LoadJobDetailCommand alloc]init];
-        [loadJobDetailCommand executeWithJobDetailId:self.sharedModel.selectedJob.jobDetailId];
+        [self loadJobDetail];
         NSLog(@"selectedJob has been observed!");
     }
     if ([keyPath isEqual:@"selectedJobDetail"]) {
         [self configureViewWithJobDetailDetails];
-        LoadProjectCommand *loadProjectCommand = [[LoadProjectCommand alloc]init];
-        [loadProjectCommand executeAndUpdateComponent:self projectId:self.sharedModel.selectedJobDetail.ownerProjectId];
-        LoadTrafficEmployeeCommand *loadTrafficEmployeeCommand = [[LoadTrafficEmployeeCommand alloc]init];
-        [loadTrafficEmployeeCommand executeWithTrafficEmployeeId:self.sharedModel.selectedJobDetail.accountManagerId];
+        [self loadProject];
+        [self loadEmployee];
 
         NSLog(@"selectedJobDetail has been observed!");
     }
     if ([keyPath isEqual:@"selectedClient"]) {
+        [self configureViewWithClientDetails];
         NSLog(@"selectedClient has been observed!");
     }
     if ([keyPath isEqual:@"selectedJobTask"]) {
@@ -89,8 +149,7 @@
         NSLog(@"selectedJobTask has been observed!");
     }
     if ([keyPath isEqual:@"selectedJobTaskAllocation"]) {
-        LoadJobCommand *loadJobCommand = [[LoadJobCommand alloc]init];
-        [loadJobCommand executeWithJobId:self.sharedModel.selectedJobTaskAllocation.jobId];
+        [self loadJob];
         NSLog(@"selectedJobTaskAllocation has been observed!");
     }
     if ([keyPath isEqual:@"timesheet"]) {
@@ -99,6 +158,7 @@
     }
     if ([keyPath isEqual:@"selectedProject"]) {
         [self configureViewWithProjectDetails];
+        [self loadClient];
         NSLog(@"selectedProject has been observed!");
     }
     if ([keyPath isEqual:@"selectedOwner"]) {
@@ -128,7 +188,7 @@
 - (void)configureViewWithTaskDetails
 {
     if(self.sharedModel.selectedJobTask!=nil) {
-        self.taskDeadlineLabel.text = [NSString stringWithFormat:@"%@",self.sharedModel.selectedJobTask.taskDeadline];
+        self.taskDeadlineLabel.text = [self fullDateStringFromDate:self.sharedModel.selectedJobTask.taskDeadline];
         self.taskDescriptionLabel.text = self.sharedModel.selectedJobTask.jobTaskDescription;
         self.taskNotesLabel.text = self.sharedModel.selectedJobTask.internalNote;
         self.stageLabel.text = self.sharedModel.selectedJobTask.jobStageDescription;
@@ -139,7 +199,7 @@
 {
     if(self.sharedModel.selectedJob!=nil) {
         self.jobNoLabel.text = self.sharedModel.selectedJob.jobNumber;
-        self.jobDeadlineLabel.text = [NSString stringWithFormat:@"%@",self.sharedModel.selectedJob.jobDeadline];
+        self.jobDeadlineLabel.text = [self fullDateStringFromDate:self.sharedModel.selectedJob.jobDeadline];
     }
 }
 
@@ -164,8 +224,31 @@
     }
 }
 
+- (void)configureViewWithClientDetails
+{
+    if(self.sharedModel.selectedClient!=nil){
+        self.clientLabel.text = [NSString stringWithFormat:@"%@",self.sharedModel.selectedClient.clientName];
+    }
+}
+
 - (GlobalModel*)sharedModel{
     return [GlobalModel sharedInstance];
 }
 
+- (BOOL)tableView:(UITableView *)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath *)indexPath {
+    return NO;
+}
+
+-(NSString*)fullDateStringFromDate:(NSDate*)date{
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+        [dateFormatter setDateStyle:NSDateFormatterFullStyle];
+        [dateFormatter setTimeStyle:NSDateFormatterShortStyle];
+        [dateFormatter setTimeZone:[NSTimeZone systemTimeZone]];
+    }else if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+        [dateFormatter setDateFormat:@"dd-MM-YYYY HH:mm"];
+    }
+    return [dateFormatter stringFromDate:date];
+}
 @end

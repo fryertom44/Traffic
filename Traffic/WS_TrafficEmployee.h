@@ -7,15 +7,12 @@
 //
 
 #import "BaseObject.h"
+#import "Money.h"
 
 @interface WS_TrafficEmployee : BaseObject
-{
-    NSNumber *trafficEmployeeId;
-    NSString *firstName;
-    NSString *lastName;
-}
 
 @property (nonatomic,retain) NSNumber *trafficEmployeeId;
 @property (nonatomic,retain) NSString *firstName;
 @property (nonatomic,retain) NSString *lastName;
+@property (nonatomic,retain) Money* costPerHour;
 @end

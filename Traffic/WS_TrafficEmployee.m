@@ -13,4 +13,5 @@
 @synthesize trafficEmployeeId=_trafficEmployeeId;
 @synthesize firstName=_firstName;
 @synthesize lastName=_lastName;
+@synthesize costPerHour=_costPerHour;
 @end

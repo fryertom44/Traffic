@@ -12,23 +12,37 @@
 
 @synthesize taskDescription;
 @synthesize happyRating;
+@synthesize happyRatingHasChanged;
 @synthesize isTaskComplete;
 @synthesize taskDeadline;
+@synthesize jobTaskAllocationGroupId;
 @synthesize jobTaskId;
 @synthesize jobId;
 @synthesize trafficEmployeeId;
 @synthesize totalTimeLoggedMinutes;
 @synthesize internalNote;
 
+- (id)init {
+    self = [super init];
+    if (self) {
+        happyRatingHasChanged = FALSE;
+    }
+    return self;
+}
+
 -(id)copyWithZone:(NSZone *)zone
 {
     WS_JobTaskAllocation *copiedObject = [[WS_JobTaskAllocation alloc]init];
     [copiedObject setTaskDescription:[self taskDescription]];
     [copiedObject setHappyRating:[self happyRating]];
+    [copiedObject setHappyRatingHasChanged:[self happyRatingHasChanged]];
     [copiedObject setIsTaskComplete:[self isTaskComplete]];
     [copiedObject setTaskDeadline:[self taskDeadline]];
     [copiedObject setJobTaskId:[self jobTaskId]];
+    [copiedObject setJobId:[self jobId]];
+    [copiedObject setTrafficEmployeeId:[self trafficEmployeeId]];
     [copiedObject setTotalTimeLoggedMinutes:[self totalTimeLoggedMinutes]];
+    [copiedObject setInternalNote:[self internalNote]];
     return copiedObject;
 }
 

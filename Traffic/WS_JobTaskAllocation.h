@@ -9,24 +9,17 @@
 #import "BaseObject.h"
 
 @interface WS_JobTaskAllocation : BaseObject
-{
-    BOOL isTaskComplete;
-	NSString* taskDescription;
-    NSDate* taskDeadline;
-	NSString* happyRating;
-    NSNumber*jobTaskId;
-    NSNumber*trafficEmployeeId;
-    NSNumber*totalTimeLoggedMinutes;
-    NSString *internalNote;
-}
+
 @property (nonatomic,retain) NSString* taskDescription;
 @property (nonatomic,retain) NSString* happyRating;
+@property (nonatomic) BOOL happyRatingHasChanged;
 @property (nonatomic,retain) NSDate* taskDeadline;
 @property (nonatomic) BOOL isTaskComplete;
+@property (nonatomic,retain) NSNumber* jobTaskAllocationGroupId;
 @property (nonatomic,retain) NSNumber* jobTaskId;
 @property (nonatomic,retain) NSNumber* jobId;
 @property (nonatomic,retain) NSNumber* trafficEmployeeId;
-@property (nonatomic, retain) NSNumber* totalTimeLoggedMinutes;
+@property (nonatomic,retain) NSNumber* totalTimeLoggedMinutes;
 @property (nonatomic,retain) NSString* internalNote;
 
 -(NSUInteger)daysUntilDeadline;
