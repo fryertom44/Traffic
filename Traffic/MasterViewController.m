@@ -17,6 +17,8 @@
 #import "LoadJobTaskAllocationsCommand.h"
 #import "RefreshJobTaskAllocationsCommand.h"
 #import "GlobalModel.h"
+#import "HappyRatingHelper.h"
+#import "NSDate+Helper.h"
 
 @implementation MasterViewController
 
@@ -43,13 +45,12 @@
     self.refreshControl = refreshControl;
 
     [self loadTaskAllocationsWithPageNumber:self.sharedModel.pageNumber andWindowSize:10];
-    
-    [self.tableView reloadData];
 
 }
 
 -(void)viewDidAppear:(BOOL)animated{
     [self.sharedModel addObserver:self forKeyPath:@"taskAllocations" options:NSKeyValueObservingOptionNew context:NULL];
+    [self.tableView reloadData];
 }
 
 -(void)viewDidDisappear:(BOOL)animated{
@@ -100,12 +101,14 @@
     [cell setBackgroundView:[[UIView alloc] init]];
     [cell.backgroundView.layer insertSublayer:grad atIndex:0];
     
-    WS_JobTaskAllocation *task = self.sharedModel.taskAllocations[indexPath.row];
-    cell.companyLabel.text = @"Company Name: <lookup>";
-    cell.jobLabel.text = @"Job Name: <lookup>";
-    cell.timesheetLabel.text = task.taskDescription;
-    cell.daysToDeadlineLabel.text = [NSString stringWithFormat:@"%d days remaining",[task daysUntilDeadline]];
-    cell.happyRating.image = [UIImage imageNamed:task.happyRatingImage];
+    WS_JobTaskAllocation *allocation = self.sharedModel.taskAllocations[indexPath.row];
+    cell.companyLabel.text = [NSString stringWithFormat:@"Company Name: <lookup>"];
+    cell.jobLabel.text = [NSString stringWithFormat:@"Job ID: %@",allocation.jobId];
+    cell.timesheetLabel.text = allocation.taskDescription;
+    cell.daysToDeadlineLabel.text = [NSString stringWithFormat:@"%d days %@",allocation.daysUntilDeadlineUnsigned, allocation.daysUntilDeadline < 0 ? @"overdue" : @"remaining"];
+    cell.timeCompletedLabel.text = [NSString stringWithFormat:@"%@ of %@", [NSDate timeStringFromMinutes:allocation.totalTimeLoggedMinutes.intValue],[NSDate timeStringFromMinutes:allocation.durationInMinutes.intValue]];
+    cell.timeCompletedLabel.textColor = allocation.totalTimeLoggedMinutes.intValue > allocation.durationInMinutes.intValue ? [UIColor redColor] : [UIColor blackColor];
+    cell.happyRating.image = [HappyRatingHelper happyRatingImageFromString:allocation.happyRating];
 
     return cell;
 }

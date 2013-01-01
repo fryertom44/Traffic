@@ -10,29 +10,23 @@
 
 @implementation WS_TimeEntry
 
-@synthesize timeEntryId,jobTaskId,trafficEmployeeId,jobId,allocationGroupId,chargebandId,billable,exported,lockedByApproval,comment,endTime,startTime,minutes,taskDescription,taskRate,valueOfTimeEntry,timeEntryCost,timeEntryPersonalRate,dateModified,version;
-
-//@synthesize startTime = _startTime;
-//
-//- (NSDate *)startTime {
-//    if (_startTime) {
-//        return _startTime;
-//    } else {
-//        return [[NSDate alloc] init];
-//    }
-//}
+//@synthesize timeEntryId,jobTaskId,trafficEmployeeId,jobId,allocationGroupId,chargebandId,billable,exported,lockedByApproval,comment,endTime,startTime,minutes,taskDescription,taskRate,valueOfTimeEntry,timeEntryCost,timeEntryPersonalRate,dateModified,version;
 
 - (id)init{
     self = [super init];
     
     if(self){
-        billable = true;
-        exported = false;
-        lockedByApproval = false;
-        comment = @"";
-        taskDescription = @"";
-        timeEntryId = [NSNumber numberWithInt:-1];
-        version = [NSNumber numberWithInt:-1];
+        self.billable = true;
+        self.exported = false;
+        self.lockedByApproval = false;
+        self.timesheetWasChanged = false;
+        self.comment = @"";
+        self.taskDescription = @"";
+        self.timeEntryId = [NSNumber numberWithInt:-1];
+        self.version = [NSNumber numberWithInt:-1];
+        self.valueOfTimeEntry = [[Money alloc]init];
+        self.timeEntryCost = [[Money alloc]init];
+        self.timeEntryPersonalRate = [[Money alloc]init];
     }
     return self;
 }

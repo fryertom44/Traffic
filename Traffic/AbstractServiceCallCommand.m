@@ -9,6 +9,7 @@
 #import "AbstractServiceCallCommand.h"
 #import "KeychainItemWrapper.h"
 #import "GlobalModel.h"
+#import "NSNull+Addition.h"
 
 @implementation AbstractServiceCallCommand
 

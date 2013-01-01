@@ -8,8 +8,15 @@
 
 #import <UIKit/UIKit.h>
 #import "PGToggleButton.h"
+#import "DatePickerWithToolBar.h"
 
-@interface DetailViewController : UITableViewController <UISplitViewControllerDelegate,UITextFieldDelegate>
+@class DetailViewController;
+
+@protocol DetailViewControllerDelegate <NSObject>
+-(void)saveSuccessful;
+@end
+
+@interface DetailViewController : UITableViewController <UISplitViewControllerDelegate,UITextViewDelegate,UITextFieldDelegate,DetailViewControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet UILabel *taskDescription;
 @property (weak, nonatomic) IBOutlet UILabel *jobTitle;
@@ -26,13 +33,14 @@
 @property (weak, nonatomic) IBOutlet UITextView *timesheetNotes;
 @property (weak, nonatomic) IBOutlet UISwitch *billableSwitch;
 @property (weak, nonatomic) IBOutlet UIButton *happyRatingButton;
-
+@property (nonatomic) id txtActiveComponent;
 @property (nonatomic,retain) UIView *subview;
+
 -(IBAction)goToSettings:(id)sender;
 -(IBAction)changeHappyRating:(id)sender;
 -(IBAction)startTimer:(id)sender;
 -(IBAction)stopTimer:(id)sender;
-- (IBAction)billableValueChanged:(id)sender;
+-(IBAction)billableValueChanged:(id)sender;
 -(IBAction)onSave:(id)sender;
 -(IBAction)onCancel:(id)sender;
 

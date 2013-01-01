@@ -8,6 +8,7 @@
 
 #import "LoadProjectCommand.h"
 #import "WS_Project.h"
+#import "NSDictionary+Helpers.h"
 
 @implementation LoadProjectCommand
 
@@ -44,7 +45,7 @@
         
         WS_Project *project = [[WS_Project alloc] init];
 		[project setProjectId:[NSNumber numberWithInt:[[json valueForKeyPath:@"id"]intValue]]];
-        [project setProjectName:[json valueForKeyPath:@"name"]];
+        [project setProjectName:[json stringForKey:@"name"]];
         [project setClientCRMEntryId:[NSNumber numberWithInt:[[json valueForKeyPath:@"clientCRMEntryId"]intValue]]];
         
         self.sharedModel.selectedProject = project;

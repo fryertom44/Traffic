@@ -10,8 +10,8 @@
 #import "KeychainItemWrapper.h"
 #import "WS_JobDetail.h"
 #import "DetailViewController.h"
-#import "NSDictionary+Helper.h"
 #import "GlobalModel.h"
+#import "NSDictionary+Helpers.h"
 
 @implementation LoadJobDetailCommand
 
@@ -52,8 +52,8 @@
         WS_JobDetail *jobDetail = [[WS_JobDetail alloc] init];
 		[jobDetail setJobContactId:[NSNumber numberWithInt:[[json valueForKeyPath:@"jobContactId"]intValue]]];
         [jobDetail setJobDetailId:[NSNumber numberWithInt:[[json valueForKeyPath:@"jobDetail.id"]intValue]]];
-        [jobDetail setJobDescription:[json getStringUsingkey:@"description" fallback:@""]];
-        [jobDetail setJobTitle:[json getStringUsingkey:@"name" fallback:@""]];
+        [jobDetail setJobDescription:[json stringForKey:@"description"]];
+        [jobDetail setJobTitle:[json stringForKey:@"name"]];
         [jobDetail setAccountManagerId:[NSNumber numberWithInt:[[json valueForKeyPath:@"accountManagerId"]intValue]]];
         [jobDetail setOwnerProjectId:[NSNumber numberWithInt:[[json valueForKeyPath:@"ownerProjectId"]intValue]]];
         

@@ -13,4 +13,13 @@
 
 @synthesize currencyType,amount;
 
+-(id)init{
+    self = [super init];
+    if(self){
+        self.amount = [NSNumber numberWithFloat:0.00];
+        self.currencyType = @"GBP";
+    }
+    return self;
+}
+
 @end

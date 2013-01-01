@@ -10,11 +10,14 @@
 #import "NSDate+Helper.h"
 #import "Constants.h"
 #import "GlobalModel.h"
-//#import "ParseJobTaskFromJobData.h"
 #import "LoadJobCommand.h"
 #import "LoadJobDetailCommand.h"
 #import "PutTimesheetCommand.h"
 #import "UIToolbar+Helper.h"
+#import "DatePickerWithToolBar.h"
+#import "HappyRatingHelper.h"
+#import "PostJobTaskAllocationCommand.h"
+#import "GetJobTaskAllocationCommand.h"
 
 @interface DetailViewController ()
 @property (strong, nonatomic) UIPopoverController *masterPopoverController;
@@ -45,34 +48,24 @@ UIView *normalView;
     [[self recordButton]setOffStateImage:[UIImage imageNamed:kPlayButtonImage]];
     [[self recordButton]setOnStateImage:[UIImage imageNamed:kPauseButtonImage]];
     [[self stopButton]setImage:[UIImage imageNamed:kStopButtonImage] forState:UIControlStateNormal];
-    
+        
     UIDatePicker *startPicker = [[UIDatePicker alloc]init];
     [startPicker setDate:[NSDate date]];
     [startPicker setDatePickerMode:UIDatePickerModeDateAndTime];
+    [self.startTimeInput setInputView:startPicker];
     
     UIDatePicker *endPicker = [[UIDatePicker alloc]init];
     [endPicker setDate:[NSDate date]];
-    [endPicker setDatePickerMode:UIDatePickerModeDateAndTime];
-    
-    [self.startTimeInput setInputView:startPicker];
+    [endPicker setDatePickerMode:UIDatePickerModeDateAndTime];    
     [self.endTimeInput setInputView:endPicker];
 
     UIDatePicker *durationPicker = [[UIDatePicker alloc]init];
-    [durationPicker setDate:[NSDate date]];
     [durationPicker setDatePickerMode:UIDatePickerModeCountDownTimer];
     [self.durationInput setInputView:durationPicker];
-
-    // Plug the keyboardDoneButtonView into the text field...
-    [self.startTimeInput setInputAccessoryView:[self newKeyboardViewWithDoneMethod:@selector(startTimeDoneClicked:)cancelMethod:@selector(startTimeCancelClicked:)forComponent:self.startTimeInput]];
-    [self.endTimeInput setInputAccessoryView:[self newKeyboardViewWithDoneMethod:@selector(endTimeDoneClicked:)cancelMethod:@selector(endTimeCancelClicked:)forComponent:self.endTimeInput]];
-    [self.durationInput setInputAccessoryView:[self newKeyboardViewWithDoneMethod:@selector(durationDoneClicked:)cancelMethod:@selector(durationCancelClicked:)forComponent:self.durationInput]];
-     [self.dateInput setInputAccessoryView:[self newKeyboardViewWithDoneMethod:@selector(dateDoneClicked:)cancelMethod:@selector(dateCancelClicked:)forComponent:self.dateInput]];
-
-    [self configureView];
+    [self configureInputAccessoryViews];
 }
 
 -(void)viewWillAppear:(BOOL)animated{
-    [self.sharedModel addObserver:self forKeyPath:@"selectedJobAsData" options:NSKeyValueObservingOptionNew context:NULL];
     [self.sharedModel addObserver:self forKeyPath:@"selectedJob" options:NSKeyValueObservingOptionNew context:NULL];
     [self.sharedModel addObserver:self forKeyPath:@"selectedJobDetail" options:NSKeyValueObservingOptionNew context:NULL];
     [self.sharedModel addObserver:self forKeyPath:@"selectedClient" options:NSKeyValueObservingOptionNew context:NULL];
@@ -82,10 +75,11 @@ UIView *normalView;
     [self.sharedModel addObserver:self forKeyPath:@"timesheet" options:NSKeyValueObservingOptionNew context:NULL];
     
     [super viewWillAppear:animated];
+    [self configureView];
+
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
-    [self.sharedModel removeObserver:self forKeyPath:@"selectedJobAsData"];
     [self.sharedModel removeObserver:self forKeyPath:@"selectedJob"];
     [self.sharedModel removeObserver:self forKeyPath:@"selectedJobDetail"];
     [self.sharedModel removeObserver:self forKeyPath:@"selectedClient"];
@@ -101,13 +95,6 @@ UIView *normalView;
                       ofObject:(id)object
                         change:(NSDictionary *)change
                        context:(void *)context {
-    if ([keyPath isEqual:@"selectedJobAsData"]) {
-        
-        if(self.sharedModel.timesheet!=nil){
-//            self.sharedModel.selectedJobTask = [ParseJobTaskFromJobData parseData:[change objectForKey:NSKeyValueChangeNewKey] fetchJobTaskWithId:self.sharedModel.timesheet.jobTaskId];
-        }
-        NSLog(@"selectedJobData has been observed!");
-    }
     if ([keyPath isEqual:@"selectedJob"]) {
         [self displayJobDetails];
         
@@ -126,6 +113,7 @@ UIView *normalView;
     }
     if ([keyPath isEqual:@"selectedJobTask"]) {
         [self displayTaskDetails];
+        self.sharedModel.timesheet.chargebandId = self.sharedModel.selectedJobTask.chargeBandId;
         NSLog(@"selectedJobTask has been observed!");
     }
     if ([keyPath isEqual:@"selectedJobTaskAllocation"]) {
@@ -135,13 +123,14 @@ UIView *normalView;
             LoadJobCommand *loadJobCommand = [[LoadJobCommand alloc]init];
             [loadJobCommand executeWithJobId:self.sharedModel.selectedJobTaskAllocation.jobId];
         }
-        
         self.view = normalView;
         [self.navigationController setToolbarHidden:FALSE animated:TRUE];
         NSLog(@"selectedJobTaskAllocation has been observed!");
     }
     if ([keyPath isEqual:@"timesheet"]) {
         [self displayTimesheetDetails];
+        GetJobTaskAllocationCommand *getJobTaskAllocationCmd = [[GetJobTaskAllocationCommand alloc]init];
+        [getJobTaskAllocationCmd executeWithAllocationGroupId:self.sharedModel.timesheet.allocationGroupId];
         NSLog(@"timesheet has been observed!");
     }
     if (self.masterPopoverController != nil) {
@@ -174,6 +163,11 @@ UIView *normalView;
     
     if (self.sharedModel.timesheet!=nil) {
         self.timerLabel.text = @"00:00:00";
+        NSDateFormatter *df = [[NSDateFormatter alloc]init];
+        [df setDateFormat:kJSONDateFormat];
+        self.startTimeInput.text = [df stringFromDate:self.sharedModel.timesheet.startTime];
+        self.endTimeInput.text = [df stringFromDate:self.sharedModel.timesheet.endTime];
+        self.durationInput.text = [NSDate timeStringFromMinutes:self.sharedModel.timesheet.minutes.intValue];
         self.billableSwitch.on = self.sharedModel.timesheet.billable;
     }
 }
@@ -196,7 +190,7 @@ UIView *normalView;
 - (void)displayTaskAllocationDetails
 {
     if(self.sharedModel.selectedJobTaskAllocation!=nil) {
-        [self.happyRatingButton setImage:[UIImage imageNamed:self.sharedModel.selectedJobTaskAllocation.happyRatingImage] forState:UIControlStateNormal];
+        [self.happyRatingButton setImage:[HappyRatingHelper happyRatingImageFromString:self.sharedModel.selectedJobTaskAllocation.happyRating] forState:UIControlStateNormal];
         self.daysRemainingLabel.text = [NSString stringWithFormat:@"%d",self.sharedModel.selectedJobTaskAllocation.daysUntilDeadline];
     }
 }
@@ -225,7 +219,7 @@ UIView *normalView;
 
 }
 
-- (UIToolbar *)newKeyboardViewWithDoneMethod:(SEL)doneMethod cancelMethod:(SEL)cancelMethod forComponent:(id)component
+- (void)configureInputAccessoryViews
 {
     UIToolbar* keyboardDoneButtonView = [[UIToolbar alloc] init];
     keyboardDoneButtonView.barStyle = UIBarStyleBlack;
@@ -235,13 +229,21 @@ UIView *normalView;
     UIBarButtonItem *flexSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:self action:nil];
     UIBarButtonItem* cancelButton = [[UIBarButtonItem alloc] initWithTitle:@"Cancel"
                                                                      style:UIBarButtonItemStyleBordered target:self
-                                                                    action:cancelMethod];
+                                                                    action:@selector(inputViewCancelled:)];
     UIBarButtonItem* doneButton = [[UIBarButtonItem alloc] initWithTitle:@"Done"
                                                                    style:UIBarButtonItemStyleBordered target:self
-                                                                  action:doneMethod];
+                                                                  action:@selector(inputViewDone:)];
     [keyboardDoneButtonView setItems:[NSArray arrayWithObjects:flexSpace,cancelButton,doneButton, nil]];
-    return keyboardDoneButtonView;
+    [self.startTimeInput setInputAccessoryView:keyboardDoneButtonView];
+    [self.startTimeInput setDelegate:self];
+    [self.endTimeInput setInputAccessoryView:keyboardDoneButtonView];
+    [self.endTimeInput setDelegate:self];
+    [self.durationInput setInputAccessoryView:keyboardDoneButtonView];
+    [self.durationInput setDelegate:self];
+    [self.timesheetNotes setInputAccessoryView:keyboardDoneButtonView];
+    [self.timesheetNotes setDelegate:self];
 }
+
 
 #pragma mark - Split view
 
@@ -286,8 +288,11 @@ UIView *normalView;
 }
 
 - (IBAction)changeHappyRating:(id)sender {
-    [self.sharedModel.selectedJobTaskAllocation nextHappyRating];
-    [self.happyRatingButton setImage:[UIImage imageNamed:self.sharedModel.selectedJobTaskAllocation.happyRatingImage] forState:UIControlStateNormal];
+    NSString *currentRating = self.sharedModel.selectedJobTaskAllocation.happyRating;
+    NSString *nextHappyRating = [HappyRatingHelper nextHappyRating:currentRating];
+    self.sharedModel.selectedJobTaskAllocation.happyRating = nextHappyRating;
+    self.sharedModel.selectedJobTaskAllocation.happyRatingWasChanged = TRUE;
+    [self.happyRatingButton setImage:[HappyRatingHelper happyRatingImageFromString:nextHappyRating] forState:UIControlStateNormal];
     [self.navigationController setToolbarHidden:FALSE animated:TRUE];
 }
 
@@ -295,6 +300,7 @@ UIView *normalView;
 {
     if(self.sharedModel.myTimer==nil){
         [self setTimerToZero];
+        self.sharedModel.timerStartDate = [NSDate date];
         self.sharedModel.myTimer= [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(updateTimer) userInfo:nil repeats:YES];
     }
     [self.navigationController setToolbarHidden:FALSE animated:TRUE];
@@ -308,9 +314,18 @@ UIView *normalView;
     self.sharedModel.isRecordingTime = NO;
     [[self recordButton]setOn:FALSE];
     
-    self.startTimeInput.text = [self fullDateStringFromDate:self.sharedModel.timerStartDate];
-    self.endTimeInput.text = [self fullDateStringFromDate:[NSDate date]];
-    self.durationInput.text = [NSDate timeStringFromMinutes:self.sharedModel.timeElapsedInterval/60];
+    NSDate *dateNow = [NSDate date];
+    NSDate *dateAtBeginning = self.sharedModel.timerStartDate;
+    int minutesElapsed = [self regulatedTotalFromMinutes:(self.sharedModel.timeElapsedInterval/60)];
+    
+    self.startTimeInput.text = [self fullDateStringFromDate:dateAtBeginning];
+    self.endTimeInput.text = [self fullDateStringFromDate:dateNow];
+    self.durationInput.text = [NSDate timeStringFromMinutes:minutesElapsed];
+    
+    self.sharedModel.timesheet.startTime = self.sharedModel.timerStartDate;
+    self.sharedModel.timesheet.endTime = dateNow;
+    self.sharedModel.timesheet.minutes = [NSNumber numberWithInt:minutesElapsed];
+    self.sharedModel.timesheet.timesheetWasChanged = TRUE;
     [self setMinAndMaxDatesOnPickers];
 
     [self setTimerToZero];
@@ -319,6 +334,13 @@ UIView *normalView;
 
 }
 
+-(void)setTimerToZero
+{
+    self.sharedModel.timerStartDate = [NSDate date];
+    self.sharedModel.timeElapsedInterval=[[NSDate date] timeIntervalSinceDate:self.sharedModel.timerStartDate];
+}
+
+#pragma mark - form actions
 - (IBAction)billableValueChanged:(id)sender {
     if(self.billableSwitch.isOn)
         self.sharedModel.timesheet.billable = TRUE;
@@ -327,8 +349,16 @@ UIView *normalView;
 }
 
 - (IBAction)onSave:(id)sender {
-    PutTimesheetCommand *putTimesheetCmd = [[PutTimesheetCommand alloc]init];
-    [putTimesheetCmd execute];
+    if(self.sharedModel.selectedJobTaskAllocation.happyRatingWasChanged){
+        PostJobTaskAllocationCommand *postJobTaskAllocationCmd = [[PostJobTaskAllocationCommand alloc]init];
+        postJobTaskAllocationCmd.delegate = self;
+        [postJobTaskAllocationCmd execute];
+    }
+    if (self.sharedModel.timesheet.timesheetWasChanged) {
+        PutTimesheetCommand *putTimesheetCmd = [[PutTimesheetCommand alloc]init];
+        putTimesheetCmd.delegate = self;
+        [putTimesheetCmd execute];
+    }
 }
 
 - (IBAction)onCancel:(id)sender {
@@ -337,89 +367,8 @@ UIView *normalView;
     self.sharedModel.timesheet.minutes = 0;
     self.sharedModel.timesheet.comment = nil;
     self.sharedModel.timesheet.billable = TRUE;
-    [self.sharedModel.selectedJobTaskAllocation restoreState];
+//    [self.sharedModel.selectedJobTaskAllocation restoreState];
     [self configureView];
-}
-
--(void)setTimerToZero
-{
-    self.sharedModel.timerStartDate = [NSDate date];
-    self.sharedModel.timeElapsedInterval=[[NSDate date] timeIntervalSinceDate:self.sharedModel.timerStartDate];
-}
-
-#pragma mark - date picker
--(void)startTimeDoneClicked:(id)sender
-{
-    UIDatePicker *picker = (UIDatePicker*)self.startTimeInput.inputView;
-    self.startTimeInput.text = [self fullDateStringFromDate:picker.date];
-    self.sharedModel.timesheet.startTime = picker.date;
-    [self setMinAndMaxDatesOnPickers];
-    [[self startTimeInput] resignFirstResponder];
-    [self.navigationController setToolbarHidden:FALSE animated:TRUE];
-}
-
--(void)endTimeDoneClicked:(id)sender
-{
-    UIDatePicker *picker = (UIDatePicker*)self.endTimeInput.inputView;
-    self.endTimeInput.text = [self fullDateStringFromDate:picker.date];
-    self.sharedModel.timesheet.endTime = picker.date;
-    [self setMinAndMaxDatesOnPickers];
-    [[self endTimeInput] resignFirstResponder];
-    [self.navigationController setToolbarHidden:FALSE animated:TRUE];
-
-}
-
--(void)setMinAndMaxDatesOnPickers{
-    UIDatePicker *startPicker = (UIDatePicker*)self.startTimeInput.inputView;
-    UIDatePicker *endPicker = (UIDatePicker*)self.endTimeInput.inputView;
-    endPicker.minimumDate = startPicker.date;
-    startPicker.maximumDate = endPicker.date;
-}
-
--(void)durationDoneClicked:(id)sender
-{
-    UIDatePicker *picker = (UIDatePicker*)self.durationInput.inputView;
-    NSCalendar *calendar = [NSCalendar currentCalendar];
-    NSDateComponents *components = [calendar components:(NSHourCalendarUnit | NSMinuteCalendarUnit) fromDate:picker.date];
-    NSInteger hour = [components hour];
-    NSInteger minute = [components minute];
-    self.durationInput.text = [NSString stringWithFormat:@"%02d:%02d",hour,minute];
-    self.sharedModel.timesheet.minutes = [NSNumber numberWithInteger:(60*hour+minute)];
-    [[self durationInput] resignFirstResponder];
-    [self.navigationController setToolbarHidden:FALSE animated:TRUE];
-
-}
-
--(void)dateDoneClicked:(id)sender
-{
-    UIDatePicker *picker = (UIDatePicker*)self.dateInput.inputView;
-    self.dateInput.text = [self fullDateStringFromDate:picker.date];
-    [[self dateInput] resignFirstResponder];
-    [self.navigationController setToolbarHidden:FALSE animated:TRUE];
-
-}
-
--(void)startTimeCancelClicked:(id)sender
-{
-    [self.startTimeInput resignFirstResponder];
-}
-
-
--(void)endTimeCancelClicked:(id)sender
-{
-    [self.endTimeInput resignFirstResponder];
-}
-
-
--(void)durationCancelClicked:(id)sender
-{
-    [self.durationInput resignFirstResponder];
-}
-
-
--(void)dateCancelClicked:(id)sender
-{
-    [self.dateInput resignFirstResponder];
 }
 
 -(NSString*)fullDateStringFromDate:(NSDate*)date{
@@ -433,6 +382,95 @@ UIView *normalView;
         [dateFormatter setDateFormat:@"dd-MM-YYYY HH:mm"];
     }
     return [dateFormatter stringFromDate:date];
+}
+
+#pragma mark - DetailViewControllerDelegate
+-(void)saveSuccessful{
+    [self.navigationController setToolbarHidden:TRUE animated:TRUE];
+}
+
+#pragma mark - UITextFieldDelegate methods
+-(void)textFieldDidBeginEditing:(UITextField *)textField{
+    self.txtActiveComponent = textField;
+}
+
+#pragma mark - UITextViewDelegate methods
+-(void)textViewDidBeginEditing:(UITextView *)textView{
+    self.txtActiveComponent = textView;
+}
+
+-(void)textViewDidChange:(UITextView *)textView{
+    //limit character length to 255    
+    NSInteger restrictedLength=255;
+
+    NSString *temp=textView.text;
+    
+    if([[textView text] length] > restrictedLength){
+        textView.text=[temp substringToIndex:restrictedLength];
+    }
+}
+
+#pragma mark - Input accessory methods
+-(void)inputViewDone:(id)sender{
+    
+    if([self.txtActiveComponent isKindOfClass:[UITextField class]])
+    {
+        UITextField *activeField = (UITextField*)self.txtActiveComponent;
+        UIDatePicker *datePicker = (UIDatePicker*)activeField.inputView;
+
+        if([self.txtActiveComponent isEqual:self.durationInput]){
+            NSCalendar *calendar = [NSCalendar currentCalendar];
+            NSDateComponents *components = [calendar components:(NSHourCalendarUnit | NSMinuteCalendarUnit) fromDate:datePicker.date];
+            
+            NSInteger hour = [components hour];
+            NSInteger minute = [components minute];
+            int totalMinutes = 60*hour+minute;
+            totalMinutes = [self regulatedTotalFromMinutes:totalMinutes];
+            
+            self.sharedModel.timesheet.minutes = [NSNumber numberWithInt:totalMinutes];
+            self.durationInput.text = [NSDate timeStringFromMinutes:totalMinutes];
+            
+        }
+        else if ([self.txtActiveComponent isEqual:self.startTimeInput]) {
+            self.startTimeInput.text = [self fullDateStringFromDate:datePicker.date];
+            self.sharedModel.timesheet.startTime = datePicker.date;
+        }
+        else if([self.txtActiveComponent isEqual:self.endTimeInput]){
+            self.endTimeInput.text = [self fullDateStringFromDate:datePicker.date];
+            self.sharedModel.timesheet.endTime = datePicker.date;
+        }
+        [self setMinAndMaxDatesOnPickers];
+    }
+
+    else if ([self.txtActiveComponent isEqual:self.timesheetNotes]) {
+        self.sharedModel.timesheet.comment = self.timesheetNotes.text;
+    }
+    [self.txtActiveComponent resignFirstResponder];
+    self.txtActiveComponent  = nil;
+    self.sharedModel.timesheet.timesheetWasChanged = TRUE;
+    [self.navigationController setToolbarHidden:FALSE animated:TRUE];
+}
+
+-(void)inputViewCancelled:(id)sender{
+    [self.txtActiveComponent resignFirstResponder];
+    self.txtActiveComponent = nil;
+}
+
+-(void)setMinAndMaxDatesOnPickers{
+    UIDatePicker *startPicker = (UIDatePicker*)self.startTimeInput.inputView;
+    UIDatePicker *endPicker = (UIDatePicker*)self.endTimeInput.inputView;
+    endPicker.minimumDate = startPicker.date;
+    startPicker.maximumDate = endPicker.date;
+}
+
+-(int)regulatedTotalFromMinutes:(int)minutes{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    int storedInterval = [defaults integerForKey:kTimeIntervalSettingKey];
+    
+    //Make sure the duration we've selected is divisible by the interval setting (if not, round it up to the next divisible number)
+    int leftover = minutes % storedInterval;
+    int regulatedTotal = leftover > 0 || minutes < storedInterval ? minutes+(storedInterval-leftover) : minutes;
+    return regulatedTotal;
 }
 
 @end

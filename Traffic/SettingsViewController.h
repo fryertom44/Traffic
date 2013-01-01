@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SettingsViewController : UITableViewController
+@interface SettingsViewController : UITableViewController<UITextFieldDelegate>
 
 @property (weak, nonatomic) IBOutlet UITextField *timeIntervalTextInput;
 

@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-//#import "LoginOperation.h"
 #import "KeychainItemWrapper.h"
 
 @class LoginViewController;
@@ -33,7 +32,6 @@
 
 // Properties
 @property (nonatomic, assign) id<LoginViewControllerDelegate>    delegate;
-//@property (nonatomic, retain) LoginOperation                    *loginOperation;
 
 // Outlets
 @property (nonatomic, retain) IBOutlet UITextField              *usernameTextField;

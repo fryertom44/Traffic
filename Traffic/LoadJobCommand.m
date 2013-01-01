@@ -9,7 +9,8 @@
 #import "LoadJobCommand.h"
 #import "WS_Job.h"
 #import "ParseJobTaskFromJobData.h"
-#import "NSDictionary+Helper.h"
+#import "NSDictionary+Helpers.h"
+
 @implementation LoadJobCommand
 
 - (void)executeWithJobId:(NSNumber*)jobId{
@@ -28,9 +29,6 @@
 #pragma mark - NSURLConnection Delegates
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
-    //HACK: Store raw data in model, so that job task parser can extract job tasks from it
-//    self.sharedModel.selectedJobAsData = super.responseData;
-    
 	NSLog(@"DONE. Received Bytes: %d", [super.responseData length]);
 	NSString *theJSON = [[NSString alloc]
 						 initWithBytes: [super.responseData mutableBytes]
@@ -69,19 +67,23 @@
 		WS_JobTask *jobTask = [[WS_JobTask alloc] init];
         [jobTask setJobTaskId:[NSNumber numberWithInt:[[dict valueForKeyPath:@"id"]intValue]]];
         [jobTask setVersion:[NSNumber numberWithInt:[[dict valueForKeyPath:@"version"]intValue]]];
-		[jobTask setJobTaskDescription:[dict getStringUsingkey:@"description" fallback:@""]];
-        [jobTask setInternalNote:[dict getStringUsingkey:@"internalNote" fallback:@""]];
+		[jobTask setJobTaskDescription:[dict stringForKey:@"description"]];
+        [jobTask setInternalNote:[dict stringForKey:@"internalNote"]];
         [jobTask setQuantity:[NSNumber numberWithFloat:[[dict valueForKeyPath:@"quantity"]floatValue]]];
-        [jobTask setChargeBandId:[NSNumber numberWithInt:[[dict valueForKeyPath:@"chargebandId"]intValue]]];
-        [jobTask setJobId:[NSNumber numberWithInt:[[dict valueForKeyPath:@"jobId"]intValue]]];
         
-        if([dict respondsToSelector:NSSelectorFromString(@"jobTaskCompletionDate")]){
-            [jobTask setJobTaskCompletionDate:[df dateFromString:[dict valueForKeyPath:@"jobTaskCompletionDate"]]];
+        id cb = [dict valueForKeyPath:@"chargeBandId.id"];
+        if([NSNull null]!=cb){
+            int cbInt = [cb intValue];
+            NSNumber *cbNum = [NSNumber numberWithInt:cbInt];
+            [jobTask setChargeBandId:cbNum];
         }
+        
+        [jobTask setJobId:[NSNumber numberWithInt:[[dict valueForKeyPath:@"jobId"]intValue]]];
+        [jobTask setJobTaskCompletionDate:[dict dateFromJSONStringForKey:@"jobTaskCompletionDate"]];
         [jobTask setStudioAllocationMinutes:[NSNumber numberWithFloat:[[dict valueForKeyPath:@"studioAllocationMinutes"]floatValue]]];
-        [jobTask setTaskDeadline:[df dateFromString:[dict valueForKeyPath:@"taskDeadline"]]];
-        [jobTask setTaskStartDate:[df dateFromString:[dict valueForKeyPath:@"taskStartDate"]]];
-		[jobTask setJobStageDescription:[dict getStringUsingkey:@"jobStageDescription" fallback:@""]];
+        [jobTask setTaskDeadline:[dict dateFromJSONStringForKey:@"taskDeadline"]];
+        [jobTask setTaskStartDate:[dict dateFromJSONStringForKey:@"taskStartDate"]];
+		[jobTask setJobStageDescription:[dict stringForKey:@"jobStageDescription"]];
         [jobTask setDurationMinutes:[NSNumber numberWithFloat:[[dict valueForKeyPath:@"durationMinutes"]floatValue]]];
         [jobTask setTotalTimeLoggedMinutes:[NSNumber numberWithFloat:[[dict valueForKeyPath:@"totalTimeLoggedMinutes"]floatValue]]];
         [jobTask setTotalTimeLoggedBillableMinutes:[NSNumber numberWithFloat:[[dict valueForKeyPath:@"totalTimeLoggedBillableMinutes"]floatValue]]];

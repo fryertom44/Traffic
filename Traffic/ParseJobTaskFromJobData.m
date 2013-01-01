@@ -8,7 +8,6 @@
 
 #import "ParseJobTaskFromJobData.h"
 #import "WS_JobTask.h"
-#import "NSDictionary+Helper.h"
 
 @implementation ParseJobTaskFromJobData
 
@@ -31,8 +30,8 @@
 		WS_JobTask *jobTask = [[WS_JobTask alloc] init];
         [jobTask setJobTaskId:[NSNumber numberWithInt:[[dict valueForKeyPath:@"id"]intValue]]];
         [jobTask setVersion:[NSNumber numberWithInt:[[dict valueForKeyPath:@"version"]intValue]]];
-		[jobTask setJobTaskDescription:[dict getStringUsingkey:@"description" fallback:@""]];
-        [jobTask setInternalNote:[dict getStringUsingkey:@"internalNote" fallback:@""]];
+		[jobTask setJobTaskDescription:[dict valueForKeyPath:@"description"]];
+        [jobTask setInternalNote:[dict valueForKeyPath:@"internalNote"]];
         [jobTask setQuantity:[NSNumber numberWithFloat:[[dict valueForKeyPath:@"quantity"]floatValue]]];
         [jobTask setChargeBandId:[NSNumber numberWithInt:[[dict valueForKeyPath:@"chargebandId"]intValue]]];
         [jobTask setJobId:[NSNumber numberWithInt:[[dict valueForKeyPath:@"jobId"]intValue]]];
@@ -43,8 +42,7 @@
         [jobTask setStudioAllocationMinutes:[NSNumber numberWithFloat:[[dict valueForKeyPath:@"studioAllocationMinutes"]floatValue]]];
         [jobTask setTaskDeadline:[df dateFromString:[dict valueForKeyPath:@"taskDeadline"]]];
         [jobTask setTaskStartDate:[df dateFromString:[dict valueForKeyPath:@"taskStartDate"]]];
-		[jobTask setJobStageDescription:[dict getStringUsingkey:@"jobStageDescription" fallback:@""]];
-        NSLog([NSString stringWithFormat:@"durationMinutes: %@",[dict valueForKeyPath:@"durationMinutes"]]);
+		[jobTask setJobStageDescription:[dict valueForKeyPath:@"jobStageDescription"]];
         [jobTask setDurationMinutes:[NSNumber numberWithFloat:[[dict valueForKeyPath:@"durationMinutes"]floatValue]]];
         [jobTask setTotalTimeLoggedMinutes:[NSNumber numberWithFloat:[[dict valueForKeyPath:@"totalTimeLoggedMinutes"]floatValue]]];
         [jobTask setTotalTimeLoggedBillableMinutes:[NSNumber numberWithFloat:[[dict valueForKeyPath:@"totalTimeLoggedBillableMinutes"]floatValue]]];

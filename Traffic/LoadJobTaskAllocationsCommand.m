@@ -7,7 +7,9 @@
 //
 
 #import "LoadJobTaskAllocationsCommand.h"
-#import "NSDictionary+Helper.h"
+#import "WS_AllocationInterval.h"
+#import "NSNull+Addition.h"
+#import "NSDictionary+Helpers.h"
 
 @implementation LoadJobTaskAllocationsCommand
 
@@ -79,15 +81,47 @@
 	for (NSDictionary *dict in jsonObjects)
 	{
 		WS_JobTaskAllocation *allocation = [[WS_JobTaskAllocation alloc] init];
-		[allocation setTaskDescription:[dict valueForKeyPath:@"taskDescription"]];
-        [allocation setHappyRating:[dict valueForKeyPath:@"happyRating"]];
-        [allocation setIsTaskComplete:[[dict valueForKeyPath:@"isTaskComplete"]boolValue]];
-        [allocation setTaskDeadline:[df dateFromString:[dict valueForKeyPath:@"taskDeadline"]]];
+        [allocation setJobTaskAllocationGroupId:[NSNumber numberWithInt:[dict integerForKey:@"id"]]];
+        [allocation setTaskDescription:[dict stringForKey:@"taskDescription"]];
+        [allocation setHappyRating:[dict stringForKey:@"happyRating"]];
+        [allocation setIsTaskComplete:[dict boolForKey:@"isTaskComplete"]];
+        [allocation setTaskDeadline:[dict dateFromJSONStringForKey:@"taskDeadline"]];
         [allocation setJobTaskId:[NSNumber numberWithInt:[[dict valueForKeyPath:@"jobTaskId.id"]intValue]]];
         [allocation setJobId:[NSNumber numberWithInt:[[dict valueForKeyPath:@"jobId.id"]intValue]]];
-		[allocation setTrafficEmployeeId:[NSNumber numberWithInt:[[dict valueForKeyPath:@"trafficEmployeeId.id"]intValue]]];
-        [allocation setInternalNote:[dict getStringUsingkey:@"internalNote" fallback:@""]];
+        [allocation setTrafficEmployeeId:[NSNumber numberWithInt:[[dict valueForKeyPath:@"trafficEmployeeId.id"]intValue]]];
+        [allocation setInternalNote:[dict stringForKey:@"internalNote"]];
+        [allocation setExternalCalendarTag:[dict stringForKey:@"externalCalendarTag"]];
+        [allocation setExternalCalendarUUID:[dict stringForKey:@"externalCalendarUuid"]];
+        [allocation setDurationInMinutes:[NSNumber numberWithInt:[dict integerForKey:@"durationInMinutes"]]];
+        [allocation setDependencyTaskDeadline:[dict dateFromJSONStringForKey:@"dependancyTaskDeadline"]];
+        [allocation setJobStageDescription:[dict stringForKey:@"jobStageDescription"]];
+        [allocation setJobStageUUID:[dict valueForKeyPath:@"jobStageUuid"]];
+        [allocation setTotalTimeLoggedMinutes:[NSNumber numberWithInteger:[dict integerForKey:@"totalTimeLoggedMinutes"]]];
+        [allocation setIsTaskMilestone:[dict boolForKey:@"isTaskMilesone"]];
+        [allocation setUuid:[dict stringForKey:@"uuid"]];
+        [allocation setWsVersion:[NSNumber numberWithInteger:[dict integerForKey:@"version"]]];
         
+        NSMutableArray *allocationIntervals;
+        NSDictionary *allocationIntervalsDict = [dict objectForKey:@"allocationIntervals"];
+        
+        for (NSDictionary *intervalDict in allocationIntervalsDict) {
+            if (allocationIntervals==nil) {
+                allocationIntervals = [[NSMutableArray alloc]init];
+            }
+            WS_AllocationInterval *interval = [[WS_AllocationInterval alloc]init];
+            [interval setAllocationIntervalId:[NSNumber numberWithInt:[intervalDict integerForKey:@"id"]]];
+            [interval setStartTime:[intervalDict dateFromJSONStringForKey:@"startTime"]];
+            [interval setEndTime:[intervalDict dateFromJSONStringForKey:@"endTime"]];
+            [interval setAllocationIntervalStatus:[intervalDict stringForKey:@"allocationIntervalStatus"]];
+            [interval setDurationInSeconds:[NSNumber numberWithInt:[intervalDict integerForKey:@"durationInSeconds"]]];
+            [interval setDateModified:[intervalDict dateFromJSONStringForKey:@"dateModified"]];
+            [interval setUuid:[dict stringForKey:@"uuid"]];
+            [interval setWsVersion:[NSNumber numberWithInteger:[dict integerForKey:@"version"]]];
+            [interval setClassName:[dict stringForKey:@"@class"]];
+            [allocationIntervals addObject:interval];
+        }
+        
+        allocation.allocationIntervals = allocationIntervals;
         [taskAllocations addObject:allocation];
 	}
 

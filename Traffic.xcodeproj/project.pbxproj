@@ -43,11 +43,11 @@
 		9177C25D162B4268004719B6 /* MasterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9177C25C162B4268004719B6 /* MasterViewController.m */; };
 		9177C260162B4268004719B6 /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9177C25F162B4268004719B6 /* DetailViewController.m */; };
 		9177C268162B450C004719B6 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9177C267162B450C004719B6 /* LoginViewController.m */; };
-		917C3E86168B5FEA00896A61 /* whiteLogo160.png in Resources */ = {isa = PBXBuildFile; fileRef = 917C3E85168B5FEA00896A61 /* whiteLogo160.png */; };
 		917C3E88168E10AC00896A61 /* Money.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BA64831651949900B91A41 /* Money.m */; };
+		917C3E8E168FB1C900896A61 /* DatePickerWithToolbar.xib in Resources */ = {isa = PBXBuildFile; fileRef = 917C3E8D168FB1C900896A61 /* DatePickerWithToolbar.xib */; };
+		917C3E92168FB32E00896A61 /* DatePickerWithToolBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 917C3E91168FB32E00896A61 /* DatePickerWithToolBar.m */; };
 		91825CAC1679331000404C52 /* WS_JobTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 91825CAB1679330F00404C52 /* WS_JobTask.m */; };
 		91825CAF1679388000404C52 /* ParseJobTaskFromJobData.m in Sources */ = {isa = PBXBuildFile; fileRef = 91825CAE1679388000404C52 /* ParseJobTaskFromJobData.m */; };
-		91825CBA167CFF8600404C52 /* NSDictionary+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 91825CB9167CFF8600404C52 /* NSDictionary+Helper.m */; };
 		91825CBC167D2B0100404C52 /* whiteLogo320.png in Resources */ = {isa = PBXBuildFile; fileRef = 91825CBB167D2B0000404C52 /* whiteLogo320.png */; };
 		91825CBE167D2C0B00404C52 /* login_background_landscape.png in Resources */ = {isa = PBXBuildFile; fileRef = 91825CBD167D2C0A00404C52 /* login_background_landscape.png */; };
 		9185847D165D40D200A2950E /* libobjc.A.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9185847C165D40D200A2950E /* libobjc.A.dylib */; };
@@ -56,6 +56,13 @@
 		918AD3B4166E464F00DFC21C /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 918AD3B3166E464E00DFC21C /* Default.png */; };
 		918AD3B6166E466A00DFC21C /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 918AD3B5166E466A00DFC21C /* Default@2x.png */; };
 		918AD3B8166E468C00DFC21C /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 918AD3B7166E468C00DFC21C /* Default-568h@2x.png */; };
+		918D5E69169085EA00696318 /* WS_AllocationInterval.m in Sources */ = {isa = PBXBuildFile; fileRef = 918D5E68169085EA00696318 /* WS_AllocationInterval.m */; };
+		918D5E6D169090F000696318 /* PostJobTaskAllocationCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 918D5E6C169090EF00696318 /* PostJobTaskAllocationCommand.m */; };
+		918D5E701690E30B00696318 /* HappyRatingHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 918D5E6F1690E30B00696318 /* HappyRatingHelper.m */; };
+		918D5E731691027C00696318 /* GetJobTaskAllocationCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 918D5E721691027C00696318 /* GetJobTaskAllocationCommand.m */; };
+		918D5E761691FA0800696318 /* NSNull+Addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 918D5E751691FA0800696318 /* NSNull+Addition.m */; };
+		918D5E7816922AF800696318 /* NSDictionary+Helpers.m in Sources */ = {isa = PBXBuildFile; fileRef = 918D5E7716922AF700696318 /* NSDictionary+Helpers.m */; };
+		918D5E7D1693897600696318 /* whiteLogo160.png in Resources */ = {isa = PBXBuildFile; fileRef = 918D5E7C1693897600696318 /* whiteLogo160.png */; };
 		91BA647B16516A8900B91A41 /* LoadTimeEntriesCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BA647A16516A8900B91A41 /* LoadTimeEntriesCommand.m */; };
 		91BA647F16516BB400B91A41 /* ParserTimeEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BA647D16516BB300B91A41 /* ParserTimeEntry.m */; };
 		91BA648116516BDF00B91A41 /* WS_TimeEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BA648016516BDF00B91A41 /* WS_TimeEntry.m */; };
@@ -149,13 +156,13 @@
 		9177C25F162B4268004719B6 /* DetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
 		9177C266162B450C004719B6 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
 		9177C267162B450C004719B6 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
-		917C3E85168B5FEA00896A61 /* whiteLogo160.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = whiteLogo160.png; sourceTree = "<group>"; };
+		917C3E8D168FB1C900896A61 /* DatePickerWithToolbar.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DatePickerWithToolbar.xib; sourceTree = "<group>"; };
+		917C3E90168FB32D00896A61 /* DatePickerWithToolBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatePickerWithToolBar.h; sourceTree = "<group>"; };
+		917C3E91168FB32E00896A61 /* DatePickerWithToolBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatePickerWithToolBar.m; sourceTree = "<group>"; };
 		91825CAA1679330F00404C52 /* WS_JobTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WS_JobTask.h; sourceTree = "<group>"; };
 		91825CAB1679330F00404C52 /* WS_JobTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WS_JobTask.m; sourceTree = "<group>"; };
 		91825CAD1679388000404C52 /* ParseJobTaskFromJobData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParseJobTaskFromJobData.h; sourceTree = "<group>"; };
 		91825CAE1679388000404C52 /* ParseJobTaskFromJobData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParseJobTaskFromJobData.m; sourceTree = "<group>"; };
-		91825CB8167CFF8500404C52 /* NSDictionary+Helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+Helper.h"; sourceTree = "<group>"; };
-		91825CB9167CFF8600404C52 /* NSDictionary+Helper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+Helper.m"; sourceTree = "<group>"; };
 		91825CBB167D2B0000404C52 /* whiteLogo320.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = whiteLogo320.png; sourceTree = "<group>"; };
 		91825CBD167D2C0A00404C52 /* login_background_landscape.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = login_background_landscape.png; sourceTree = "<group>"; };
 		9185847C165D40D200A2950E /* libobjc.A.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libobjc.A.dylib; path = usr/lib/libobjc.A.dylib; sourceTree = SDKROOT; };
@@ -165,6 +172,19 @@
 		918AD3B3166E464E00DFC21C /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = ../Default.png; sourceTree = "<group>"; };
 		918AD3B5166E466A00DFC21C /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default@2x.png"; path = "../Default@2x.png"; sourceTree = "<group>"; };
 		918AD3B7166E468C00DFC21C /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "../Default-568h@2x.png"; sourceTree = "<group>"; };
+		918D5E67169085EA00696318 /* WS_AllocationInterval.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WS_AllocationInterval.h; sourceTree = "<group>"; };
+		918D5E68169085EA00696318 /* WS_AllocationInterval.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WS_AllocationInterval.m; sourceTree = "<group>"; };
+		918D5E6B169090EF00696318 /* PostJobTaskAllocationCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PostJobTaskAllocationCommand.h; sourceTree = "<group>"; };
+		918D5E6C169090EF00696318 /* PostJobTaskAllocationCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PostJobTaskAllocationCommand.m; sourceTree = "<group>"; };
+		918D5E6E1690E30B00696318 /* HappyRatingHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HappyRatingHelper.h; sourceTree = "<group>"; };
+		918D5E6F1690E30B00696318 /* HappyRatingHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HappyRatingHelper.m; sourceTree = "<group>"; };
+		918D5E711691027C00696318 /* GetJobTaskAllocationCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetJobTaskAllocationCommand.h; sourceTree = "<group>"; };
+		918D5E721691027C00696318 /* GetJobTaskAllocationCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetJobTaskAllocationCommand.m; sourceTree = "<group>"; };
+		918D5E741691FA0700696318 /* NSNull+Addition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSNull+Addition.h"; sourceTree = "<group>"; };
+		918D5E751691FA0800696318 /* NSNull+Addition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSNull+Addition.m"; sourceTree = "<group>"; };
+		918D5E7716922AF700696318 /* NSDictionary+Helpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+Helpers.m"; sourceTree = "<group>"; };
+		918D5E7916922B1C00696318 /* NSDictionary+Helpers.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+Helpers.h"; sourceTree = "<group>"; };
+		918D5E7C1693897600696318 /* whiteLogo160.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = whiteLogo160.png; sourceTree = "<group>"; };
 		91BA647916516A8900B91A41 /* LoadTimeEntriesCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadTimeEntriesCommand.h; sourceTree = "<group>"; };
 		91BA647A16516A8900B91A41 /* LoadTimeEntriesCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadTimeEntriesCommand.m; sourceTree = "<group>"; };
 		91BA647C16516BB300B91A41 /* ParserTimeEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParserTimeEntry.h; sourceTree = "<group>"; };
@@ -227,24 +247,28 @@
 				916A3AE5168689FC00AEEEDF /* AbstractServiceCallCommand.m */,
 				91110E6216729DBB00BBB7F8 /* LoginCommand.h */,
 				91110E6316729DBB00BBB7F8 /* LoginCommand.m */,
-				91110E4A166FE68C00BBB7F8 /* LoadJobTaskAllocationsCommand.h */,
-				91110E4B166FE68D00BBB7F8 /* LoadJobTaskAllocationsCommand.m */,
+				918D5E711691027C00696318 /* GetJobTaskAllocationCommand.h */,
+				918D5E721691027C00696318 /* GetJobTaskAllocationCommand.m */,
 				916A3AE11686880E00AEEEDF /* RefreshJobTaskAllocationsCommand.h */,
 				916A3AE21686880F00AEEEDF /* RefreshJobTaskAllocationsCommand.m */,
 				91BA647916516A8900B91A41 /* LoadTimeEntriesCommand.h */,
 				91BA647A16516A8900B91A41 /* LoadTimeEntriesCommand.m */,
 				91110E6B1674F38900BBB7F8 /* LoadJobCommand.h */,
 				91110E6C1674F38A00BBB7F8 /* LoadJobCommand.m */,
-				9153CD1616751A7300875EFB /* LoadJobDetailCommand.h */,
 				9153CD1716751A7300875EFB /* LoadJobDetailCommand.m */,
 				9153CD19167524CF00875EFB /* LoadTrafficEmployeeCommand.h */,
 				9153CD1A167524CF00875EFB /* LoadTrafficEmployeeCommand.m */,
+				91110E4A166FE68C00BBB7F8 /* LoadJobTaskAllocationsCommand.h */,
+				91110E4B166FE68D00BBB7F8 /* LoadJobTaskAllocationsCommand.m */,
 				9153CD1C1675299E00875EFB /* LoadProjectCommand.h */,
+				9153CD1616751A7300875EFB /* LoadJobDetailCommand.h */,
 				9153CD1D1675299E00875EFB /* LoadProjectCommand.m */,
 				9153CD1F16752AA700875EFB /* LoadClientCommand.h */,
 				9153CD2016752AA700875EFB /* LoadClientCommand.m */,
 				916A3AED1687816800AEEEDF /* PutTimesheetCommand.h */,
 				916A3AEE1687816A00AEEEDF /* PutTimesheetCommand.m */,
+				918D5E6B169090EF00696318 /* PostJobTaskAllocationCommand.h */,
+				918D5E6C169090EF00696318 /* PostJobTaskAllocationCommand.m */,
 				91BA64841653E87900B91A41 /* LoginOperation.h */,
 				91BA64851653E87900B91A41 /* LoginOperation.m */,
 			);
@@ -264,6 +288,8 @@
 				91BA648016516BDF00B91A41 /* WS_TimeEntry.m */,
 				91110E4D166FEA3700BBB7F8 /* WS_JobTaskAllocation.h */,
 				91110E4E166FEA3700BBB7F8 /* WS_JobTaskAllocation.m */,
+				918D5E67169085EA00696318 /* WS_AllocationInterval.h */,
+				918D5E68169085EA00696318 /* WS_AllocationInterval.m */,
 				91825CAA1679330F00404C52 /* WS_JobTask.h */,
 				91825CAB1679330F00404C52 /* WS_JobTask.m */,
 				9153CD0616750C8700875EFB /* WS_Job.h */,
@@ -290,6 +316,9 @@
 				91BA64B4165C3F7900B91A41 /* PGToggleButton.h */,
 				91BA64B5165C3F7A00B91A41 /* PGToggleButton.m */,
 				916A3ADF168515E800AEEEDF /* NothingSelectedView.xib */,
+				917C3E8D168FB1C900896A61 /* DatePickerWithToolbar.xib */,
+				917C3E90168FB32D00896A61 /* DatePickerWithToolBar.h */,
+				917C3E91168FB32E00896A61 /* DatePickerWithToolBar.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -328,8 +357,12 @@
 				91BA64B2165BDDD900B91A41 /* NSDate+Helper.m */,
 				916A3AEA1687648700AEEEDF /* UIToolbar+Helper.h */,
 				916A3AEB1687648700AEEEDF /* UIToolbar+Helper.m */,
-				91825CB8167CFF8500404C52 /* NSDictionary+Helper.h */,
-				91825CB9167CFF8600404C52 /* NSDictionary+Helper.m */,
+				918D5E7916922B1C00696318 /* NSDictionary+Helpers.h */,
+				918D5E7716922AF700696318 /* NSDictionary+Helpers.m */,
+				918D5E6E1690E30B00696318 /* HappyRatingHelper.h */,
+				918D5E6F1690E30B00696318 /* HappyRatingHelper.m */,
+				918D5E741691FA0700696318 /* NSNull+Addition.h */,
+				918D5E751691FA0800696318 /* NSNull+Addition.m */,
 			);
 			name = Utility;
 			sourceTree = "<group>";
@@ -433,8 +466,8 @@
 		917C3E84168B5A1C00896A61 /* iphone */ = {
 			isa = PBXGroup;
 			children = (
+				918D5E7C1693897600696318 /* whiteLogo160.png */,
 				910390CF1688829B0022F869 /* login_background_portrait_iphone.png */,
-				917C3E85168B5FEA00896A61 /* whiteLogo160.png */,
 			);
 			name = iphone;
 			sourceTree = "<group>";
@@ -516,7 +549,8 @@
 				91825CBE167D2C0B00404C52 /* login_background_landscape.png in Resources */,
 				916A3AE0168515E800AEEEDF /* NothingSelectedView.xib in Resources */,
 				910390D01688829B0022F869 /* login_background_portrait_iphone.png in Resources */,
-				917C3E86168B5FEA00896A61 /* whiteLogo160.png in Resources */,
+				917C3E8E168FB1C900896A61 /* DatePickerWithToolbar.xib in Resources */,
+				918D5E7D1693897600696318 /* whiteLogo160.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -562,12 +596,18 @@
 				9153CD2116752AA700875EFB /* LoadClientCommand.m in Sources */,
 				91825CAC1679331000404C52 /* WS_JobTask.m in Sources */,
 				91825CAF1679388000404C52 /* ParseJobTaskFromJobData.m in Sources */,
-				91825CBA167CFF8600404C52 /* NSDictionary+Helper.m in Sources */,
 				916A3AE31686881400AEEEDF /* RefreshJobTaskAllocationsCommand.m in Sources */,
 				916A3AE6168689FD00AEEEDF /* AbstractServiceCallCommand.m in Sources */,
 				916A3AE916875D4300AEEEDF /* SettingsViewController.m in Sources */,
 				916A3AEC1687648800AEEEDF /* UIToolbar+Helper.m in Sources */,
 				916A3AEF1687816B00AEEEDF /* PutTimesheetCommand.m in Sources */,
+				917C3E92168FB32E00896A61 /* DatePickerWithToolBar.m in Sources */,
+				918D5E69169085EA00696318 /* WS_AllocationInterval.m in Sources */,
+				918D5E6D169090F000696318 /* PostJobTaskAllocationCommand.m in Sources */,
+				918D5E701690E30B00696318 /* HappyRatingHelper.m in Sources */,
+				918D5E731691027C00696318 /* GetJobTaskAllocationCommand.m in Sources */,
+				918D5E761691FA0800696318 /* NSNull+Addition.m in Sources */,
+				918D5E7816922AF800696318 /* NSDictionary+Helpers.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

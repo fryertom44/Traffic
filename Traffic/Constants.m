@@ -16,11 +16,13 @@ NSString *const kPauseButtonImage = @"pause320.png";
 
 NSString *const kHappyRatingHappy = @"HAPPY";
 NSString *const kHappyRatingSad = @"SAD";
-NSString *const kHappyRatingCompleted = @"COMPLETED";
+NSString *const kHappyRatingCompleted = @"COMPLETE";
 
 NSString *const kHappyRatingHappyImage = @"happyRatingHappySmall320.png";
 NSString *const kHappyRatingSadImage = @"happyRatingSadSmall320.png";
 NSString *const kHappyRatingCompletedImage = @"happyRatingCompletedSmall320.png";
 
 NSString *const kJSONDateFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+NSString *const kTimeIntervalSettingKey = @"timeInterval";
+
 @end

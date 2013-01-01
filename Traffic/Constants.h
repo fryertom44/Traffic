@@ -23,4 +23,6 @@ extern NSString *const kHappyRatingSadImage;
 extern NSString *const kHappyRatingCompletedImage;
 
 extern NSString *const kJSONDateFormat;
+extern NSString *const kTimeIntervalSettingKey;
+
 @end

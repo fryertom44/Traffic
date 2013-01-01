@@ -14,7 +14,7 @@
     id memento;
 }
 
-//@property (readwrite,nonatomic,retain) id memento;
+@property (nonatomic,retain) NSNumber *wsVersion;
 
 - (void)saveState;
 - (void)restoreState;

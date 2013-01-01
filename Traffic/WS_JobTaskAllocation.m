@@ -10,22 +10,10 @@
 
 @implementation WS_JobTaskAllocation
 
-@synthesize taskDescription;
-@synthesize happyRating;
-@synthesize happyRatingHasChanged;
-@synthesize isTaskComplete;
-@synthesize taskDeadline;
-@synthesize jobTaskAllocationGroupId;
-@synthesize jobTaskId;
-@synthesize jobId;
-@synthesize trafficEmployeeId;
-@synthesize totalTimeLoggedMinutes;
-@synthesize internalNote;
-
 - (id)init {
     self = [super init];
     if (self) {
-        happyRatingHasChanged = FALSE;
+        self.happyRatingWasChanged = FALSE;
     }
     return self;
 }
@@ -35,7 +23,7 @@
     WS_JobTaskAllocation *copiedObject = [[WS_JobTaskAllocation alloc]init];
     [copiedObject setTaskDescription:[self taskDescription]];
     [copiedObject setHappyRating:[self happyRating]];
-    [copiedObject setHappyRatingHasChanged:[self happyRatingHasChanged]];
+    [copiedObject setHappyRatingWasChanged:[self happyRatingWasChanged]];
     [copiedObject setIsTaskComplete:[self isTaskComplete]];
     [copiedObject setTaskDeadline:[self taskDeadline]];
     [copiedObject setJobTaskId:[self jobTaskId]];
@@ -46,32 +34,15 @@
     return copiedObject;
 }
 
--(NSUInteger)daysUntilDeadline{
+-(int)daysUntilDeadline{
 	NSDateFormatter *df = [[NSDateFormatter alloc] init];
 	[df setDateFormat:@"dd-MM-yyyy"];
 	NSDate *currentDate = [[NSDate alloc]init];
-	return (int)[self.taskDeadline timeIntervalSinceDate:currentDate] / (60*60*24) *-1;
+	return (int)[self.taskDeadline timeIntervalSinceDate:currentDate] / (60*60*24);
 }
 
--(NSString*)happyRatingImage{
-    if ([self.happyRating isEqualToString:kHappyRatingHappy]) {
-        return kHappyRatingHappyImage;
-    }else if ([self.happyRating isEqualToString:kHappyRatingSad]){
-        return kHappyRatingSadImage;
-    }else if ([self.happyRating isEqualToString:kHappyRatingCompleted]){
-        return kHappyRatingCompletedImage;
-    }
-    return kHappyRatingHappyImage;
-}
-
--(void)nextHappyRating{
-    if ([self.happyRating isEqualToString:kHappyRatingHappy]) {
-        self.happyRating = (NSString*)kHappyRatingSad;
-    }else if ([self.happyRating isEqualToString:kHappyRatingSad]){
-        self.happyRating = (NSString*)kHappyRatingCompleted;
-    }else if ([self.happyRating isEqualToString:kHappyRatingCompleted]){
-        self.happyRating = (NSString*)kHappyRatingHappy;
-    }
+-(int)daysUntilDeadlineUnsigned{
+    return abs(self.daysUntilDeadline);
 }
 
 @end

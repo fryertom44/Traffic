@@ -8,6 +8,7 @@
 
 #import "LoadClientCommand.h"
 #import "WS_Client.h"
+#import "NSDictionary+Helpers.h"
 
 @implementation LoadClientCommand
 
@@ -48,7 +49,7 @@
     
     WS_Client *client = [[WS_Client alloc] init];
     [client setClientId:[NSNumber numberWithInt:[[json valueForKeyPath:@"id"]intValue]]];
-    [client setClientName:[json valueForKeyPath:@"name"]];
+    [client setClientName:[json stringForKey:@"name"]];
 
     self.sharedModel.selectedClient = client;
 }

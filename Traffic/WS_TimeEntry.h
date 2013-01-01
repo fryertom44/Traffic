@@ -21,6 +21,7 @@
 @property bool billable;
 @property bool exported;
 @property bool lockedByApproval;
+@property bool timesheetWasChanged;
 @property (nonatomic, retain) NSString*comment;
 @property (nonatomic, retain) NSDate*startTime;
 @property (nonatomic, retain) NSDate*endTime;

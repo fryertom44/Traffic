@@ -9,10 +9,6 @@
 #import "SettingsViewController.h"
 #import "UIToolbar+Helper.h"
 
-@interface SettingsViewController ()
-
-@end
-
 @implementation SettingsViewController
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -38,7 +34,20 @@
     UIDatePicker *intervalPicker = [[UIDatePicker alloc]init];
     [intervalPicker setDate:[NSDate date]];
     [intervalPicker setDatePickerMode:UIDatePickerModeCountDownTimer];
-    [self.timeIntervalTextInput setInputAccessoryView:[UIToolbar newKeyboardViewWithDoneMethod:@selector(timeIntervalDoneClicked:)cancelMethod:@selector(timeIntervalCancelClicked:)forComponent:self.timeIntervalTextInput]];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSNumber *storedInterval = (NSNumber*)[defaults objectForKey:kTimeIntervalSettingKey];
+    [intervalPicker setMinuteInterval:(NSInteger)storedInterval];
+    [self.timeIntervalTextInput setInputView:intervalPicker];
+    [self configureInputAccessoryViews];
+}
+
+-(void)viewWillAppear:(BOOL)animated{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSNumber *storedInterval = (NSNumber*)[defaults objectForKey:kTimeIntervalSettingKey];
+    NSInteger hours = storedInterval.integerValue / 60;
+    NSInteger minutes = storedInterval.integerValue % 60;
+    self.timeIntervalTextInput.text = [NSString stringWithFormat:@"%02d:%02d",hours,minutes];
+    [super viewWillAppear:animated];
     
 }
 
@@ -48,11 +57,40 @@
     // Dispose of any resources that can be recreated.
 }
 
--(void)timeIntervalDoneClicked:(id)sender{
-    
+- (void)configureInputAccessoryViews
+{
+    UIToolbar* keyboardDoneButtonView = [[UIToolbar alloc] init];
+    keyboardDoneButtonView.barStyle = UIBarStyleBlack;
+    keyboardDoneButtonView.translucent = YES;
+    keyboardDoneButtonView.tintColor = nil;
+    [keyboardDoneButtonView sizeToFit];
+    UIBarButtonItem *flexSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:self action:nil];
+    UIBarButtonItem* cancelButton = [[UIBarButtonItem alloc] initWithTitle:@"Cancel"
+                                                                     style:UIBarButtonItemStyleBordered target:self
+                                                                    action:@selector(inputViewCancelled:)];
+    UIBarButtonItem* doneButton = [[UIBarButtonItem alloc] initWithTitle:@"Done"
+                                                                   style:UIBarButtonItemStyleBordered target:self
+                                                                  action:@selector(inputViewDone:)];
+    [keyboardDoneButtonView setItems:[NSArray arrayWithObjects:flexSpace,cancelButton,doneButton, nil]];
+    [self.timeIntervalTextInput setInputAccessoryView:keyboardDoneButtonView];
+    [self.timeIntervalTextInput setDelegate:self];
 }
 
--(void)timeIntervalCancelClicked:(id)sender{
+-(void)inputViewDone:(id)sender{
+    UIDatePicker* picker = (UIDatePicker*) self.timeIntervalTextInput.inputView;
+    NSCalendar* calendar = [NSCalendar currentCalendar];
+    NSDateComponents* components = [calendar components:(NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit | NSHourCalendarUnit | NSMinuteCalendarUnit) fromDate:picker.date];
+    NSInteger minutes = [components minute];
+    NSInteger hours = [components hour];
+    int totalMinutes = (hours*60)+minutes;
+    self.timeIntervalTextInput.text = [NSString stringWithFormat:@"%02d:%02d",hours,minutes];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setInteger:totalMinutes forKey:kTimeIntervalSettingKey];
+    [defaults synchronize];
+    [self.timeIntervalTextInput resignFirstResponder];
+}
+
+-(void)inputViewCancelled:(id)sender{
     [self.timeIntervalTextInput resignFirstResponder];
 }
 
