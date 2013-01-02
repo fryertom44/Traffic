@@ -255,13 +255,13 @@
 				91BA647A16516A8900B91A41 /* LoadTimeEntriesCommand.m */,
 				91110E6B1674F38900BBB7F8 /* LoadJobCommand.h */,
 				91110E6C1674F38A00BBB7F8 /* LoadJobCommand.m */,
+				9153CD1616751A7300875EFB /* LoadJobDetailCommand.h */,
 				9153CD1716751A7300875EFB /* LoadJobDetailCommand.m */,
 				9153CD19167524CF00875EFB /* LoadTrafficEmployeeCommand.h */,
 				9153CD1A167524CF00875EFB /* LoadTrafficEmployeeCommand.m */,
 				91110E4A166FE68C00BBB7F8 /* LoadJobTaskAllocationsCommand.h */,
 				91110E4B166FE68D00BBB7F8 /* LoadJobTaskAllocationsCommand.m */,
 				9153CD1C1675299E00875EFB /* LoadProjectCommand.h */,
-				9153CD1616751A7300875EFB /* LoadJobDetailCommand.h */,
 				9153CD1D1675299E00875EFB /* LoadProjectCommand.m */,
 				9153CD1F16752AA700875EFB /* LoadClientCommand.h */,
 				9153CD2016752AA700875EFB /* LoadClientCommand.m */,
@@ -700,6 +700,7 @@
 				GCC_PREFIX_HEADER = "Traffic/Traffic-Prefix.pch";
 				INFOPLIST_FILE = "Traffic/Traffic-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -711,6 +712,7 @@
 				GCC_PREFIX_HEADER = "Traffic/Traffic-Prefix.pch";
 				INFOPLIST_FILE = "Traffic/Traffic-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

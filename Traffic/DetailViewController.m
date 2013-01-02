@@ -192,16 +192,27 @@ UIView *normalView;
     if(self.sharedModel.selectedJobTaskAllocation!=nil) {
         [self.happyRatingButton setImage:[HappyRatingHelper happyRatingImageFromString:self.sharedModel.selectedJobTaskAllocation.happyRating] forState:UIControlStateNormal];
         self.daysRemainingLabel.text = [NSString stringWithFormat:@"%d",self.sharedModel.selectedJobTaskAllocation.daysUntilDeadline];
+        
+        float progressFloat = self.sharedModel.selectedJobTaskAllocation.totalTimeLoggedMinutes.floatValue / self.sharedModel.selectedJobTaskAllocation.durationInMinutes.floatValue;
+        BOOL taskIsOverWorked = self.sharedModel.selectedJobTaskAllocation.totalTimeLoggedMinutes.floatValue > self.sharedModel.selectedJobTaskAllocation.durationInMinutes.floatValue;
+        
+        if(taskIsOverWorked){
+            [self.taskProgress setProgressTintColor:[UIColor redColor]];
+        }
+        
+        [self.taskProgress setProgress:progressFloat animated:YES];
+        self.progressLabel.text = [NSString stringWithFormat:@"%@ of %@",[NSDate timeStringFromMinutes:self.sharedModel.selectedJobTaskAllocation.totalTimeLoggedMinutes.intValue],[NSDate timeStringFromMinutes:self.sharedModel.selectedJobTaskAllocation.durationInMinutes.intValue]];
     }
 }
 
 - (void)displayTaskDetails
 {
     if(self.sharedModel.selectedJobTask!=nil) {
-        NSNumber *totalLoggedMinutes = [NSNumber numberWithFloat:self.sharedModel.selectedJobTask.totalTimeLoggedMinutes.floatValue + self.sharedModel.selectedJobTask.totalTimeLoggedBillableMinutes.floatValue];
-        float progressAsFloat = totalLoggedMinutes.floatValue / self.sharedModel.selectedJobTask.totalTimeAllocatedMinutes.floatValue;
-        [self.taskProgress setProgress:progressAsFloat animated:YES];
-        self.progressLabel.text = [NSString stringWithFormat:@"%@ of %@",[NSDate timeStringFromMinutes:totalLoggedMinutes.intValue],[NSDate timeStringFromMinutes:self.sharedModel.selectedJobTask.totalTimeAllocatedMinutes.intValue]];
+//        NSNumber *totalLoggedMinutes = [NSNumber numberWithFloat:self.sharedModel.selectedJobTask.totalTimeLoggedMinutes.floatValue + self.sharedModel.selectedJobTask.totalTimeLoggedBillableMinutes.floatValue];
+//        float progressAsFloat = totalLoggedMinutes.floatValue / self.sharedModel.selectedJobTask.totalTimeAllocatedMinutes.floatValue;
+//        [self.taskProgress setProgress:progressAsFloat animated:YES];
+//        [self.taskProgress setProgressTintColor:]
+//        self.progressLabel.text = [NSString stringWithFormat:@"%@ of %@",[NSDate timeStringFromMinutes:totalLoggedMinutes.intValue],[NSDate timeStringFromMinutes:self.sharedModel.selectedJobTask.totalTimeAllocatedMinutes.intValue]];
         
         if(self.sharedModel.selectedJobTask.jobTaskDescription!=nil)
             self.taskDescription.text = self.sharedModel.selectedJobTask.jobTaskDescription;
