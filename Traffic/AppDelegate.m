@@ -11,6 +11,7 @@
 //#import "LoginOperation.h"
 #import "MasterViewController.h"
 #import "GlobalModel.h"
+#import "ConfigureRestkitCommand.h"
 
 @implementation AppDelegate
 
@@ -34,6 +35,8 @@
 //    }
 
 //    return YES;
+    
+    [ConfigureRestkitCommand execute];
     
     self.loginViewController = (LoginViewController *)self.window.rootViewController;
     self.loginViewController.delegate = self;

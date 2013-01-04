@@ -10,8 +10,8 @@
 
 @implementation WS_Job
 
-@synthesize jobId;
-@synthesize jobDeadline;
-@synthesize jobDetailId;
-@synthesize jobNumber;
+//@synthesize jobId;
+//@synthesize jobDeadline;
+//@synthesize jobDetailId;
+//@synthesize jobNumber;
 @end

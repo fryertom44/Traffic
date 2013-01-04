@@ -19,6 +19,9 @@
 #import "GlobalModel.h"
 #import "HappyRatingHelper.h"
 #import "NSDate+Helper.h"
+#import "LoadClientCompanies.h"
+#import "ServiceCommandLibrary.h"
+#import <RestKit/RestKit.h>
 
 @implementation MasterViewController
 
@@ -44,7 +47,15 @@
     [refreshControl addTarget:self action:@selector(refreshList:) forControlEvents:UIControlEventValueChanged];
     self.refreshControl = refreshControl;
 
-    [self loadTaskAllocationsWithPageNumber:self.sharedModel.pageNumber andWindowSize:10];
+//    [self loadTaskAllocationsWithPageNumber:self.sharedModel.pageNumber andWindowSize:10];
+    
+    
+    //TESTING...
+    [ServiceCommandLibrary loadClientsWithParams:nil];
+    [ServiceCommandLibrary loadProjectsWithParams:nil];
+    [ServiceCommandLibrary loadJobsWithParams:nil];
+    [ServiceCommandLibrary loadJobDetailsWithParams:nil];
+    [ServiceCommandLibrary loadJobTaskAllocationsWithParams:@{@"currentPage" : [NSNumber numberWithInt:self.sharedModel.pageNumber], @"windowSize" : @"10"}];
 
 }
 
@@ -102,8 +113,14 @@
     [cell.backgroundView.layer insertSublayer:grad atIndex:0];
     
     WS_JobTaskAllocation *allocation = self.sharedModel.taskAllocations[indexPath.row];
-    cell.companyLabel.text = [NSString stringWithFormat:@"Company Name: <lookup>"];
-    cell.jobLabel.text = [NSString stringWithFormat:@"Job ID: %@",allocation.jobId];
+    WS_JobTask *relatedJobTask = [self.sharedModel.jobTasksDictionary objectForKey:allocation.jobTaskId.stringValue];
+    WS_Job *relatedJob = [self.sharedModel.jobsDictionary objectForKey:relatedJobTask.jobId.stringValue];
+    WS_JobDetail *relatedJobDetail = [self.sharedModel.jobDetailsDictionary objectForKey:relatedJob.jobDetailId.stringValue];
+    WS_Project *relatedProject = [self.sharedModel.projectsDictionary objectForKey:relatedJobDetail.ownerProjectId.stringValue];
+    WS_Client *relatedClient = [self.sharedModel.clientsDictionary objectForKey:relatedProject.clientCRMEntryId.stringValue];
+    
+    cell.companyLabel.text = [NSString stringWithFormat:@"Company Name: %@",relatedClient.clientName];
+    cell.jobLabel.text = [NSString stringWithFormat:@"Job: %@-%@",relatedJob.jobNumber, relatedJobDetail.jobTitle];
     cell.timesheetLabel.text = allocation.taskDescription;
     cell.daysToDeadlineLabel.text = [NSString stringWithFormat:@"%d days %@",allocation.daysUntilDeadlineUnsigned, allocation.daysUntilDeadline < 0 ? @"overdue" : @"remaining"];
     cell.timeCompletedLabel.text = [NSString stringWithFormat:@"%@ of %@", [NSDate timeStringFromMinutes:allocation.totalTimeLoggedMinutes.intValue],[NSDate timeStringFromMinutes:allocation.durationInMinutes.intValue]];

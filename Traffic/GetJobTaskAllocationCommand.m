@@ -27,13 +27,13 @@
 
 -(void)connectionDidFinishLoading:(NSURLConnection *)connection {
     
-	NSLog(@"DONE. Received Bytes: %d", [super.responseData length]);
-	NSString *theJSON = [[NSString alloc]
-						 initWithBytes: [super.responseData mutableBytes]
-						 length:[super.responseData length]
-						 encoding:NSUTF8StringEncoding];
-	//---shows the JSON ---
-	NSLog(@"%@", theJSON);
+//	NSLog(@"DONE. Received Bytes: %d", [super.responseData length]);
+//	NSString *theJSON = [[NSString alloc]
+//						 initWithBytes: [super.responseData mutableBytes]
+//						 length:[super.responseData length]
+//						 encoding:NSUTF8StringEncoding];
+//	//---shows the JSON ---
+//	NSLog(@"%@", theJSON);
     
     WS_JobTaskAllocation *returnedAllocation = [self parseData:super.responseData];
     

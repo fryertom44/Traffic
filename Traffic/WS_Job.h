@@ -14,4 +14,6 @@
 @property (nonatomic,retain) NSNumber*jobDetailId;
 @property (nonatomic,retain) NSDate* jobDeadline;
 @property (nonatomic,retain) NSString* jobNumber;
+@property (nonatomic,retain) NSArray *jobTasks;
+
 @end

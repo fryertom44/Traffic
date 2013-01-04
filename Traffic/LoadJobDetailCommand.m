@@ -31,13 +31,13 @@
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
     
-	NSLog(@"DONE. Received Bytes: %d", [super.responseData length]);
-	NSString *theJSON = [[NSString alloc]
-						 initWithBytes: [super.responseData mutableBytes]
-						 length:[super.responseData length]
-						 encoding:NSUTF8StringEncoding];
-	//---shows the JSON ---
-	NSLog(@"%@", theJSON);
+//	NSLog(@"DONE. Received Bytes: %d", [super.responseData length]);
+//	NSString *theJSON = [[NSString alloc]
+//						 initWithBytes: [super.responseData mutableBytes]
+//						 length:[super.responseData length]
+//						 encoding:NSUTF8StringEncoding];
+//	//---shows the JSON ---
+//	NSLog(@"%@", theJSON);
     
     NSDateFormatter* df = [[NSDateFormatter alloc]init];
     [df setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSSZ"];

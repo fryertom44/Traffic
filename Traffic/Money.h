@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 
-@interface Money : NSNumber
+@interface Money : NSObject
 
 @property (nonatomic, retain) NSNumber* amount;
 @property (nonatomic, retain) NSString* currencyType;

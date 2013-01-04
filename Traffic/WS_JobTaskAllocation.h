@@ -7,6 +7,7 @@
 //
 
 #import "BaseObject.h"
+#import "WS_Client.h"
 
 @interface WS_JobTaskAllocation : BaseObject
 
@@ -30,6 +31,8 @@
 @property (nonatomic,retain) NSString* internalNote;
 @property (nonatomic) BOOL isTaskMilestone;
 @property (nonatomic,retain) NSMutableArray *allocationIntervals;
+
+@property (nonatomic,retain)WS_Client *client;
 
 -(int)daysUntilDeadline;
 -(int)daysUntilDeadlineUnsigned;

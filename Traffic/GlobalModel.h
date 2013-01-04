@@ -21,12 +21,24 @@
 + (GlobalModel *)sharedInstance;
 - (void)printOutTaskAllocations;
 
+#pragma mark - lists
 @property (nonatomic,strong) NSMutableArray *timeEntries;
 @property (nonatomic,strong) NSMutableArray *taskAllocations;
+@property (nonatomic,strong) NSMutableArray *clients;
+@property (nonatomic,strong) NSMutableArray *jobs;
+@property (nonatomic,strong) NSMutableArray *jobDetails;
+@property (nonatomic,strong) NSMutableArray *projects;
+
+#pragma mark - Dictionaries for fast lookups
+@property (nonatomic,strong) NSMutableDictionary *clientsDictionary;
+@property (nonatomic,strong) NSMutableDictionary *jobsDictionary;
+@property (nonatomic,strong) NSMutableDictionary *jobDetailsDictionary;
+@property (nonatomic,strong) NSMutableDictionary *jobTasksDictionary;
+@property (nonatomic,strong) NSMutableDictionary *projectsDictionary;
+
 @property (nonatomic) int pageNumber;
 
-//@property (nonatomic,strong) NSMutableData *selectedJobAsData;
-
+#pragma mark - Current selection/state
 @property (nonatomic,strong) WS_TrafficEmployee *loggedInEmployee;
 @property (nonatomic,strong) WS_TrafficEmployee *selectedOwner;
 @property (nonatomic,strong) WS_JobTask *selectedJobTask;
@@ -37,7 +49,7 @@
 @property (nonatomic,strong) WS_Project *selectedProject;
 @property (nonatomic,strong) WS_TimeEntry *timesheet;
 
-#pragma mark - Timer
+#pragma mark - Storing 'Timer' state
 @property (weak, nonatomic) NSTimer *myTimer;
 @property (strong, nonatomic) NSDate *timerStartDate;
 @property (nonatomic) double timeElapsedInterval;
