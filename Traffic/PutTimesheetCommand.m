@@ -34,7 +34,7 @@
                                     [NSNumber numberWithBool:timesheet.lockedByApproval], @"lockedByApproval",
                                     [df stringFromDate:timesheet.endTime],@"endTime",
                                     [NSNull null],@"workPoints",
-                                    timesheet.version.stringValue, @"version",
+                                    timesheet.trafficVersion.stringValue, @"version",
                                     [NSNumber numberWithBool:timesheet.billable], @"billable",
                                     [df stringFromDate:timesheet.startTime], @"startTime",
                                     timesheet.timeEntryId.stringValue, @"id",
@@ -115,11 +115,11 @@
     [timeEntry setTaskRate:[super newMoneyFromDict:[dict objectForKey:@"taskRate"]]];
     [timeEntry setTimeEntryCost:[super newMoneyFromDict:[dict objectForKey:@"timeEntryCost"]]];
     [timeEntry setTrafficEmployeeId:[NSNumber numberWithInt:[[dict valueForKeyPath:@"trafficEmployeeId.id"]intValue]]];
-    [timeEntry setBillable:[[dict objectForKey:@"billable"]boolValue]];
-    [timeEntry setVersion:[NSNumber numberWithInt:[[dict objectForKey:@"version"]intValue]]];
+    [timeEntry setBillable:[dict objectForKey:@"billable"]];
+    [timeEntry setTrafficVersion:[NSNumber numberWithInt:[[dict objectForKey:@"version"]intValue]]];
     [timeEntry setChargebandId:[NSNumber numberWithInt:[[dict valueForKeyPath:@"chargebandId.id"]intValue]]];
     [timeEntry setComment:[dict stringForKey:@"comment"]];
-    [timeEntry setExported:[[dict objectForKey:@"exported"]boolValue]];
+    [timeEntry setExported:[dict objectForKey:@"exported"]];
     [timeEntry setEndTime:[NSDate dateFromString:[dict objectForKey:@"endTime"]]];
     [timeEntry setValueOfTimeEntry:[super newMoneyFromDict:[dict objectForKey:@"valueOfTimeEntry"]]];
     

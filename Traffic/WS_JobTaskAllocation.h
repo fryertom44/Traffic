@@ -19,17 +19,17 @@
 @property (nonatomic,retain) NSString* jobStageDescription;
 @property (nonatomic,retain) NSString* jobStageUUID;
 @property (nonatomic,retain) NSString* happyRating;
-@property (nonatomic) BOOL happyRatingWasChanged;
+@property (nonatomic,retain) NSNumber* happyRatingWasChanged;
 @property (nonatomic,retain) NSDate* taskDeadline;
-@property (nonatomic) BOOL isTaskComplete;
+@property (nonatomic,retain) NSNumber* isTaskComplete;
 @property (nonatomic,retain) NSNumber* jobTaskAllocationGroupId;
 @property (nonatomic,retain) NSNumber* jobTaskId;
 @property (nonatomic,retain) NSNumber* jobId;
 @property (nonatomic,retain) NSNumber* trafficEmployeeId;
 @property (nonatomic,retain) NSNumber* totalTimeLoggedMinutes;
-@property (nonatomic, retain) NSNumber* durationInMinutes;
+@property (nonatomic,retain) NSNumber* durationInMinutes;
 @property (nonatomic,retain) NSString* internalNote;
-@property (nonatomic) BOOL isTaskMilestone;
+@property (nonatomic,retain) NSNumber* isTaskMilestone;
 @property (nonatomic,retain) NSMutableArray *allocationIntervals;
 
 @property (nonatomic,retain)WS_Client *client;

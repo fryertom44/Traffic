@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "PGToggleButton.h"
 #import "DatePickerWithToolBar.h"
+#import <RestKit.h>
 
 @class DetailViewController;
 
@@ -44,4 +45,5 @@
 -(IBAction)onSave:(id)sender;
 -(IBAction)onCancel:(id)sender;
 
+-(void)handleFailureWithOperation:(RKObjectRequestOperation*)operation error:(NSError*)error;
 @end

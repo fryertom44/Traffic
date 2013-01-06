@@ -38,11 +38,11 @@
 		//[timeEntry setTaskRate:[dict objectForKey:@"taskRate"]];
 		//[timeEntry setTimeEntryCost:[dict objectForKey:@"timeEntryCost"]];]
 		[timeEntry setTrafficEmployeeId:[NSNumber numberWithInt:[[dict valueForKeyPath:@"trafficEmployeeId.id"]intValue]]];
-		[timeEntry setBillable:[[dict objectForKey:@"billable"]boolValue]];
-		[timeEntry setVersion:[NSNumber numberWithInt:[[dict objectForKey:@"version"]intValue]]];
+		[timeEntry setBillable:[dict objectForKey:@"billable"]];
+		[timeEntry setTrafficVersion:[NSNumber numberWithInt:[[dict objectForKey:@"version"]intValue]]];
 		[timeEntry setChargebandId:[NSNumber numberWithInt:[[dict valueForKeyPath:@"chargebandId.id"]intValue]]];
 		[timeEntry setComment:[dict objectForKey:@"comment"]];
-		[timeEntry setExported:[[dict objectForKey:@"exported"]boolValue]];
+		[timeEntry setExported:[dict objectForKey:@"exported"]];
 //        NSString *dateString = [dict objectForKey:@"endTime"];
 //        NSDate *endTimeAsDate = [NSDate dateFromString:[dict objectForKey:@"endTime"]];
 		[timeEntry setEndTime:[NSDate dateFromString:[dict objectForKey:@"endTime"]]];

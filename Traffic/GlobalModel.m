@@ -49,7 +49,7 @@ static GlobalModel *sharedInstance = nil;
         NSLog(@"Task Allocation:%@",jt);
         NSLog(@"%@:%@", @"description", jt.taskDescription);
         NSLog(@"%@:%@", @"happyRating", jt.happyRating);
-        NSLog(@"%@:%d", @"isTaskComplete", jt.isTaskComplete);
+        NSLog(@"%@:%@", @"isTaskComplete", jt.isTaskComplete);
         NSLog(@"%@:%@", @"taskDeadline", jt.taskDeadline);
 
     }

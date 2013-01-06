@@ -19,5 +19,4 @@
 @property (nonatomic,retain) NSString *uuid;
 @property (nonatomic,retain) NSDate *dateModified;
 @property (nonatomic,retain) NSString *className;
-@property (nonatomic,retain) NSNumber *version;
 @end

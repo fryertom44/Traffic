@@ -34,30 +34,30 @@
     NSNumber *jta_isTaskComplete = [NSNumber numberWithBool:allocation.isTaskComplete];
     NSString *jta_uuid = allocation.uuid;
     NSString *jta_taskDescription = allocation.taskDescription;
-    NSNumber *jta_version = allocation.wsVersion;
+    NSNumber *jta_version = allocation.trafficVersion;
     NSNumber *jta_totalTimeLoggedMinutes = allocation.totalTimeLoggedMinutes;
     
     NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
-                                    [NSNull nullWhenNil:jta_dependencyTaskDeadline],@"dependancyTaskDeadline",
-                                    [NSNull nullWhenNil:jta_externalCalendarTag],@"externalCalendarTag",
-                                    [NSNull nullWhenNil:jta_taskDeadline],@"taskDeadline",
-                                    [NSDictionary dictionaryWithObjectsAndKeys:allocation.jobId,@"id",nil],@"jobId",
-                                    [NSNull nullWhenNil:jta_durationInMinutes],@"durationInMinutes",
-                                    [NSNull nullWhenNil:jta_jobStageDescription],@"jobStageDescription",
-                                    [NSNull nullWhenNil:jta_jobStageUUID ],@"jobStageUUID",
+//                                    [NSNull nullWhenNil:jta_dependencyTaskDeadline],@"dependancyTaskDeadline",
+//                                    [NSNull nullWhenNil:jta_externalCalendarTag],@"externalCalendarTag",
+//                                    [NSNull nullWhenNil:jta_taskDeadline],@"taskDeadline",
+//                                    [NSDictionary dictionaryWithObjectsAndKeys:allocation.jobId,@"id",nil],@"jobId",
+//                                    [NSNull nullWhenNil:jta_durationInMinutes],@"durationInMinutes",
+//                                    [NSNull nullWhenNil:jta_jobStageDescription],@"jobStageDescription",
+//                                    [NSNull nullWhenNil:jta_jobStageUUID ],@"jobStageUUID",
                                     [NSNull nullWhenNil:jta_happyRating],@"happyRating",
-                                    [NSNull nullWhenNil:jta_version],@"version",
+//                                    [NSNull nullWhenNil:jta_version],@"version",
                                     [NSNull nullWhenNil:jta_jobTaskAllocationGroupId],@"id",
-                                    [NSNull nullWhenNil:jta_externalCalendarUUID],@"externalCalendarUUID",
-                                    [NSNull nullWhenNil:[self allocationIntervalsAsDict]],@"allocationIntervals",
-                                    [NSDictionary dictionaryWithObjectsAndKeys:allocation.jobTaskId,@"id",nil],@"jobTaskId",
-                                    [NSDictionary dictionaryWithObjectsAndKeys:allocation.trafficEmployeeId,@"id", nil],@"trafficEmployeeId",
-                                    [NSNull nullWhenNil:jta_isTaskMilestone],@"isTaskMilesone",
-                                    [NSNull nullWhenNil:jta_isTaskComplete],@"isTaskComplete",
-                                    [NSNull nullWhenNil:jta_uuid],@"uuid",
-                                    [NSNull nullWhenNil:jta_taskDescription],@"taskDescription",
-                                    [NSNull nullWhenNil:jta_totalTimeLoggedMinutes],@"totalTimeLoggedMinutes",
-                                    [df stringFromDate:[NSDate date]],@"dateModified",
+//                                    [NSNull nullWhenNil:jta_externalCalendarUUID],@"externalCalendarUUID",
+//                                    [NSNull nullWhenNil:[self allocationIntervalsAsDict]],@"allocationIntervals",
+//                                    [NSDictionary dictionaryWithObjectsAndKeys:allocation.jobTaskId,@"id",nil],@"jobTaskId",
+//                                    [NSDictionary dictionaryWithObjectsAndKeys:allocation.trafficEmployeeId,@"id", nil],@"trafficEmployeeId",
+//                                    [NSNull nullWhenNil:jta_isTaskMilestone],@"isTaskMilesone",
+//                                    [NSNull nullWhenNil:jta_isTaskComplete],@"isTaskComplete",
+//                                    [NSNull nullWhenNil:jta_uuid],@"uuid",
+//                                    [NSNull nullWhenNil:jta_taskDescription],@"taskDescription",
+//                                    [NSNull nullWhenNil:jta_totalTimeLoggedMinutes],@"totalTimeLoggedMinutes",
+//                                    [df stringFromDate:[NSDate date]],@"dateModified",
                                     nil];
 
     NSLog(@"POST Allocation: %@",[jsonDictionary description]);
@@ -175,7 +175,7 @@
     }
     [allocation setTaskDescription:[dict stringForKey:@"taskDescription"]];
     [allocation setHappyRating:[dict stringForKey:@"happyRating"]];
-    [allocation setIsTaskComplete:[[dict valueForKeyPath:@"isTaskComplete"]boolValue]];
+    [allocation setIsTaskComplete:[dict objectForKey:@"isTaskComplete"]];
     [allocation setTaskDeadline:[dict dateFromJSONStringForKey:@"taskDeadline"]];
     [allocation setJobTaskId:[NSNumber numberWithInt:[[dict valueForKeyPath:@"jobTaskId.id"]intValue]]];
     [allocation setJobId:[NSNumber numberWithInt:[[dict valueForKeyPath:@"jobId.id"]intValue]]];
@@ -188,9 +188,9 @@
     [allocation setJobStageDescription:[dict stringForKey:@"jobStageDescription"]];
     [allocation setJobStageUUID:[dict valueForKeyPath:@"jobStageUuid"]];
     [allocation setTotalTimeLoggedMinutes:[NSNumber numberWithInteger:[dict integerForKey:@"totalTimeLoggedMinutes"]]];
-    [allocation setIsTaskMilestone:[[dict valueForKeyPath:@"isTaskMilesone"]boolValue]];
+    [allocation setIsTaskMilestone:[dict objectForKey:@"isTaskMilesone"]];
     [allocation setUuid:[dict valueForKeyPath:@"uuid"]];
-    [allocation setWsVersion:[NSNumber numberWithInteger:[dict integerForKey:@"version"]]];
+    [allocation setTrafficVersion:[NSNumber numberWithInteger:[dict integerForKey:@"version"]]];
     
     NSMutableArray *allocationIntervals;
     NSDictionary *allocationIntervalsDict = [dict objectForKey:@"allocationIntervals"];
@@ -207,7 +207,7 @@
         [interval setDurationInSeconds:[NSNumber numberWithInt:[[intervalDict valueForKeyPath:@"durationInSeconds"]intValue]]];
         [interval setDateModified:[intervalDict dateFromJSONStringForKey:@"dateModified"]];
         [interval setUuid:[dict valueForKeyPath:@"uuid"]];
-        [interval setVersion:[dict valueForKeyPath:@"version"]];
+        [interval setTrafficVersion:[dict valueForKeyPath:@"version"]];
         [interval setClassName:[dict valueForKeyPath:@"@class"]];
         [allocationIntervals addObject:interval];
     }

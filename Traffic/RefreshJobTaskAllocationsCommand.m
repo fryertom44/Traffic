@@ -79,7 +79,7 @@
         [allocation setJobTaskAllocationGroupId:[NSNumber numberWithInt:[dict integerForKey:@"id"]]];
         [allocation setTaskDescription:[dict stringForKey:@"taskDescription"]];
         [allocation setHappyRating:[dict stringForKey:@"happyRating"]];
-        [allocation setIsTaskComplete:[dict boolForKey:@"isTaskComplete"]];
+        [allocation setIsTaskComplete:[dict objectForKey:@"isTaskComplete"]];
         [allocation setTaskDeadline:[dict dateFromJSONStringForKey:@"taskDeadline"]];
         [allocation setJobTaskId:[NSNumber numberWithInt:[[dict valueForKeyPath:@"jobTaskId.id"]intValue]]];
         [allocation setJobId:[NSNumber numberWithInt:[[dict valueForKeyPath:@"jobId.id"]intValue]]];
@@ -92,9 +92,9 @@
         [allocation setJobStageDescription:[dict valueForKeyPath:@"jobStageDescription"]];
         [allocation setJobStageUUID:[dict valueForKeyPath:@"jobStageUuid"]];
         [allocation setTotalTimeLoggedMinutes:[NSNumber numberWithInt:[dict integerForKey:@"totalTimeLoggedMinutes"]]];
-        [allocation setIsTaskMilestone:[[dict valueForKeyPath:@"isTaskMilesone"]boolValue]];
+        [allocation setIsTaskMilestone:[dict objectForKey:@"isTaskMilesone"]];
         [allocation setUuid:[dict valueForKeyPath:@"uuid"]];
-        [allocation setWsVersion:[NSNumber numberWithInteger:[dict integerForKey:@"version"]]];
+        [allocation setTrafficVersion:[NSNumber numberWithInteger:[dict integerForKey:@"version"]]];
 
         NSMutableArray *allocationIntervals;
         NSDictionary *allocationIntervalsDict = [dict objectForKey:@"allocationIntervals"];
@@ -111,7 +111,7 @@
             [interval setDurationInSeconds:[NSNumber numberWithInt:[intervalDict integerForKey:@"durationInSeconds"]]];
             [interval setDateModified:[intervalDict dateFromJSONStringForKey:@"dateModified"]];
             [interval setUuid:[dict valueForKeyPath:@"uuid"]];
-            [interval setWsVersion:[NSNumber numberWithInt:[dict integerForKey:@"version"]]];
+            [interval setTrafficVersion:[NSNumber numberWithInt:[dict integerForKey:@"version"]]];
             [interval setClassName:[dict stringForKey:@"@class"]];
             [allocationIntervals addObject:interval];
         }

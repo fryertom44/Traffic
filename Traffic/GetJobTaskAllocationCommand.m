@@ -75,7 +75,7 @@
     
     [allocation setTaskDescription:[dict stringForKey:@"taskDescription"]];
     [allocation setHappyRating:[dict stringForKey:@"happyRating"]];
-    [allocation setIsTaskComplete:[[dict valueForKeyPath:@"isTaskComplete"]boolValue]];
+    [allocation setIsTaskComplete:[dict objectForKey:@"isTaskComplete"]];
     [allocation setTaskDeadline:[dict dateFromJSONStringForKey:@"taskDeadline"]];
     [allocation setJobTaskId:[NSNumber numberWithInt:[[dict valueForKeyPath:@"jobTaskId.id"]intValue]]];
     [allocation setJobId:[NSNumber numberWithInt:[[dict valueForKeyPath:@"jobId.id"]intValue]]];
@@ -88,9 +88,9 @@
     [allocation setJobStageDescription:[dict stringForKey:@"jobStageDescription"]];
     [allocation setJobStageUUID:[dict valueForKeyPath:@"jobStageUuid"]];
     [allocation setTotalTimeLoggedMinutes:[NSNumber numberWithInteger:[dict integerForKey:@"totalTimeLoggedMinutes"]]];
-    [allocation setIsTaskMilestone:[[dict valueForKeyPath:@"isTaskMilesone"]boolValue]];
+    [allocation setIsTaskMilestone:[dict objectForKey:@"isTaskMilesone"]];
     [allocation setUuid:[dict valueForKeyPath:@"uuid"]];
-    [allocation setWsVersion:[NSNumber numberWithInteger:[dict integerForKey:@"version"]]];
+    [allocation setTrafficVersion:[NSNumber numberWithInteger:[dict integerForKey:@"version"]]];
     
     NSMutableArray *allocationIntervals;
     NSDictionary *allocationIntervalsDict = [dict objectForKey:@"allocationIntervals"];
@@ -106,7 +106,7 @@
         [interval setDurationInSeconds:[NSNumber numberWithInt:[[intervalDict valueForKeyPath:@"durationInSeconds"]intValue]]];
         [interval setDateModified:[intervalDict dateFromJSONStringForKey:@"dateModified"]];
         [interval setUuid:[dict valueForKeyPath:@"uuid"]];
-        [interval setWsVersion:[dict valueForKeyPath:@"version"]];
+        [interval setTrafficVersion:[dict valueForKeyPath:@"version"]];
         [interval setClassName:[dict valueForKeyPath:@"@class"]];
 
         [allocationIntervals addObject:interval];

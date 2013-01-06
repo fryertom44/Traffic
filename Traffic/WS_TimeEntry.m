@@ -16,14 +16,14 @@
     self = [super init];
     
     if(self){
-        self.billable = true;
-        self.exported = false;
-        self.lockedByApproval = false;
-        self.timesheetWasChanged = false;
+        self.billable = [NSNumber numberWithBool:TRUE];
+        self.exported = [NSNumber numberWithBool:FALSE];
+        self.lockedByApproval = [NSNumber numberWithBool:FALSE];
+        self.timesheetWasChanged = [NSNumber numberWithBool:FALSE];
         self.comment = @"";
         self.taskDescription = @"";
         self.timeEntryId = [NSNumber numberWithInt:-1];
-        self.version = [NSNumber numberWithInt:-1];
+        self.trafficVersion = [NSNumber numberWithInt:-1];
         self.valueOfTimeEntry = [[Money alloc]init];
         self.timeEntryCost = [[Money alloc]init];
         self.timeEntryPersonalRate = [[Money alloc]init];
@@ -55,7 +55,7 @@
     [copiedObject setTimeEntryId:[self timeEntryId]];
     [copiedObject setTrafficEmployeeId:[self trafficEmployeeId]];
     [copiedObject setValueOfTimeEntry:[self valueOfTimeEntry]];
-    [copiedObject setVersion:[self version]];
+    [copiedObject setTrafficVersion:[self trafficVersion]];
     return copiedObject;
 }
 

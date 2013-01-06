@@ -18,10 +18,10 @@
 @property (nonatomic, retain) NSNumber* jobId;
 @property (nonatomic, retain) NSNumber* allocationGroupId;
 @property (nonatomic, retain) NSNumber* chargebandId;
-@property bool billable;
-@property bool exported;
-@property bool lockedByApproval;
-@property bool timesheetWasChanged;
+@property (nonatomic, retain) NSNumber* billable;
+@property (nonatomic, retain) NSNumber* exported;
+@property (nonatomic, retain) NSNumber* lockedByApproval;
+@property (nonatomic, retain) NSNumber* timesheetWasChanged;
 @property (nonatomic, retain) NSString*comment;
 @property (nonatomic, retain) NSDate*startTime;
 @property (nonatomic, retain) NSDate*endTime;
@@ -32,6 +32,5 @@
 @property (nonatomic, retain) Money*timeEntryCost;
 @property (nonatomic,retain) Money* timeEntryPersonalRate;
 @property (nonatomic, retain) NSDate*dateModified;
-@property (nonatomic, retain) NSNumber* version;
 
 @end

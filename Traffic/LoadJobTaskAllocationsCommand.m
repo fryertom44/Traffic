@@ -84,7 +84,7 @@
         [allocation setJobTaskAllocationGroupId:[NSNumber numberWithInt:[dict integerForKey:@"id"]]];
         [allocation setTaskDescription:[dict stringForKey:@"taskDescription"]];
         [allocation setHappyRating:[dict stringForKey:@"happyRating"]];
-        [allocation setIsTaskComplete:[dict boolForKey:@"isTaskComplete"]];
+        [allocation setIsTaskComplete:[dict objectForKey:@"isTaskComplete"]];
         [allocation setTaskDeadline:[dict dateFromJSONStringForKey:@"taskDeadline"]];
         [allocation setJobTaskId:[NSNumber numberWithInt:[[dict valueForKeyPath:@"jobTaskId.id"]intValue]]];
         [allocation setJobId:[NSNumber numberWithInt:[[dict valueForKeyPath:@"jobId.id"]intValue]]];
@@ -97,9 +97,9 @@
         [allocation setJobStageDescription:[dict stringForKey:@"jobStageDescription"]];
         [allocation setJobStageUUID:[dict valueForKeyPath:@"jobStageUuid"]];
         [allocation setTotalTimeLoggedMinutes:[NSNumber numberWithInteger:[dict integerForKey:@"totalTimeLoggedMinutes"]]];
-        [allocation setIsTaskMilestone:[dict boolForKey:@"isTaskMilesone"]];
+        [allocation setIsTaskMilestone:[dict objectForKey:@"isTaskMilesone"]];
         [allocation setUuid:[dict stringForKey:@"uuid"]];
-        [allocation setWsVersion:[NSNumber numberWithInteger:[dict integerForKey:@"version"]]];
+        [allocation setTrafficVersion:[NSNumber numberWithInteger:[dict integerForKey:@"version"]]];
         
         NSMutableArray *allocationIntervals;
         NSDictionary *allocationIntervalsDict = [dict objectForKey:@"allocationIntervals"];
@@ -116,7 +116,7 @@
             [interval setDurationInSeconds:[NSNumber numberWithInt:[intervalDict integerForKey:@"durationInSeconds"]]];
             [interval setDateModified:[intervalDict dateFromJSONStringForKey:@"dateModified"]];
             [interval setUuid:[dict stringForKey:@"uuid"]];
-            [interval setWsVersion:[NSNumber numberWithInteger:[dict integerForKey:@"version"]]];
+            [interval setTrafficVersion:[NSNumber numberWithInteger:[dict integerForKey:@"version"]]];
             [interval setClassName:[dict stringForKey:@"@class"]];
             [allocationIntervals addObject:interval];
         }

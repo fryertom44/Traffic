@@ -126,44 +126,44 @@
                        context:(void *)context {
     if ([keyPath isEqual:@"selectedJobAsData"]) {
         self.sharedModel.selectedJobTask = [ParseJobTaskFromJobData parseData:[change objectForKey:NSKeyValueChangeNewKey] fetchJobTaskWithId:self.sharedModel.timesheet.jobTaskId];
-        NSLog(@"selectedJobData has been observed!");
+        NSLog(@"TaskViewDetail:selectedJobData has been observed!");
     }
     if ([keyPath isEqual:@"selectedJob"]) {
         [self configureViewWithJobDetails];
         [self loadJobDetail];
-        NSLog(@"selectedJob has been observed!");
+        NSLog(@"TaskViewDetail:selectedJob has been observed!");
     }
     if ([keyPath isEqual:@"selectedJobDetail"]) {
         [self configureViewWithJobDetailDetails];
         [self loadProject];
         [self loadEmployee];
 
-        NSLog(@"selectedJobDetail has been observed!");
+        NSLog(@"TaskViewDetail:selectedJobDetail has been observed!");
     }
     if ([keyPath isEqual:@"selectedClient"]) {
         [self configureViewWithClientDetails];
-        NSLog(@"selectedClient has been observed!");
+        NSLog(@"TaskViewDetail:selectedClient has been observed!");
     }
     if ([keyPath isEqual:@"selectedJobTask"]) {
         [self configureViewWithTaskDetails];
-        NSLog(@"selectedJobTask has been observed!");
+        NSLog(@"TaskViewDetail:selectedJobTask has been observed!");
     }
     if ([keyPath isEqual:@"selectedJobTaskAllocation"]) {
         [self loadJob];
-        NSLog(@"selectedJobTaskAllocation has been observed!");
+        NSLog(@"TaskViewDetail:selectedJobTaskAllocation has been observed!");
     }
     if ([keyPath isEqual:@"timesheet"]) {
         [self configureViewWithTimesheetDetails];
-        NSLog(@"timesheet has been observed!");
+        NSLog(@"TaskViewDetail:timesheet has been observed!");
     }
     if ([keyPath isEqual:@"selectedProject"]) {
         [self configureViewWithProjectDetails];
         [self loadClient];
-        NSLog(@"selectedProject has been observed!");
+        NSLog(@"TaskViewDetail:selectedProject has been observed!");
     }
     if ([keyPath isEqual:@"selectedOwner"]) {
         [self configureViewWithEmployeeDetails];
-        NSLog(@"selectedOwner has been observed!");
+        NSLog(@"TaskViewDetail:selectedOwner has been observed!");
     }
 }
 

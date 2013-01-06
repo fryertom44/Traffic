@@ -14,7 +14,7 @@
     id memento;
 }
 
-@property (nonatomic,retain) NSNumber *wsVersion;
+@property (nonatomic,retain) NSNumber *trafficVersion;
 
 - (void)saveState;
 - (void)restoreState;

@@ -18,6 +18,7 @@
 #import "HappyRatingHelper.h"
 #import "PostJobTaskAllocationCommand.h"
 #import "GetJobTaskAllocationCommand.h"
+#import <RestKit.h>
 
 @interface DetailViewController ()
 @property (strong, nonatomic) UIPopoverController *masterPopoverController;
@@ -95,43 +96,43 @@ UIView *normalView;
                       ofObject:(id)object
                         change:(NSDictionary *)change
                        context:(void *)context {
+    
+    //selected job changed
     if ([keyPath isEqual:@"selectedJob"]) {
         [self displayJobDetails];
         
-        if(self.sharedModel.selectedJob!=nil){
-            LoadJobDetailCommand *loadJobDetailCommand = [[LoadJobDetailCommand alloc]init];
-            [loadJobDetailCommand executeWithJobDetailId:self.sharedModel.selectedJob.jobDetailId];
-        }
-        NSLog(@"selectedJob has been observed!");
+//        if(self.sharedModel.selectedJob!=nil){
+//            LoadJobDetailCommand *loadJobDetailCommand = [[LoadJobDetailCommand alloc]init];
+//            [loadJobDetailCommand executeWithJobDetailId:self.sharedModel.selectedJob.jobDetailId];
+//        }
     }
+    //selected job detail changed
     if ([keyPath isEqual:@"selectedJobDetail"]) {
         [self displayJobDetailsDetails];
-        NSLog(@"selectedJobDetail has been observed!");
     }
+    //selected client changed
     if ([keyPath isEqual:@"selectedClient"]) {
-        NSLog(@"selectedClient has been observed!");
     }
+    //selected job task changed
     if ([keyPath isEqual:@"selectedJobTask"]) {
         [self displayTaskDetails];
-        self.sharedModel.timesheet.chargebandId = self.sharedModel.selectedJobTask.chargeBandId;
-        NSLog(@"selectedJobTask has been observed!");
     }
+    //selected allocation changed
     if ([keyPath isEqual:@"selectedJobTaskAllocation"]) {
         [self displayTaskAllocationDetails];
         
         if(self.sharedModel.selectedJobTaskAllocation!=nil){
-            LoadJobCommand *loadJobCommand = [[LoadJobCommand alloc]init];
-            [loadJobCommand executeWithJobId:self.sharedModel.selectedJobTaskAllocation.jobId];
+//            LoadJobCommand *loadJobCommand = [[LoadJobCommand alloc]init];
+//            [loadJobCommand executeWithJobId:self.sharedModel.selectedJobTaskAllocation.jobId];
         }
         self.view = normalView;
         [self.navigationController setToolbarHidden:FALSE animated:TRUE];
-        NSLog(@"selectedJobTaskAllocation has been observed!");
     }
+    //selected timesheet changed
     if ([keyPath isEqual:@"timesheet"]) {
         [self displayTimesheetDetails];
-        GetJobTaskAllocationCommand *getJobTaskAllocationCmd = [[GetJobTaskAllocationCommand alloc]init];
-        [getJobTaskAllocationCmd executeWithAllocationGroupId:self.sharedModel.timesheet.allocationGroupId];
-        NSLog(@"timesheet has been observed!");
+//        GetJobTaskAllocationCommand *getJobTaskAllocationCmd = [[GetJobTaskAllocationCommand alloc]init];
+//        [getJobTaskAllocationCmd executeWithAllocationGroupId:self.sharedModel.timesheet.allocationGroupId];
     }
     if (self.masterPopoverController != nil) {
         [self.masterPopoverController dismissPopoverAnimated:YES];
@@ -168,7 +169,7 @@ UIView *normalView;
         self.startTimeInput.text = [df stringFromDate:self.sharedModel.timesheet.startTime];
         self.endTimeInput.text = [df stringFromDate:self.sharedModel.timesheet.endTime];
         self.durationInput.text = [NSDate timeStringFromMinutes:self.sharedModel.timesheet.minutes.intValue];
-        self.billableSwitch.on = self.sharedModel.timesheet.billable;
+        self.billableSwitch.on = self.sharedModel.timesheet.billable.boolValue;
     }
 }
 
@@ -298,7 +299,7 @@ UIView *normalView;
     NSString *currentRating = self.sharedModel.selectedJobTaskAllocation.happyRating;
     NSString *nextHappyRating = [HappyRatingHelper nextHappyRating:currentRating];
     self.sharedModel.selectedJobTaskAllocation.happyRating = nextHappyRating;
-    self.sharedModel.selectedJobTaskAllocation.happyRatingWasChanged = TRUE;
+    self.sharedModel.selectedJobTaskAllocation.happyRatingWasChanged = [NSNumber numberWithBool:TRUE];
     [self.happyRatingButton setImage:[HappyRatingHelper happyRatingImageFromString:nextHappyRating] forState:UIControlStateNormal];
     [self.navigationController setToolbarHidden:FALSE animated:TRUE];
 }
@@ -332,7 +333,7 @@ UIView *normalView;
     self.sharedModel.timesheet.startTime = self.sharedModel.timerStartDate;
     self.sharedModel.timesheet.endTime = dateNow;
     self.sharedModel.timesheet.minutes = [NSNumber numberWithInt:minutesElapsed];
-    self.sharedModel.timesheet.timesheetWasChanged = TRUE;
+    self.sharedModel.timesheet.timesheetWasChanged = [NSNumber numberWithBool:TRUE];
     [self setMinAndMaxDatesOnPickers];
 
     [self setTimerToZero];
@@ -350,22 +351,87 @@ UIView *normalView;
 #pragma mark - form actions
 - (IBAction)billableValueChanged:(id)sender {
     if(self.billableSwitch.isOn)
-        self.sharedModel.timesheet.billable = TRUE;
+        self.sharedModel.timesheet.billable = [NSNumber numberWithBool:TRUE];
     else
-        self.sharedModel.timesheet.billable = FALSE;
+        self.sharedModel.timesheet.billable = [NSNumber numberWithBool:FALSE];
 }
 
 - (IBAction)onSave:(id)sender {
-    if(self.sharedModel.selectedJobTaskAllocation.happyRatingWasChanged){
-        PostJobTaskAllocationCommand *postJobTaskAllocationCmd = [[PostJobTaskAllocationCommand alloc]init];
-        postJobTaskAllocationCmd.delegate = self;
-        [postJobTaskAllocationCmd execute];
+//    if(self.sharedModel.selectedJobTaskAllocation.happyRatingWasChanged){
+//        PostJobTaskAllocationCommand *postJobTaskAllocationCmd = [[PostJobTaskAllocationCommand alloc]init];
+//        postJobTaskAllocationCmd.delegate = self;
+//        [postJobTaskAllocationCmd execute];
+//    }
+//    if (self.sharedModel.timesheet.timesheetWasChanged) {
+//        PutTimesheetCommand *putTimesheetCmd = [[PutTimesheetCommand alloc]init];
+//        putTimesheetCmd.delegate = self;
+//        [putTimesheetCmd execute];
+//    }
+    
+    WS_JobTaskAllocation *allocation = self.sharedModel.selectedJobTaskAllocation;
+    self.sharedModel.selectedJobTask = [self.sharedModel.jobTasksDictionary objectForKey:allocation.jobTaskId.stringValue];
+    self.sharedModel.selectedJob = [self.sharedModel.jobsDictionary objectForKey:self.sharedModel.selectedJobTask.jobId.stringValue];
+    self.sharedModel.selectedJobDetail = [self.sharedModel.jobDetailsDictionary objectForKey:self.sharedModel.selectedJob.jobDetailId.stringValue];
+    self.sharedModel.selectedProject = [self.sharedModel.projectsDictionary objectForKey:self.sharedModel.selectedJobDetail.ownerProjectId.stringValue];
+    self.sharedModel.selectedClient = [self.sharedModel.clientsDictionary objectForKey:self.sharedModel.selectedProject.clientCRMEntryId.stringValue];
+    
+    WS_Project *testProject = self.sharedModel.selectedProject;
+    //TESTING(DELETE THIS WHEN FINISHED):
+//    [[RKObjectManager sharedManager] postObject:testProject path:nil parameters:nil
+//                                       success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {       
+//                                        NSArray* timesheets = [mappingResult array];
+//                                        NSLog(@"Loaded timesheets: %@", timesheets);
+//                                       }
+//                                       failure:^(RKObjectRequestOperation *operation, NSError *error) {
+//                                           [self handleFailureWithOperation:operation error:error];
+//                                       }];
+//
+    
+    
+    
+//    PostJobTaskAllocationCommand *postJobTaskAllocationCmd = [[PostJobTaskAllocationCommand alloc]init];
+//    postJobTaskAllocationCmd.delegate = self;
+//    [postJobTaskAllocationCmd execute];
+    
+    
+    
+    WS_TimeEntry *timesheet = self.sharedModel.timesheet;
+    timesheet.chargebandId = self.sharedModel.selectedJobTask.chargeBandId;
+    timesheet.jobId = self.sharedModel.selectedJobTaskAllocation.jobId;
+    timesheet.jobTaskId = self.sharedModel.selectedJobTaskAllocation.jobTaskId;
+    timesheet.trafficEmployeeId = self.sharedModel.selectedJobTaskAllocation.trafficEmployeeId;
+    timesheet.allocationGroupId = self.sharedModel.selectedJobTaskAllocation.jobTaskAllocationGroupId;
+    
+    //TODO: queue these up and remove toolbar if successful
+//    if(timesheet.timesheetWasChanged && timesheet.timeEntryId.intValue == -1){
+//        [[RKObjectManager sharedManager] putObject:timesheet path:nil parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+//            NSArray* timesheets = [mappingResult array];
+//            NSLog(@"Loaded timesheets: %@", timesheets);
+//        }
+//                                           failure:^(RKObjectRequestOperation *operation, NSError *error) {
+//                                               [self handleFailureWithOperation:operation error:error];
+//                                           }];
+//    }else if(timesheet.timesheetWasChanged){
+//        [[RKObjectManager sharedManager] postObject:timesheet path:nil parameters:nil
+//                                            success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+//                                                NSArray* timesheets = [mappingResult array];
+//                                                NSLog(@"Loaded timesheets: %@", timesheets);
+//                                            }
+//                                            failure:^(RKObjectRequestOperation *operation, NSError *error) {
+//                                                [self handleFailureWithOperation:operation error:error];
+//                                            }];
+//    }
+//    
+    if (allocation.happyRatingWasChanged) {
+        [[RKObjectManager sharedManager] postObject:allocation path:nil parameters:nil
+                                            success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                                id thingummy = mappingResult;
+                                                NSLog(@"Loaded thingummy: %@", thingummy);
+                                            }
+                                            failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                                [self handleFailureWithOperation:operation error:error];                                        }];
     }
-    if (self.sharedModel.timesheet.timesheetWasChanged) {
-        PutTimesheetCommand *putTimesheetCmd = [[PutTimesheetCommand alloc]init];
-        putTimesheetCmd.delegate = self;
-        [putTimesheetCmd execute];
-    }
+
 }
 
 - (IBAction)onCancel:(id)sender {
@@ -373,7 +439,7 @@ UIView *normalView;
     self.sharedModel.timesheet.endTime = nil;
     self.sharedModel.timesheet.minutes = 0;
     self.sharedModel.timesheet.comment = nil;
-    self.sharedModel.timesheet.billable = TRUE;
+    self.sharedModel.timesheet.billable = [NSNumber numberWithBool:TRUE];
 //    [self.sharedModel.selectedJobTaskAllocation restoreState];
     [self configureView];
 }
@@ -454,7 +520,7 @@ UIView *normalView;
     }
     [self.txtActiveComponent resignFirstResponder];
     self.txtActiveComponent  = nil;
-    self.sharedModel.timesheet.timesheetWasChanged = TRUE;
+    self.sharedModel.timesheet.timesheetWasChanged = [NSNumber numberWithBool:TRUE];
     [self.navigationController setToolbarHidden:FALSE animated:TRUE];
 }
 
@@ -479,5 +545,15 @@ UIView *normalView;
     int regulatedTotal = leftover > 0 || minutes < storedInterval ? minutes+(storedInterval-leftover) : minutes;
     return regulatedTotal;
 }
+
+-(void)handleFailureWithOperation:(RKObjectRequestOperation*)operation error:(NSError*)error{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                    message:[error localizedDescription]
+                                                   delegate:nil
+                                          cancelButtonTitle:@"OK"
+                                          otherButtonTitles:nil];
+    [alert show];
+    NSLog(@"Hit error: %@", error);
+};
 
 @end
