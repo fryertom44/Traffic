@@ -4,7 +4,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1930"/>
     </dependencies>
     <scenes>
-        <!--Settings View Controller-->
+        <!--Settings View Controller - Settings-->
         <scene sceneID="T6A-dw-YjT">
             <objects>
                 <tableViewController storyboardIdentifier="settingsView" id="Qbq-7I-Hbc" customClass="SettingsViewController" sceneMemberID="viewController">
@@ -14,7 +14,7 @@
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                         <sections>
-                            <tableViewSection headerTitle="Settings" id="aKg-Si-UkJ">
+                            <tableViewSection headerTitle="Timer" id="aKg-Si-UkJ">
                                 <cells>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="geh-mT-lMf">
                                         <rect key="frame" x="0.0" y="54" width="703" height="46"/>
@@ -42,10 +42,64 @@
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
+                            <tableViewSection headerTitle="Task Allocations" id="dg4-Tz-Scl">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="Tnl-br-nsr">
+                                        <rect key="frame" x="0.0" y="144" width="703" height="45"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="43" y="1" width="617" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Maximum Allocations to Display:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="vGL-2a-TZG">
+                                                    <rect key="frame" x="20" y="11" width="307" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </label>
+                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Default: 10" textAlignment="right" minimumFontSize="17" id="4ag-Ob-ykb">
+                                                    <rect key="frame" x="335" y="7" width="262" height="30"/>
+                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <textInputTraits key="textInputTraits"/>
+                                                </textField>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                    </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="SnK-pB-nP2">
+                                        <rect key="frame" x="0.0" y="189" width="703" height="45"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="43" y="0.0" width="617" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <button autoresizesSubviews="NO" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" id="iR2-c4-Fe9">
+                                                    <rect key="frame" x="20" y="0.0" width="577" height="44"/>
+                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                                    <state key="normal" title="Hide Completed Tasks:">
+                                                        <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <state key="highlighted">
+                                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="onHideCompletedToggle:" destination="Qbq-7I-Hbc" eventType="touchUpInside" id="lci-SL-HRQ"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
                             <tableViewSection id="ewf-Zo-f9r">
                                 <cells>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="iLI-I6-k49">
-                                        <rect key="frame" x="0.0" y="120" width="703" height="45"/>
+                                        <rect key="frame" x="0.0" y="254" width="703" height="45"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="43" y="1" width="617" height="43"/>
@@ -71,7 +125,7 @@
                                         </view>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="zNt-sh-wxE">
-                                        <rect key="frame" x="0.0" y="165" width="703" height="45"/>
+                                        <rect key="frame" x="0.0" y="299" width="703" height="45"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="43" y="0.0" width="617" height="43"/>
@@ -104,8 +158,11 @@
                             <outlet property="delegate" destination="Qbq-7I-Hbc" id="xqJ-YW-t4f"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="biI-Sa-rHv"/>
+                    <navigationItem key="navigationItem" title="Settings" id="biI-Sa-rHv"/>
                     <connections>
+                        <outlet property="hideCompletedCell" destination="SnK-pB-nP2" id="nOF-uy-u4n"/>
+                        <outlet property="hideCompletedToggleButton" destination="iR2-c4-Fe9" id="xAu-GA-vRv"/>
+                        <outlet property="maxAllocationResultsTextInput" destination="4ag-Ob-ykb" id="zZj-1G-se6"/>
                         <outlet property="timeIntervalTextInput" destination="wb2-OF-jry" id="BE9-xN-8C0"/>
                     </connections>
                 </tableViewController>
@@ -899,15 +956,13 @@
                                                 </label>
                                                 <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="Pne-fE-xV9">
                                                     <rect key="frame" x="0.0" y="0.0" width="617" height="103"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
-                                                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" id="FYp-En-qQh">
+                                                        <webView opaque="NO" contentMode="scaleToFill" id="PuO-mE-hzo">
                                                             <rect key="frame" x="0.0" y="0.0" width="617" height="103"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                            <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                                        </textView>
+                                                        </webView>
                                                     </subviews>
                                                 </scrollView>
                                             </subviews>
@@ -924,7 +979,7 @@
                     </tableView>
                     <navigationItem key="navigationItem" id="XtD-8Q-EY7"/>
                     <connections>
-                        <outlet property="briefLabel" destination="FYp-En-qQh" id="SfL-cp-azI"/>
+                        <outlet property="briefLabel" destination="PuO-mE-hzo" id="7lG-pW-mKH"/>
                         <outlet property="clientLabel" destination="7nf-q6-9gv" id="TG7-dM-Rdh"/>
                         <outlet property="jobNameLabel" destination="KRn-Os-RJz" id="yOZ-L2-yNs"/>
                         <outlet property="jobNoLabel" destination="mCb-X1-Qzv" id="OR2-8a-UBT"/>
@@ -1193,6 +1248,93 @@
         <image name="stop320.png" width="48" height="48"/>
         <image name="whiteLogo320.png" width="470" height="132"/>
     </resources>
+    <classes>
+        <class className="DetailViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/DetailViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="billableValueChanged:"/>
+                <relationship kind="action" name="changeHappyRating:"/>
+                <relationship kind="action" name="goToSettings:"/>
+                <relationship kind="action" name="onCancel:"/>
+                <relationship kind="action" name="onSave:"/>
+                <relationship kind="action" name="startTimer:"/>
+                <relationship kind="action" name="stopTimer:"/>
+                <relationship kind="outlet" name="billableSwitch" candidateClass="UISwitch"/>
+                <relationship kind="outlet" name="dateInput" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="daysRemainingLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="durationInput" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="endTimeInput" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="happyRatingButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="jobTitle" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="progressLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="recordButton" candidateClass="PGToggleButton"/>
+                <relationship kind="outlet" name="startTimeInput" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="stopButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="taskDescription" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="taskProgress" candidateClass="UIProgressView"/>
+                <relationship kind="outlet" name="timerLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="timesheetNotes" candidateClass="UITextView"/>
+            </relationships>
+        </class>
+        <class className="LoginViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/LoginViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="submit:"/>
+                <relationship kind="outlet" name="passwordTextField" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="submitButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="usernameTextField" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="waitIndicator" candidateClass="UIActivityIndicatorView"/>
+            </relationships>
+        </class>
+        <class className="MasterViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/MasterViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="onLoadMoreSelected:"/>
+            </relationships>
+        </class>
+        <class className="PGToggleButton" superclassName="UIButton">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/PGToggleButton.h"/>
+        </class>
+        <class className="SettingsViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SettingsViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="onFollowFacebookSelected:"/>
+                <relationship kind="action" name="onFollowTwitterSelected:"/>
+                <relationship kind="action" name="onHideCompletedToggle:"/>
+                <relationship kind="outlet" name="hideCompletedCell" candidateClass="UITableViewCell"/>
+                <relationship kind="outlet" name="hideCompletedToggleButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="maxAllocationResultsTextInput" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="timeIntervalTextInput" candidateClass="UITextField"/>
+            </relationships>
+        </class>
+        <class className="TaskAllocationCell" superclassName="UITableViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/TaskAllocationCell.h"/>
+            <relationships>
+                <relationship kind="outlet" name="companyLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="daysToDeadlineLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="happyRating" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="jobLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="timeCompletedLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="timesheetLabel" candidateClass="UILabel"/>
+            </relationships>
+        </class>
+        <class className="TaskDetailViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/TaskDetailViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="briefLabel" candidateClass="UIWebView"/>
+                <relationship kind="outlet" name="clientLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="jobDeadlineLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="jobNameLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="jobNoLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="ownerLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="projectLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="stageLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="taskDeadlineLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="taskDescriptionLabel" candidateClass="UITextView"/>
+                <relationship kind="outlet" name="taskNotesLabel" candidateClass="UITextView"/>
+            </relationships>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar" statusBarStyle="blackTranslucent"/>
         <simulatedOrientationMetrics key="orientation"/>

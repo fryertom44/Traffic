@@ -36,6 +36,7 @@
 
 //    return YES;
     
+    // Initialize RestKit
     [ConfigureRestkitCommand execute];
     
     self.loginViewController = (LoginViewController *)self.window.rootViewController;

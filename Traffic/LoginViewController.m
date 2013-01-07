@@ -63,9 +63,6 @@
     KeychainItemWrapper *keychainItem = [[KeychainItemWrapper alloc]initWithIdentifier:@"TrafficLogin" accessGroup:nil];
     [keychainItem setObject:password forKey:(__bridge id)(kSecValueData)];
     [keychainItem setObject:username forKey:(__bridge id)(kSecAttrAccount)];
-    
-    // Initialize RestKit
-    [ConfigureRestkitCommand execute];
 
     NSMutableDictionary *params = [[NSMutableDictionary alloc]initWithDictionary:@{@"filter" : [NSString stringWithFormat:@"emailAddress|EQ|\"%@\"",username]}];
     
