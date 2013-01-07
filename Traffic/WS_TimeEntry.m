@@ -10,8 +10,6 @@
 
 @implementation WS_TimeEntry
 
-//@synthesize timeEntryId,jobTaskId,trafficEmployeeId,jobId,allocationGroupId,chargebandId,billable,exported,lockedByApproval,comment,endTime,startTime,minutes,taskDescription,taskRate,valueOfTimeEntry,timeEntryCost,timeEntryPersonalRate,dateModified,version;
-
 - (id)init{
     self = [super init];
     
@@ -36,9 +34,9 @@
 -(id)copyWithZone:(NSZone *)zone
 {
     WS_TimeEntry *copiedObject = [[WS_TimeEntry alloc]init];
-    [copiedObject setAllocationGroupId:[self allocationGroupId]];
+    [copiedObject setJobTaskAllocationGroupId:[self jobTaskAllocationGroupId]];
     [copiedObject setBillable:[self billable]];
-    [copiedObject setChargebandId:[self chargebandId]];
+    [copiedObject setChargeBandId:[self chargeBandId]];
     [copiedObject setComment:[self comment]];
     [copiedObject setDateModified:[self dateModified]];
     [copiedObject setEndTime:[self endTime]];

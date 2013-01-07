@@ -59,9 +59,12 @@
                          parameters:params
                             success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
                                 NSArray* jtas = [mappingResult array];
-                                NSLog(@"Loaded job task allocations: %@", jtas);
-                                if([jtas count] > 0)
-                                    sharedModel.taskAllocations = [[NSMutableArray alloc]initWithArray:jtas];
+//                                NSLog(@"Loaded job task allocations: %@", [jtas description]);
+                                NSMutableArray *mutableJtas = [[NSMutableArray alloc]init];
+                                for (WS_JobTaskAllocation *jta in jtas) {
+                                    [mutableJtas addObject:jta];
+                                }
+                                sharedModel.taskAllocations = mutableJtas;
                             }
                             failure:^(RKObjectRequestOperation *operation, NSError *error) {
                                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"

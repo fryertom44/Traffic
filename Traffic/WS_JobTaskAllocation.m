@@ -34,15 +34,13 @@
     return copiedObject;
 }
 
--(int)daysUntilDeadline{
-	NSDateFormatter *df = [[NSDateFormatter alloc] init];
-	[df setDateFormat:@"dd-MM-yyyy"];
+-(NSInteger)daysUntilDeadline{
 	NSDate *currentDate = [[NSDate alloc]init];
-	return (int)[self.taskDeadline timeIntervalSinceDate:currentDate] / (60*60*24);
+	return [self.taskDeadline timeIntervalSinceDate:currentDate] / (60*60*24);
 }
-
--(int)daysUntilDeadlineUnsigned{
-    return abs(self.daysUntilDeadline);
-}
+//
+//-(int)daysUntilDeadlineUnsigned{
+//    return abs(self.daysUntilDeadline);
+//}
 
 @end

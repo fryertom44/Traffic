@@ -99,40 +99,75 @@ UIView *normalView;
     
     //selected job changed
     if ([keyPath isEqual:@"selectedJob"]) {
-        [self displayJobDetails];
-        
-//        if(self.sharedModel.selectedJob!=nil){
-//            LoadJobDetailCommand *loadJobDetailCommand = [[LoadJobDetailCommand alloc]init];
-//            [loadJobDetailCommand executeWithJobDetailId:self.sharedModel.selectedJob.jobDetailId];
-//        }
+        if (self.sharedModel.selectedJob!=nil) {
+            WS_JobDetail *currentJobDetail = [[WS_JobDetail alloc]init];
+            currentJobDetail.jobDetailId = self.sharedModel.selectedJob.jobDetailId;
+            [[RKObjectManager sharedManager]getObject:currentJobDetail path:nil parameters:nil
+                                              success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                                  self.sharedModel.selectedJobDetail = (WS_JobDetail*)[mappingResult firstObject];
+                                              } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                                  [self handleFailureWithOperation:operation error:error];
+                                              }];
+        }
     }
     //selected job detail changed
     if ([keyPath isEqual:@"selectedJobDetail"]) {
         [self displayJobDetailsDetails];
+        if (self.sharedModel.selectedJobDetail!=nil) {
+            WS_Project *currentProject = [[WS_Project alloc]init];
+            currentProject.projectId = self.sharedModel.selectedJobDetail.ownerProjectId;
+            [[RKObjectManager sharedManager]getObject:currentProject path:nil parameters:nil
+                                              success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                                  self.sharedModel.selectedProject = (WS_Project*)[mappingResult firstObject];
+                                              } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                                  [self handleFailureWithOperation:operation error:error];
+                                              }];
+            WS_TrafficEmployee *currentOwner = [[WS_TrafficEmployee alloc]init];
+            currentOwner.trafficEmployeeId = self.sharedModel.selectedJobDetail.accountManagerId;
+            [[RKObjectManager sharedManager]getObject:currentOwner path:nil parameters:nil
+                                              success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                                  self.sharedModel.selectedOwner = (WS_TrafficEmployee*)[mappingResult firstObject];
+                                              } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                                  [self handleFailureWithOperation:operation error:error];
+                                              }];
+        }
     }
     //selected client changed
     if ([keyPath isEqual:@"selectedClient"]) {
     }
-    //selected job task changed
-    if ([keyPath isEqual:@"selectedJobTask"]) {
-        [self displayTaskDetails];
-    }
     //selected allocation changed
     if ([keyPath isEqual:@"selectedJobTaskAllocation"]) {
         [self displayTaskAllocationDetails];
-        
         if(self.sharedModel.selectedJobTaskAllocation!=nil){
-//            LoadJobCommand *loadJobCommand = [[LoadJobCommand alloc]init];
-//            [loadJobCommand executeWithJobId:self.sharedModel.selectedJobTaskAllocation.jobId];
+            WS_Job *currentJob = [[WS_Job alloc]init];
+            currentJob.jobId = self.sharedModel.selectedJobTaskAllocation.jobId;
+            [[RKObjectManager sharedManager]getObject:currentJob path:nil parameters:nil
+                                              success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                                  self.sharedModel.selectedJob = (WS_Job*)[mappingResult firstObject];
+                                              } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                                  [self handleFailureWithOperation:operation error:error];
+                                              }];
         }
         self.view = normalView;
-        [self.navigationController setToolbarHidden:FALSE animated:TRUE];
+        [self.navigationController setToolbarHidden:TRUE animated:TRUE];
+    }
+    if ([keyPath isEqual:@"selectedProject"]) {
+        if (self.sharedModel.selectedProject!=nil) {
+            WS_Client *currentClient = [[WS_Client alloc]init];
+            currentClient.clientId = self.sharedModel.selectedProject.clientCRMEntryId;
+            [[RKObjectManager sharedManager]getObject:currentClient path:nil parameters:nil
+                                              success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                                  self.sharedModel.selectedClient = (WS_Client*)[mappingResult firstObject];
+                                              } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                                  [self handleFailureWithOperation:operation error:error];
+                                              }];
+            
+        }
+
     }
     //selected timesheet changed
     if ([keyPath isEqual:@"timesheet"]) {
         [self displayTimesheetDetails];
-//        GetJobTaskAllocationCommand *getJobTaskAllocationCmd = [[GetJobTaskAllocationCommand alloc]init];
-//        [getJobTaskAllocationCmd executeWithAllocationGroupId:self.sharedModel.timesheet.allocationGroupId];
     }
     if (self.masterPopoverController != nil) {
         [self.masterPopoverController dismissPopoverAnimated:YES];
@@ -164,21 +199,12 @@ UIView *normalView;
     
     if (self.sharedModel.timesheet!=nil) {
         self.timerLabel.text = @"00:00:00";
-        NSDateFormatter *df = [[NSDateFormatter alloc]init];
-        [df setDateFormat:kJSONDateFormat];
-        self.startTimeInput.text = [df stringFromDate:self.sharedModel.timesheet.startTime];
-        self.endTimeInput.text = [df stringFromDate:self.sharedModel.timesheet.endTime];
+        self.startTimeInput.text = [self fullDateStringFromDate:self.sharedModel.timesheet.startTime];
+        self.startTimeInput.text = [self fullDateStringFromDate:self.sharedModel.timesheet.startTime];
+        self.endTimeInput.text = [self fullDateStringFromDate:self.sharedModel.timesheet.endTime];
         self.durationInput.text = [NSDate timeStringFromMinutes:self.sharedModel.timesheet.minutes.intValue];
         self.billableSwitch.on = self.sharedModel.timesheet.billable.boolValue;
     }
-}
-
--(void)displayJobDetails
-{
-    if(self.sharedModel.selectedJob!=nil){
-        //Anything to do here?
-    }
-    
 }
 
 -(void)displayJobDetailsDetails
@@ -202,29 +228,12 @@ UIView *normalView;
     }
 }
 
-- (void)displayTaskDetails
-{
-    if(self.sharedModel.selectedJobTask!=nil) {
-//        NSNumber *totalLoggedMinutes = [NSNumber numberWithFloat:self.sharedModel.selectedJobTask.totalTimeLoggedMinutes.floatValue + self.sharedModel.selectedJobTask.totalTimeLoggedBillableMinutes.floatValue];
-//        float progressAsFloat = totalLoggedMinutes.floatValue / self.sharedModel.selectedJobTask.totalTimeAllocatedMinutes.floatValue;
-//        [self.taskProgress setProgress:progressAsFloat animated:YES];
-//        [self.taskProgress setProgressTintColor:]
-//        self.progressLabel.text = [NSString stringWithFormat:@"%@ of %@",[NSDate timeStringFromMinutes:totalLoggedMinutes.intValue],[NSDate timeStringFromMinutes:self.sharedModel.selectedJobTask.totalTimeAllocatedMinutes.intValue]];
-        
-//        if(self.sharedModel.selectedJobTask.jobTaskDescription!=nil)
-//            self.taskDescription.text = self.sharedModel.selectedJobTask.jobTaskDescription;
-    }
-}
-
 - (void)configureView
 {
     [self displayTimesheetDetails];
     [self displayTaskAllocationDetails];
-    [self displayTaskDetails];
-    [self displayJobDetails];
     [self displayJobDetailsDetails];
     [self.navigationController setToolbarHidden:TRUE animated:TRUE];
-
 }
 
 - (void)configureInputAccessoryViews
@@ -311,7 +320,7 @@ UIView *normalView;
         self.sharedModel.timerStartDate = [NSDate date];
         self.sharedModel.myTimer= [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(updateTimer) userInfo:nil repeats:YES];
     }
-    [self.navigationController setToolbarHidden:FALSE animated:TRUE];
+//    [self.navigationController setToolbarHidden:FALSE animated:TRUE];
 
 }
 
@@ -357,79 +366,56 @@ UIView *normalView;
 }
 
 - (IBAction)onSave:(id)sender {
-//    if(self.sharedModel.selectedJobTaskAllocation.happyRatingWasChanged){
-//        PostJobTaskAllocationCommand *postJobTaskAllocationCmd = [[PostJobTaskAllocationCommand alloc]init];
-//        postJobTaskAllocationCmd.delegate = self;
-//        [postJobTaskAllocationCmd execute];
-//    }
-//    if (self.sharedModel.timesheet.timesheetWasChanged) {
-//        PutTimesheetCommand *putTimesheetCmd = [[PutTimesheetCommand alloc]init];
-//        putTimesheetCmd.delegate = self;
-//        [putTimesheetCmd execute];
-//    }
-    
     WS_JobTaskAllocation *allocation = self.sharedModel.selectedJobTaskAllocation;
-    self.sharedModel.selectedJobTask = [self.sharedModel.jobTasksDictionary objectForKey:allocation.jobTaskId.stringValue];
-    self.sharedModel.selectedJob = [self.sharedModel.jobsDictionary objectForKey:self.sharedModel.selectedJobTask.jobId.stringValue];
-    self.sharedModel.selectedJobDetail = [self.sharedModel.jobDetailsDictionary objectForKey:self.sharedModel.selectedJob.jobDetailId.stringValue];
-    self.sharedModel.selectedProject = [self.sharedModel.projectsDictionary objectForKey:self.sharedModel.selectedJobDetail.ownerProjectId.stringValue];
-    self.sharedModel.selectedClient = [self.sharedModel.clientsDictionary objectForKey:self.sharedModel.selectedProject.clientCRMEntryId.stringValue];
-    
-    WS_Project *testProject = self.sharedModel.selectedProject;
-    //TESTING(DELETE THIS WHEN FINISHED):
-//    [[RKObjectManager sharedManager] postObject:testProject path:nil parameters:nil
-//                                       success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {       
-//                                        NSArray* timesheets = [mappingResult array];
-//                                        NSLog(@"Loaded timesheets: %@", timesheets);
-//                                       }
-//                                       failure:^(RKObjectRequestOperation *operation, NSError *error) {
-//                                           [self handleFailureWithOperation:operation error:error];
-//                                       }];
-//
-    
-    
-    
-//    PostJobTaskAllocationCommand *postJobTaskAllocationCmd = [[PostJobTaskAllocationCommand alloc]init];
-//    postJobTaskAllocationCmd.delegate = self;
-//    [postJobTaskAllocationCmd execute];
-    
-    
     
     WS_TimeEntry *timesheet = self.sharedModel.timesheet;
-    timesheet.chargebandId = self.sharedModel.selectedJobTask.chargeBandId;
+    timesheet.chargeBandId = self.sharedModel.selectedJobTask.chargeBandId;
     timesheet.jobId = self.sharedModel.selectedJobTaskAllocation.jobId;
     timesheet.jobTaskId = self.sharedModel.selectedJobTaskAllocation.jobTaskId;
     timesheet.trafficEmployeeId = self.sharedModel.selectedJobTaskAllocation.trafficEmployeeId;
-    timesheet.allocationGroupId = self.sharedModel.selectedJobTaskAllocation.jobTaskAllocationGroupId;
+    timesheet.jobTaskAllocationGroupId = self.sharedModel.selectedJobTaskAllocation.jobTaskAllocationGroupId;
     
-    //TODO: queue these up and remove toolbar if successful
-//    if(timesheet.timesheetWasChanged && timesheet.timeEntryId.intValue == -1){
-//        [[RKObjectManager sharedManager] putObject:timesheet path:nil parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-//            NSArray* timesheets = [mappingResult array];
-//            NSLog(@"Loaded timesheets: %@", timesheets);
-//        }
-//                                           failure:^(RKObjectRequestOperation *operation, NSError *error) {
-//                                               [self handleFailureWithOperation:operation error:error];
-//                                           }];
-//    }else if(timesheet.timesheetWasChanged){
-//        [[RKObjectManager sharedManager] postObject:timesheet path:nil parameters:nil
-//                                            success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-//                                                NSArray* timesheets = [mappingResult array];
-//                                                NSLog(@"Loaded timesheets: %@", timesheets);
-//                                            }
-//                                            failure:^(RKObjectRequestOperation *operation, NSError *error) {
-//                                                [self handleFailureWithOperation:operation error:error];
-//                                            }];
-//    }
-//    
+    //Hide, but re-show if either one of these calls fails
+    [self.navigationController setToolbarHidden:TRUE animated:TRUE];
+    
+    if(timesheet.timesheetWasChanged && timesheet.trafficVersion.intValue == -1){
+        [[RKObjectManager sharedManager] putObject:timesheet path:nil parameters:nil
+                                           success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                               WS_TimeEntry *updatedTimesheet = (WS_TimeEntry*)[mappingResult firstObject];
+                                               self.sharedModel.timesheet = updatedTimesheet;
+                                           }
+                                           failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                               [self handleFailureWithOperation:operation error:error];
+                                               [self.navigationController setToolbarHidden:FALSE animated:TRUE];
+                                           }];
+    }else if(timesheet.timesheetWasChanged && timesheet.trafficVersion.intValue>=0){
+        [[RKObjectManager sharedManager] postObject:timesheet path:nil parameters:nil
+                                            success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                                WS_TimeEntry *updatedTimesheet = (WS_TimeEntry*)[mappingResult firstObject];
+                                                self.sharedModel.timesheet = updatedTimesheet;
+                                            }
+                                            failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                                [self handleFailureWithOperation:operation error:error];
+                                                [self.navigationController setToolbarHidden:FALSE animated:TRUE];
+                                            }];
+    }
     if (allocation.happyRatingWasChanged) {
         [[RKObjectManager sharedManager] postObject:allocation path:nil parameters:nil
                                             success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-                                                id thingummy = mappingResult;
-                                                NSLog(@"Loaded thingummy: %@", thingummy);
+                                                WS_JobTaskAllocation *updatedJobTaskAllocation = (WS_JobTaskAllocation*)[mappingResult firstObject];
+                                                for (int i=0; i < [self.sharedModel.taskAllocations count]; i++) {
+                                                    WS_JobTaskAllocation *jta = self.sharedModel.taskAllocations[i];
+                                                    if ([jta.jobTaskAllocationGroupId isEqualToNumber:updatedJobTaskAllocation.jobTaskAllocationGroupId]) {
+                                                        [self.sharedModel.taskAllocations setObject:updatedJobTaskAllocation atIndexedSubscript:i];
+                                                        break;
+                                                    }
+                                                }
+                                                self.sharedModel.selectedJobTaskAllocation = updatedJobTaskAllocation;
                                             }
                                             failure:^(RKObjectRequestOperation *operation, NSError *error) {
-                                                [self handleFailureWithOperation:operation error:error];                                        }];
+                                                [self handleFailureWithOperation:operation error:error];
+                                                [self.navigationController setToolbarHidden:FALSE animated:TRUE];
+                                            }];
     }
 
 }
@@ -455,11 +441,6 @@ UIView *normalView;
         [dateFormatter setDateFormat:@"dd-MM-YYYY HH:mm"];
     }
     return [dateFormatter stringFromDate:date];
-}
-
-#pragma mark - DetailViewControllerDelegate
--(void)saveSuccessful{
-    [self.navigationController setToolbarHidden:TRUE animated:TRUE];
 }
 
 #pragma mark - UITextFieldDelegate methods

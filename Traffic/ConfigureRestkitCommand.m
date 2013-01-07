@@ -47,6 +47,7 @@
     [RKObjectMapping addDefaultDateFormatter:df];
     [RKObjectMapping setPreferredDateFormatter:df];
     
+#pragma mark - Object Mapping
     // Setup our object mappings
     RKObjectMapping *moneyMapping = [RKObjectMapping mappingForClass:[Money class]];
     [moneyMapping addAttributeMappingsFromDictionary:@{
@@ -90,6 +91,7 @@
      @"id" : @"jobDetailId",
      @"description" : @"jobDescription",
      @"name" : @"jobTitle",
+     @"notes" : @"notes",
      @"accountManagerId" : @"accountManagerId",
      @"ownerProjectId" : @"ownerProjectId",
      }];
@@ -119,7 +121,7 @@
     [jobTaskAllocationMapping addAttributeMappingsFromDictionary:@{
      @"id" : @"jobTaskAllocationGroupId",
      @"jobId.id" : @"jobId",
-     @"description" : @"taskDescription",
+     @"taskDescription" : @"taskDescription",
      @"happyRating" : @"happyRating",
      @"isTaskComplete" : @"isTaskComplete",
      @"taskDeadline" : @"taskDeadline",
@@ -141,9 +143,12 @@
     
     RKObjectMapping *trafficEmployeeMapping = [RKObjectMapping mappingForClass:[WS_TrafficEmployee class]];
     [trafficEmployeeMapping addAttributeMappingsFromDictionary:@{
+     @"id" : @"trafficEmployeeId",
      @"employeeDetails.personalDetails.firstName" : @"firstName",
-          @"employeeDetails.personalDetails.lastName" : @"lastName",
+     @"employeeDetails.personalDetails.lastName" : @"lastName",
+     @"version" : @"trafficVersion",
      }];
+    
     [trafficEmployeeMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"employeeDetails.costPerHour" toKeyPath:@"costPerHour" withMapping:trafficEmployeeMapping]];
 
     RKObjectMapping *projectMapping = [RKObjectMapping mappingForClass:[WS_Project class]];
@@ -158,7 +163,6 @@
      @"id" : @"timeEntryId",
      @"jobId.id" : @"jobId",
      @"allocationGroupId.id" : @"jobTaskAllocationGroupId",
-     @"jobStageDescription" : @"jobStageDescription",
      @"jobTaskId.id" : @"jobTaskId",
      @"lockedByApproval" : @"lockedByApproval",
      @"minutes" : @"minutes",
@@ -170,12 +174,11 @@
      @"comment" : @"comment",
      @"exported" : @"exported",
      @"endTime" : @"endTime",
-     @"workPoints" : @"workPoints",
+//     @"workPoints" : @"workPoints",
      @"startTime" : @"startTime",
      @"taskComplete" : @"isTaskComplete",
      @"lockedByApprovalDate" : @"lockedByApprovalDate",
      @"lockedByApprovalEmployeeId" : @"lockedByApprovalEmployeeId",
-     @"exportError" : @"exportError",
      }];
     
     [timeEntryMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"timeEntryCost" toKeyPath:@"timeEntryCost" withMapping:moneyMapping]];
@@ -184,55 +187,78 @@
     [timeEntryMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"taskRate" toKeyPath:@"taskRate" withMapping:moneyMapping]];
 
     
-    // Register our mappings with the provider using a response descriptor
-    RKResponseDescriptor *clientsGetResponseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:clientMapping pathPattern:@"crm/client" keyPath:@"resultList" statusCodes:[NSIndexSet indexSetWithIndex:200]];
+#pragma mark - Response Mapping
+    RKResponseDescriptor *clientsResponseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:clientMapping pathPattern:@"crm/client" keyPath:@"resultList" statusCodes:[NSIndexSet indexSetWithIndex:200]];
     
-    RKResponseDescriptor *clientsPutPostDeleteResponseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:clientMapping pathPattern:@"crm/client" keyPath:nil statusCodes:[NSIndexSet indexSetWithIndex:200]];
+    RKResponseDescriptor *clientResponseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:clientMapping pathPattern:@"crm/client/:clientId" keyPath:nil statusCodes:[NSIndexSet indexSetWithIndex:200]];
     
-    RKResponseDescriptor *jobsGetResponseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:jobMapping pathPattern:@"job" keyPath:@"resultList" statusCodes:[NSIndexSet indexSetWithIndex:200]];
+    RKResponseDescriptor *clientPutPostDeleteResponseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:clientMapping pathPattern:@"crm/client" keyPath:nil statusCodes:[NSIndexSet indexSetWithIndex:200]];
     
-//    RKResponseDescriptor *jobsPutPostDeleteResponseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:jobMapping pathPattern:@"job" keyPath:nil statusCodes:[NSIndexSet indexSetWithIndex:200]];
+    RKResponseDescriptor *jobsResponseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:jobMapping pathPattern:@"job" keyPath:@"resultList" statusCodes:[NSIndexSet indexSetWithIndex:200]];
     
-    RKResponseDescriptor *jobDetailGetResponseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:jobDetailMapping                                                                                            pathPattern:@"jobdetail" keyPath:@"resultList" statusCodes:[NSIndexSet indexSetWithIndex:200]];
+    RKResponseDescriptor *jobResponseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:jobMapping pathPattern:@"job/:jobId" keyPath:nil statusCodes:[NSIndexSet indexSetWithIndex:200]];
+    
+    RKResponseDescriptor *jobPutPostDeleteResponseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:jobMapping pathPattern:@"job" keyPath:nil statusCodes:[NSIndexSet indexSetWithIndex:200]];
+    
+    RKResponseDescriptor *jobDetailsResponseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:jobDetailMapping                                                                                            pathPattern:@"jobdetail" keyPath:@"resultList" statusCodes:[NSIndexSet indexSetWithIndex:200]];
+    
+    RKResponseDescriptor *jobDetailResponseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:jobDetailMapping                                                                                            pathPattern:@"jobdetail/:jobDetailId" keyPath:nil statusCodes:[NSIndexSet indexSetWithIndex:200]];
     
     RKResponseDescriptor *jobDetailPutPostDeleteResponseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:jobDetailMapping                                                                                            pathPattern:@"jobdetail" keyPath:nil statusCodes:[NSIndexSet indexSetWithIndex:200]];
     
-    RKResponseDescriptor *jobTaskAllocationGetResponseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:jobTaskAllocationMapping pathPattern:@"timeallocations/jobtasks" keyPath:@"resultList" statusCodes:[NSIndexSet indexSetWithIndex:200]];
+    RKResponseDescriptor *jobTaskAllocationsResponseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:jobTaskAllocationMapping pathPattern:@"timeallocations/jobtasks" keyPath:@"resultList" statusCodes:[NSIndexSet indexSetWithIndex:200]];
+    
+    RKResponseDescriptor *jobTaskAllocationResponseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:jobTaskAllocationMapping pathPattern:@"timeallocations/jobtasks/:jobTaskAllocationGroupId" keyPath:nil statusCodes:[NSIndexSet indexSetWithIndex:200]];
     
     RKResponseDescriptor *jobTaskAllocationPutPostDeleteResponseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:jobTaskAllocationMapping pathPattern:@"timeallocations/jobtasks" keyPath:nil statusCodes:[NSIndexSet indexSetWithIndex:200]];
+
+    RKResponseDescriptor *jobTaskAllocationsByEmployeeResponseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:jobTaskAllocationMapping pathPattern:@"staff/employee/:trafficEmployeeId/jobtaskallocations" keyPath:@"resultList" statusCodes:[NSIndexSet indexSetWithIndex:200]];
     
-    RKResponseDescriptor *jobTaskAllocationByEmployeeGetResponseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:jobTaskAllocationMapping pathPattern:@"staff/employee/:trafficEmployeeId/jobtaskallocations" keyPath:@"resultList" statusCodes:[NSIndexSet indexSetWithIndex:200]];
+    RKResponseDescriptor *jobTaskAllocationsByJobResponseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:jobTaskAllocationMapping pathPattern:@"job/:jobId/jobtaskallocations" keyPath:@"resultList" statusCodes:[NSIndexSet indexSetWithIndex:200]];
     
-    RKResponseDescriptor *jobTaskAllocationByJobGetResponseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:jobTaskAllocationMapping pathPattern:@"job/:jobId/jobtaskallocations" keyPath:@"resultList" statusCodes:[NSIndexSet indexSetWithIndex:200]];
+    RKResponseDescriptor *trafficEmployeesResponseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:trafficEmployeeMapping pathPattern:@"staff/employee" keyPath:@"resultList" statusCodes:[NSIndexSet indexSetWithIndex:200]];
     
-    RKResponseDescriptor *trafficEmployeeGetResponseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:trafficEmployeeMapping pathPattern:@"staff/employee" keyPath:@"resultList" statusCodes:[NSIndexSet indexSetWithIndex:200]];
+    RKResponseDescriptor *trafficEmployeeResponseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:trafficEmployeeMapping pathPattern:@"staff/employee/:trafficEmployeeId" keyPath:nil statusCodes:[NSIndexSet indexSetWithIndex:200]];
     
     RKResponseDescriptor *trafficEmployeePutPostDeleteResponseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:trafficEmployeeMapping pathPattern:@"staff/employee" keyPath:nil statusCodes:[NSIndexSet indexSetWithIndex:200]];
     
-    RKResponseDescriptor *projectGetResponseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:projectMapping pathPattern:@"project" keyPath:@"resultList" statusCodes:[NSIndexSet indexSetWithIndex:200]];
+    RKResponseDescriptor *projectsResponseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:projectMapping pathPattern:@"project" keyPath:@"resultList" statusCodes:[NSIndexSet indexSetWithIndex:200]];
+    
+    RKResponseDescriptor *projectResponseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:projectMapping pathPattern:@"project/:projectId" keyPath:nil statusCodes:[NSIndexSet indexSetWithIndex:200]];
     
     RKResponseDescriptor *projectPutPostDeleteResponseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:projectMapping pathPattern:@"project" keyPath:nil statusCodes:[NSIndexSet indexSetWithIndex:200]];
     
-    RKResponseDescriptor *timeEntryGetResponseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:timeEntryMapping pathPattern:@"timeentries" keyPath:@"resultList" statusCodes:[NSIndexSet indexSetWithIndex:200]];
+    RKResponseDescriptor *timeEntriesResponseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:timeEntryMapping pathPattern:@"timeentries" keyPath:@"resultList" statusCodes:[NSIndexSet indexSetWithIndex:200]];
     
-    RKResponseDescriptor *timeEntryPutPostDeleteResponseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:timeEntryMapping pathPattern:@"timeentries" keyPath:@"resultList" statusCodes:[NSIndexSet indexSetWithIndex:200]];
+    RKResponseDescriptor *timeEntryResponseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:timeEntryMapping pathPattern:@"timeentries/:timeEntryId" keyPath:nil statusCodes:[NSIndexSet indexSetWithIndex:200]];
+    
+    RKResponseDescriptor *timeEntryPutPostDeleteResponseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:timeEntryMapping pathPattern:@"timeentries" keyPath:nil statusCodes:[NSIndexSet indexSetWithIndex:200]];
 
-    [objectManager addResponseDescriptor:clientsGetResponseDescriptor];
-    [objectManager addResponseDescriptor:clientsPutPostDeleteResponseDescriptor];
-    [objectManager addResponseDescriptor:jobsGetResponseDescriptor];
+    [objectManager addResponseDescriptor:clientsResponseDescriptor];
+    [objectManager addResponseDescriptor:clientResponseDescriptor];
+    [objectManager addResponseDescriptor:clientPutPostDeleteResponseDescriptor];
+    [objectManager addResponseDescriptor:jobsResponseDescriptor];
+    [objectManager addResponseDescriptor:jobResponseDescriptor];
 //    [objectManager addResponseDescriptor:jobsPutPostDeleteResponseDescriptor];
-    [objectManager addResponseDescriptor:jobDetailGetResponseDescriptor];
+    [objectManager addResponseDescriptor:jobDetailsResponseDescriptor];
+    [objectManager addResponseDescriptor:jobDetailResponseDescriptor];
     [objectManager addResponseDescriptor:jobDetailPutPostDeleteResponseDescriptor];
-    [objectManager addResponseDescriptor:jobTaskAllocationGetResponseDescriptor];
+    [objectManager addResponseDescriptor:jobTaskAllocationsResponseDescriptor];
+    [objectManager addResponseDescriptor:jobTaskAllocationResponseDescriptor];
     [objectManager addResponseDescriptor:jobTaskAllocationPutPostDeleteResponseDescriptor];
-    [objectManager addResponseDescriptor:jobTaskAllocationByEmployeeGetResponseDescriptor];
-    [objectManager addResponseDescriptor:jobTaskAllocationByJobGetResponseDescriptor];
-    [objectManager addResponseDescriptor:trafficEmployeeGetResponseDescriptor];
+    [objectManager addResponseDescriptor:jobTaskAllocationsByEmployeeResponseDescriptor];
+    [objectManager addResponseDescriptor:jobTaskAllocationsByJobResponseDescriptor];
+    [objectManager addResponseDescriptor:trafficEmployeeResponseDescriptor];
+    [objectManager addResponseDescriptor:trafficEmployeesResponseDescriptor];
     [objectManager addResponseDescriptor:trafficEmployeePutPostDeleteResponseDescriptor];
-    [objectManager addResponseDescriptor:projectGetResponseDescriptor];
+    [objectManager addResponseDescriptor:projectResponseDescriptor];
+    [objectManager addResponseDescriptor:projectsResponseDescriptor];
     [objectManager addResponseDescriptor:projectPutPostDeleteResponseDescriptor];
-    [objectManager addResponseDescriptor:timeEntryGetResponseDescriptor];
+    [objectManager addResponseDescriptor:timeEntriesResponseDescriptor];
+    [objectManager addResponseDescriptor:timeEntryResponseDescriptor];
     [objectManager addResponseDescriptor:timeEntryPutPostDeleteResponseDescriptor];
+
+#pragma mark - Request Mapping
 
     //Register our request mapping (for PUT, POST and DELETE actions)
     RKRequestDescriptor *timeEntryRequestDescriptor = [RKRequestDescriptor requestDescriptorWithMapping:[timeEntryMapping inverseMapping] objectClass:[WS_TimeEntry class] rootKeyPath:nil];
@@ -254,7 +280,9 @@
     [objectManager addRequestDescriptor:jobRequestDescriptor];
     [objectManager addRequestDescriptor:jobDetailRequestDescriptor];
     
-    //Routing
+    
+#pragma mark - Routing
+    
     [objectManager.router.routeSet addRoute:[RKRoute
                                              routeWithClass:[WS_Client class]
                                              pathPattern:@"crm/client/:clientId"
@@ -329,7 +357,6 @@
                                              routeWithClass:[WS_Project class]
                                              pathPattern:@"project"
                                              method:RKRequestMethodPUT]];
-
     [objectManager.router.routeSet addRoute:[RKRoute
                                              routeWithClass:[WS_TimeEntry class]
                                              pathPattern:@"timeentries"
@@ -344,6 +371,21 @@
                                              routeWithClass:[WS_TimeEntry class]
                                              pathPattern:@"timeentries/:timeEntryId"
                                              method:RKRequestMethodGET]];
+    
+    [objectManager.router.routeSet addRoute:[RKRoute
+                                             routeWithClass:[WS_TrafficEmployee class]
+                                             pathPattern:@"staff/employee/:trafficEmployeeId"
+                                             method:RKRequestMethodGET]];
+    
+    [objectManager.router.routeSet addRoute:[RKRoute
+                                             routeWithClass:[WS_TrafficEmployee class]
+                                             pathPattern:@"staff/employee"
+                                             method:RKRequestMethodPUT]];
+    
+    [objectManager.router.routeSet addRoute:[RKRoute
+                                             routeWithClass:[WS_TrafficEmployee class]
+                                             pathPattern:@"staff/employee"
+                                             method:RKRequestMethodPOST]];
 }
 
 @end

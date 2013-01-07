@@ -9,25 +9,17 @@
 #import "LoginViewController.h"
 #import "LoginCommand.h"
 #import "GlobalModel.h"
+#import <RestKit.h>
+#import "ConfigureRestkitCommand.h"
 
 @implementation LoginViewController
 
 #pragma mark - Properties
 //@synthesize delegate=_delegate;
-@synthesize usernameTextField=_usernameTextField;
-@synthesize passwordTextField=_passwordTextField;
-@synthesize submitButton=_submitButton;
-@synthesize waitIndicator=_waitIndicator;
-
-// Custom setter, which sets the 'delegate' property of the login operation
-//@synthesize loginOperation=_loginOperation;
-//- (void) setLoginOperation:(LoginOperation *)loginOperation
-//{
-//    _loginOperation = loginOperation;
-//    
-//    if (_loginOperation)
-//        _loginOperation.delegate = self;
-//}
+//@synthesize usernameTextField=_usernameTextField;
+//@synthesize passwordTextField=_passwordTextField;
+//@synthesize submitButton=_submitButton;
+//@synthesize waitIndicator=_waitIndicator;
 
 #pragma mark - Helper methods
 - (void)releaseOutlets
@@ -72,34 +64,67 @@
     [keychainItem setObject:password forKey:(__bridge id)(kSecValueData)];
     [keychainItem setObject:username forKey:(__bridge id)(kSecAttrAccount)];
     
-    [self setIsWaiting:YES];
-    LoginCommand* loginCommand = [[LoginCommand alloc]init];
-    [loginCommand executeWithUsername:username password:password delegate:self];
+    // Initialize RestKit
+    [ConfigureRestkitCommand execute];
+
+    NSMutableDictionary *params = [[NSMutableDictionary alloc]initWithDictionary:@{@"filter" : [NSString stringWithFormat:@"emailAddress|EQ|\"%@\"",username]}];
     
+    RKObjectManager *objectManager = [RKObjectManager sharedManager];
+    
+    [objectManager.HTTPClient setAuthorizationHeaderWithUsername:username password:password];
+    
+    [objectManager getObjectsAtPath:@"staff/employee" parameters:params
+                     success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                         NSArray *results = [mappingResult array];
+                         WS_TrafficEmployee *currentUser = [results objectAtIndex:0];
+                         if(currentUser.trafficVersion >= 0)
+                         {
+                             [GlobalModel sharedInstance].loggedInEmployee = currentUser;
+                             [self.delegate loginViewControllerLoggedIn:self];
+                         }
+                         else{
+                             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Login Failure"
+                                                                             message:@"The user name was not recognised."
+                                                                            delegate:nil
+                                                                   cancelButtonTitle:@"OK"
+                                                                   otherButtonTitles:nil];
+                             [alert show];
+                         }
+    } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Login Failure"
+                                                        message:[error localizedDescription]
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+        [alert show];
+        NSLog(@"Hit error: %@", error);
+
+    }];
+    [self setIsWaiting:NO];
 }
 
 #pragma mark - LoginOperationDelegate members
-- (void)loginOperationCompleted:(LoginCommand *)loginOperation
-                     withResult:(BOOL)successfulLogin
-                   errorMessage:(NSString *)errorMessage
-{
-    [self setIsWaiting:NO];
-    
-    if (successfulLogin)
-    {
-        // Let this object's delegate know that the login was a success.
-        [self.delegate loginViewControllerLoggedIn:self];
-    }
-    else
-    {
-        UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Login Failure"
-                                                          message:errorMessage
-                                                         delegate:nil
-                                                cancelButtonTitle:@"OK"
-                                                otherButtonTitles:nil];
-        [message show];
-    }
-}
+//- (void)loginOperationCompleted:(LoginCommand *)loginOperation
+//                     withResult:(BOOL)successfulLogin
+//                   errorMessage:(NSString *)errorMessage
+//{
+//    [self setIsWaiting:NO];
+//    
+//    if (successfulLogin)
+//    {
+//        // Let this object's delegate know that the login was a success.
+//        [self.delegate loginViewControllerLoggedIn:self];
+//    }
+//    else
+//    {
+//        UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Login Failure"
+//                                                          message:errorMessage
+//                                                         delegate:nil
+//                                                cancelButtonTitle:@"OK"
+//                                                otherButtonTitles:nil];
+//        [message show];
+//    }
+//}
 
 #pragma mark - UITextFieldDelegate members
 // Called when the 'return' key is pressed. Return NO to ignore.
@@ -157,5 +182,15 @@
 {
 	return UIInterfaceOrientationIsPortrait(interfaceOrientation);
 }
+
+-(void)handleFailureWithOperation:(RKObjectRequestOperation*)operation error:(NSError*)error{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Login Failure"
+                                                    message:[error localizedDescription]
+                                                   delegate:nil
+                                          cancelButtonTitle:@"OK"
+                                          otherButtonTitles:nil];
+    [alert show];
+    NSLog(@"Hit error: %@", error);
+};
 
 @end

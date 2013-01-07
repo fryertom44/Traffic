@@ -49,13 +49,12 @@
 
 //    [self loadTaskAllocationsWithPageNumber:self.sharedModel.pageNumber andWindowSize:10];
     
-    
     //Setting up...
-    NSDictionary *params = @{@"windowSize" : @"5000"};
-    [ServiceCommandLibrary loadClientsWithParams:params];
-    [ServiceCommandLibrary loadProjectsWithParams:params];
-    [ServiceCommandLibrary loadJobsWithParams:params];
-    [ServiceCommandLibrary loadJobDetailsWithParams:params];
+//    NSDictionary *params = @{@"windowSize" : @"5000"};
+//    [ServiceCommandLibrary loadClientsWithParams:params];
+//    [ServiceCommandLibrary loadProjectsWithParams:params];
+//    [ServiceCommandLibrary loadJobsWithParams:params];
+//    [ServiceCommandLibrary loadJobDetailsWithParams:params];
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSMutableDictionary *allocationParams = [[NSMutableDictionary alloc]initWithDictionary:@{@"currentPage" : [NSNumber numberWithInt:self.sharedModel.pageNumber]}];
@@ -68,27 +67,43 @@
     NSUInteger windowSize = [defaults integerForKey:kMaxResultsSettingKey];
     windowSize = windowSize ? windowSize : 10;
     [allocationParams setObject:[NSString stringWithFormat:@"%d",windowSize] forKey:@"windowSize"];
-    [ServiceCommandLibrary loadJobTaskAllocationsWithParams:allocationParams];
+    
+    RKObjectManager *objectManager = [RKObjectManager sharedManager];
+    [objectManager getObjectsAtPath:[NSString stringWithFormat:@"/TrafficLiteServer/openapi/staff/employee/%@/jobtaskallocations",self.sharedModel.loggedInEmployee.trafficEmployeeId]
+                         parameters:allocationParams
+                            success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                NSArray* jtas = [mappingResult array];
+                                NSMutableArray *mutableJtas = [[NSMutableArray alloc]init];
+                                for (WS_JobTaskAllocation *jta in jtas) {
+                                    if ([jta isMemberOfClass:[WS_JobTaskAllocation class]])
+                                        [mutableJtas addObject:jta];
+                                }
+                                self.sharedModel.taskAllocations = mutableJtas;
+                            }
+                            failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                [self handleFailureWithOperation:operation error:error];
+                            }];
+
 
 }
 
 -(void)viewDidAppear:(BOOL)animated{
     [self.sharedModel addObserver:self forKeyPath:@"taskAllocations" options:NSKeyValueObservingOptionNew context:NULL];
-    [self.sharedModel addObserver:self forKeyPath:@"jobDetailsDictionary" options:NSKeyValueObservingOptionNew context:NULL];
-    [self.sharedModel addObserver:self forKeyPath:@"jobsDictionary" options:NSKeyValueObservingOptionNew context:NULL];
-    [self.sharedModel addObserver:self forKeyPath:@"projectsDictionary" options:NSKeyValueObservingOptionNew context:NULL];
-    [self.sharedModel addObserver:self forKeyPath:@"jobTasksDictionary" options:NSKeyValueObservingOptionNew context:NULL];
-    [self.sharedModel addObserver:self forKeyPath:@"clientsDictionary" options:NSKeyValueObservingOptionNew context:NULL];
+//    [self.sharedModel addObserver:self forKeyPath:@"jobDetailsDictionary" options:NSKeyValueObservingOptionNew context:NULL];
+//    [self.sharedModel addObserver:self forKeyPath:@"jobsDictionary" options:NSKeyValueObservingOptionNew context:NULL];
+//    [self.sharedModel addObserver:self forKeyPath:@"projectsDictionary" options:NSKeyValueObservingOptionNew context:NULL];
+//    [self.sharedModel addObserver:self forKeyPath:@"jobTasksDictionary" options:NSKeyValueObservingOptionNew context:NULL];
+//    [self.sharedModel addObserver:self forKeyPath:@"clientsDictionary" options:NSKeyValueObservingOptionNew context:NULL];
 
 }
 
 -(void)viewDidDisappear:(BOOL)animated{
     [self.sharedModel removeObserver:self forKeyPath:@"taskAllocations"];
-    [self.sharedModel removeObserver:self forKeyPath:@"jobDetailsDictionary"];
-    [self.sharedModel removeObserver:self forKeyPath:@"jobsDictionary"];
-    [self.sharedModel removeObserver:self forKeyPath:@"projectsDictionary"];
-    [self.sharedModel removeObserver:self forKeyPath:@"clientsDictionary"];
-    [self.sharedModel removeObserver:self forKeyPath:@"jobTasksDictionary"];
+//    [self.sharedModel removeObserver:self forKeyPath:@"jobDetailsDictionary"];
+//    [self.sharedModel removeObserver:self forKeyPath:@"jobsDictionary"];
+//    [self.sharedModel removeObserver:self forKeyPath:@"projectsDictionary"];
+//    [self.sharedModel removeObserver:self forKeyPath:@"clientsDictionary"];
+//    [self.sharedModel removeObserver:self forKeyPath:@"jobTasksDictionary"];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath
@@ -97,32 +112,32 @@
                        context:(void *)context {
     
     if ([keyPath isEqual:@"taskAllocations"]) {
-        [self.refreshControl endRefreshing];
-    }
-    if ([keyPath isEqual:@"jobDetailsDictionary"]) {
-    }
-    if ([keyPath isEqual:@"jobsDictionary"]) {
-    }
-    if ([keyPath isEqual:@"projectsDictionary"]) {
-    }
-    if ([keyPath isEqual:@"clientsDictionary"]) {
-    }
-    if ([keyPath isEqual:@"jobTasksDictionary"]) {
-    }
-    [self refreshListLabels];
-
-}
-
--(void)refreshListLabels{
-    if (self.sharedModel.jobDetailsDictionary
-        && self.sharedModel.jobsDictionary
-        && self.sharedModel.jobTasksDictionary
-        && self.sharedModel.projectsDictionary
-        && self.sharedModel.clientsDictionary) {
-
         [self.tableView reloadData];
     }
+//    if ([keyPath isEqual:@"jobDetailsDictionary"]) {
+//    }
+//    if ([keyPath isEqual:@"jobsDictionary"]) {
+//    }
+//    if ([keyPath isEqual:@"projectsDictionary"]) {
+//    }
+//    if ([keyPath isEqual:@"clientsDictionary"]) {
+//    }
+//    if ([keyPath isEqual:@"jobTasksDictionary"]) {
+//    }
+//    [self refreshListLabels];
+
 }
+
+//-(void)refreshListLabels{
+//    if (self.sharedModel.jobDetailsDictionary
+//        && self.sharedModel.jobsDictionary
+//        && self.sharedModel.jobTasksDictionary
+//        && self.sharedModel.projectsDictionary
+//        && self.sharedModel.clientsDictionary) {
+//
+//        [self.tableView reloadData];
+//    }
+//}
 
 - (void)didReceiveMemoryWarning
 {
@@ -153,7 +168,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *kCellIdentifier = @"Cell";
-    
+
     TaskAllocationCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellIdentifier forIndexPath:indexPath];
     if (cell == nil) {
         cell = [[TaskAllocationCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kCellIdentifier];
@@ -167,22 +182,17 @@
     
     [cell setBackgroundView:[[UIView alloc] init]];
     [cell.backgroundView.layer insertSublayer:grad atIndex:0];
-    
-    WS_JobTaskAllocation *allocation = self.sharedModel.taskAllocations[indexPath.row];
-    WS_JobTask *relatedJobTask = [self.sharedModel.jobTasksDictionary objectForKey:allocation.jobTaskId.stringValue];
-    WS_Job *relatedJob = [self.sharedModel.jobsDictionary objectForKey:relatedJobTask.jobId.stringValue];
-    WS_JobDetail *relatedJobDetail = [self.sharedModel.jobDetailsDictionary objectForKey:relatedJob.jobDetailId.stringValue];
-    WS_Project *relatedProject = [self.sharedModel.projectsDictionary objectForKey:relatedJobDetail.ownerProjectId.stringValue];
-    WS_Client *relatedClient = [self.sharedModel.clientsDictionary objectForKey:relatedProject.clientCRMEntryId.stringValue];
-    
-    cell.companyLabel.text = [NSString stringWithFormat:@"Company Name: %@",relatedClient.clientName];
-    cell.jobLabel.text = [NSString stringWithFormat:@"Job: %@-%@",relatedJob.jobNumber, relatedJobDetail.jobTitle];
-    cell.timesheetLabel.text = allocation.taskDescription;
-    cell.daysToDeadlineLabel.text = [NSString stringWithFormat:@"%d days %@",allocation.daysUntilDeadlineUnsigned, allocation.daysUntilDeadline < 0 ? @"overdue" : @"remaining"];
-    cell.timeCompletedLabel.text = [NSString stringWithFormat:@"%@ of %@", [NSDate timeStringFromMinutes:allocation.totalTimeLoggedMinutes.intValue],[NSDate timeStringFromMinutes:allocation.durationInMinutes.intValue]];
-    cell.timeCompletedLabel.textColor = allocation.totalTimeLoggedMinutes.intValue > allocation.durationInMinutes.intValue ? [UIColor redColor] : [UIColor blackColor];
-    cell.happyRating.image = [HappyRatingHelper happyRatingImageFromString:allocation.happyRating];
 
+    WS_JobTaskAllocation *allocation = self.sharedModel.taskAllocations[indexPath.row];
+           
+    //    cell.companyLabel.text = [NSString stringWithFormat:@"Company Name: %@",relatedClient.clientName];
+    //    cell.jobLabel.text = [NSString stringWithFormat:@"Job: %@-%@",relatedJob.jobNumber, relatedJobDetail.jobTitle];
+    cell.timesheetLabel.text = allocation.taskDescription;
+    cell.daysToDeadlineLabel.text = [NSString stringWithFormat:@"%d days %@",abs(allocation.daysUntilDeadline), allocation.daysUntilDeadline < 0 ? @"overdue" : @"remaining"];
+    cell.timeCompletedLabel.text = [NSString stringWithFormat:@"%@ of %@", [NSDate timeStringFromMinutes:allocation.totalTimeLoggedMinutes.integerValue],[NSDate timeStringFromMinutes:allocation.durationInMinutes.integerValue]];
+    cell.timeCompletedLabel.textColor = allocation.totalTimeLoggedMinutes.integerValue > allocation.durationInMinutes.integerValue ? [UIColor redColor] : [UIColor blackColor];
+    cell.happyRating.image = [HappyRatingHelper happyRatingImageFromString:allocation.happyRating];
+    
     return cell;
 }
 
@@ -243,14 +253,77 @@
     [loadJobTaskAllocationsCommand executeWithPageNumber:page windowSize:windowSize];
 }
 
-- (IBAction)onLoadMoreSelected:(id)sender {
-    [self loadTaskAllocationsWithPageNumber:self.sharedModel.pageNumber+1 andWindowSize:10];
+- (IBAction)onLoadMoreSelected:(id)sender {    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSMutableDictionary *allocationParams = [[NSMutableDictionary alloc]initWithDictionary:@{@"currentPage" : [NSNumber numberWithInt:self.sharedModel.pageNumber+1]}];
+    BOOL hideCompleted = [defaults boolForKey:kHideCompletedSettingKey];
+    
+    if(hideCompleted){
+        [allocationParams setObject:@"happyRating|NOT_EQUAL|\"COMPLETE\"" forKey:@"filter"];
+    }
+    
+    NSUInteger windowSize = [defaults integerForKey:kMaxResultsSettingKey];
+    windowSize = windowSize ? windowSize : 10;
+    [allocationParams setObject:[NSString stringWithFormat:@"%d",windowSize] forKey:@"windowSize"];
+    
+    RKObjectManager *objectManager = [RKObjectManager sharedManager];
+    [objectManager getObjectsAtPath:[NSString stringWithFormat:@"/TrafficLiteServer/openapi/staff/employee/%@/jobtaskallocations",self.sharedModel.loggedInEmployee.trafficEmployeeId]
+                         parameters:allocationParams
+                            success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                NSArray* jtas = [mappingResult array];
+                                for (WS_JobTaskAllocation *jta in jtas) {
+                                    if ([jta isMemberOfClass:[WS_JobTaskAllocation class]])
+                                        [self.sharedModel.taskAllocations addObject:jta];
+                                }
+                                [self.tableView reloadData];
+                            }
+                            failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                [self handleFailureWithOperation:operation error:error];
+                            }];
 }
 
 -(void)refreshList:(id)sender{
     int rowCount = [self.sharedModel.taskAllocations count];
-    RefreshJobTaskAllocationsCommand *refreshAllocationsCommand = [[RefreshJobTaskAllocationsCommand alloc]init];
-    [refreshAllocationsCommand executeWithWindowSize:rowCount];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSMutableDictionary *allocationParams = [[NSMutableDictionary alloc]initWithDictionary:@{@"currentPage" : [NSNumber numberWithInt:1]}];
+    BOOL hideCompleted = [defaults boolForKey:kHideCompletedSettingKey];
+    
+    if(hideCompleted){
+        [allocationParams setObject:@"happyRating|NOT_EQUAL|\"COMPLETE\"" forKey:@"filter"];
+    }
+    
+    NSUInteger windowSize = rowCount;
+    windowSize = windowSize ? windowSize : 10;
+    [allocationParams setObject:[NSString stringWithFormat:@"%d",windowSize] forKey:@"windowSize"];
+    
+    RKObjectManager *objectManager = [RKObjectManager sharedManager];
+    [objectManager getObjectsAtPath:[NSString stringWithFormat:@"/TrafficLiteServer/openapi/staff/employee/%@/jobtaskallocations",self.sharedModel.loggedInEmployee.trafficEmployeeId]
+                         parameters:allocationParams
+                            success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                NSArray* jtas = [mappingResult array];
+                                NSMutableArray *mutableJtas = [[NSMutableArray alloc]init];
+                                for (WS_JobTaskAllocation *jta in jtas) {
+                                    if ([jta isMemberOfClass:[WS_JobTaskAllocation class]])
+                                        [mutableJtas addObject:jta];
+                                }
+                                self.sharedModel.taskAllocations = mutableJtas;
+                            }
+                            failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                [self handleFailureWithOperation:operation error:error];
+                            }];
+    
+    [self.refreshControl endRefreshing];
+
 }
+
+-(void)handleFailureWithOperation:(RKObjectRequestOperation*)operation error:(NSError*)error{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                    message:[error localizedDescription]
+                                                   delegate:nil
+                                          cancelButtonTitle:@"OK"
+                                          otherButtonTitles:nil];
+    [alert show];
+    NSLog(@"Hit error: %@", error);
+};
 
 @end

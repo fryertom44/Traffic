@@ -10,11 +10,12 @@
 
 @interface WS_JobDetail : BaseObject
 
-@property (nonatomic,retain) NSNumber*jobDetailId;
-@property (nonatomic,retain) NSNumber*ownerProjectId;
-@property (nonatomic,retain) NSNumber*jobContactId;
-@property (nonatomic,retain) NSNumber*accountManagerId;
+@property (nonatomic,retain) NSNumber *jobDetailId;
+@property (nonatomic,retain) NSNumber *ownerProjectId;
+@property (nonatomic,retain) NSNumber *jobContactId;
+@property (nonatomic,retain) NSNumber *accountManagerId;
 @property (nonatomic,retain) NSString *jobTitle;
 @property (nonatomic,retain) NSString *jobDescription;
+@property (nonatomic,retain) NSString *notes;
 
 @end

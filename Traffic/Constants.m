@@ -23,13 +23,6 @@ NSString *const kHappyRatingSadImage = @"happyRatingSadSmall320.png";
 NSString *const kHappyRatingCompletedImage = @"happyRatingCompletedSmall320.png";
 
 NSString *const kJSONDateFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSSZ";
-//NSString *const kJSONDateFormat = @"yyyy-MM-dd'T'HH:mm:ssZ";
-//NSString *const kJSONDateFormat = @"yyyy-MM-dd'T'HH:mm:ss'Z'";
-//NSString *const kJSONDateFormat = @"yyyy-MM-ddTHH:mm:ss.SSSZ";
-//NSString *const kJSONDateFormat = @"yyyy-MM-ddTHH:mm:ssZ";
-//NSString *const kJSONDateFormat = @"yyyy-MM-ddTHH:mm:ss'Z'";
-//NSString *const kJSONDateFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSS";
-
 
 NSString *const kTimeIntervalSettingKey = @"timeInterval";
 NSString *const kMaxResultsSettingKey = @"maxAllocationResults";

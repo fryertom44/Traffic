@@ -17,6 +17,14 @@
     memento = [self copy];
 }
 
+-(id)init{
+    self = [super init];
+    if (self) {
+        self.trafficVersion = [NSNumber numberWithInteger:-1];
+    }
+    return self;
+}
+
 - (void)restoreState {
     unsigned int count = 0;
     objc_property_t *properties = class_copyPropertyList( memento, &count );

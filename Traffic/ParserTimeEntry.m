@@ -34,13 +34,13 @@
 		[timeEntry setLockedByApproval:[dict objectForKey:@"lockedByApproval"]];
 		[timeEntry setMinutes:[NSNumber numberWithInt:[[dict objectForKey:@"minutes"]intValue]]];
 		[timeEntry setTaskDescription:[NSMutableString stringWithString:[dict objectForKey:@"taskDescription"]]];
-		[timeEntry setAllocationGroupId:[NSNumber numberWithInt:[[dict valueForKeyPath:@"allocationGroupId.id"]intValue]]];
+		[timeEntry setJobTaskAllocationGroupId:[NSNumber numberWithInt:[[dict valueForKeyPath:@"allocationGroupId.id"]intValue]]];
 		//[timeEntry setTaskRate:[dict objectForKey:@"taskRate"]];
 		//[timeEntry setTimeEntryCost:[dict objectForKey:@"timeEntryCost"]];]
 		[timeEntry setTrafficEmployeeId:[NSNumber numberWithInt:[[dict valueForKeyPath:@"trafficEmployeeId.id"]intValue]]];
 		[timeEntry setBillable:[dict objectForKey:@"billable"]];
 		[timeEntry setTrafficVersion:[NSNumber numberWithInt:[[dict objectForKey:@"version"]intValue]]];
-		[timeEntry setChargebandId:[NSNumber numberWithInt:[[dict valueForKeyPath:@"chargebandId.id"]intValue]]];
+		[timeEntry setChargeBandId:[NSNumber numberWithInt:[[dict valueForKeyPath:@"chargeBandId.id"]intValue]]];
 		[timeEntry setComment:[dict objectForKey:@"comment"]];
 		[timeEntry setExported:[dict objectForKey:@"exported"]];
 //        NSString *dateString = [dict objectForKey:@"endTime"];

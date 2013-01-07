@@ -20,6 +20,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *ownerLabel;
 @property (weak, nonatomic) IBOutlet UITextView *taskDescriptionLabel;
 @property (weak, nonatomic) IBOutlet UITextView *taskNotesLabel;
-@property (weak, nonatomic) IBOutlet UITextView *briefLabel;
+@property (weak, nonatomic) IBOutlet UIWebView *briefLabel;
 
 @end

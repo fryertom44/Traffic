@@ -41,7 +41,7 @@
                                     [NSDictionary dictionaryWithObjectsAndKeys:timesheet.jobTaskId,@"id",nil],@"jobTaskId",
                                     [NSDictionary dictionaryWithObjectsAndKeys:timesheet.trafficEmployeeId,@"id",nil],@"trafficEmployeeId",
                                     timesheet.taskDescription,@"taskDescription",
-                                    [NSDictionary dictionaryWithObjectsAndKeys:timesheet.chargebandId,@"id",nil],@"chargeBandId",
+                                    [NSDictionary dictionaryWithObjectsAndKeys:timesheet.chargeBandId,@"id",nil],@"chargeBandId",
                                     timesheet.minutes,@"minutes",
                                     [NSNull null],@"lockedByApprovalEmployeeId",
                                     [NSNull null],@"exportError",
@@ -111,13 +111,13 @@
     [timeEntry setLockedByApproval:[dict objectForKey:@"lockedByApproval"]];
     [timeEntry setMinutes:[NSNumber numberWithInt:[[dict objectForKey:@"minutes"]intValue]]];
     [timeEntry setTaskDescription:[dict stringForKey:@"taskDescription"]];
-    [timeEntry setAllocationGroupId:[NSNumber numberWithInt:[[dict valueForKeyPath:@"allocationGroupId.id"]intValue]]];
+    [timeEntry setJobTaskAllocationGroupId:[NSNumber numberWithInt:[[dict valueForKeyPath:@"allocationGroupId.id"]intValue]]];
     [timeEntry setTaskRate:[super newMoneyFromDict:[dict objectForKey:@"taskRate"]]];
     [timeEntry setTimeEntryCost:[super newMoneyFromDict:[dict objectForKey:@"timeEntryCost"]]];
     [timeEntry setTrafficEmployeeId:[NSNumber numberWithInt:[[dict valueForKeyPath:@"trafficEmployeeId.id"]intValue]]];
     [timeEntry setBillable:[dict objectForKey:@"billable"]];
     [timeEntry setTrafficVersion:[NSNumber numberWithInt:[[dict objectForKey:@"version"]intValue]]];
-    [timeEntry setChargebandId:[NSNumber numberWithInt:[[dict valueForKeyPath:@"chargebandId.id"]intValue]]];
+    [timeEntry setChargeBandId:[NSNumber numberWithInt:[[dict valueForKeyPath:@"chargeBandId.id"]intValue]]];
     [timeEntry setComment:[dict stringForKey:@"comment"]];
     [timeEntry setExported:[dict objectForKey:@"exported"]];
     [timeEntry setEndTime:[NSDate dateFromString:[dict objectForKey:@"endTime"]]];
