@@ -47,11 +47,6 @@
 @property (nonatomic,strong) WS_Job *selectedJob;
 @property (nonatomic,strong) WS_JobDetail *selectedJobDetail;
 @property (nonatomic,strong) WS_Project *selectedProject;
-@property (nonatomic,strong) WS_TimeEntry *timesheet;
+//@property (nonatomic,strong) WS_TimeEntry *timesheet;
 
-#pragma mark - Storing 'Timer' state
-@property (weak, nonatomic) NSTimer *myTimer;
-@property (strong, nonatomic) NSDate *timerStartDate;
-@property (nonatomic) double timeElapsedInterval;
-@property BOOL isRecordingTime;
 @end

@@ -8,7 +8,7 @@
 
 #import "BaseObject.h"
 
-@interface WS_Project : BaseObject
+@interface WS_Project : BaseObject <NSCoding>
 
 @property (nonatomic,retain) NSString *projectName;
 @property NSNumber*clientCRMEntryId;

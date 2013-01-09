@@ -22,4 +22,23 @@
     return self;
 }
 
+- (id) initWithCoder: (NSCoder *)coder
+{
+	self = [[Money alloc] init];
+    if (self != nil)
+	{
+		self.amount = [coder decodeObjectForKey:@"amount"];
+		self.currencyType = [coder decodeObjectForKey:@"currencyType"];
+	}
+	
+	return self;
+}
+
+- (void) encodeWithCoder: (NSCoder *)coder
+{
+	[coder encodeObject:self.amount forKey:@"amount"];
+	[coder encodeObject:self.currencyType forKey:@"currencyType"];
+
+    
+}
 @end

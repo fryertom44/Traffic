@@ -54,7 +54,7 @@
 
         self.sharedModel.selectedJob = job;
         self.sharedModel.selectedJobTask = [self parseJobTasksDictionary:[json objectForKey:@"jobTasks"]];
-        self.sharedModel.timesheet.taskRate = self.sharedModel.selectedJobTask.rate;
+        self.sharedModel.selectedJobTaskAllocation.timesheet.taskRate = self.sharedModel.selectedJobTask.rate;
     }
 }
 

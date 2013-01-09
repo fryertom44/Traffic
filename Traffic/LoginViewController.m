@@ -14,12 +14,58 @@
 
 @implementation LoginViewController
 
-#pragma mark - Properties
-//@synthesize delegate=_delegate;
-//@synthesize usernameTextField=_usernameTextField;
-//@synthesize passwordTextField=_passwordTextField;
-//@synthesize submitButton=_submitButton;
-//@synthesize waitIndicator=_waitIndicator;
+#pragma mark - View lifecycle
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    // Do any additional setup after loading the view from its nib.
+    UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"login_background_landscape.png"]];
+    [self.tableView setBackgroundView:imageView];
+    self.passwordTextField.secureTextEntry = TRUE;
+    KeychainItemWrapper *keychainItem = [[KeychainItemWrapper alloc]initWithIdentifier:@"TrafficLogin" accessGroup:nil];
+    self.passwordTextField.text = [keychainItem objectForKey:(__bridge id)(kSecValueData)];
+    self.usernameTextField.text = [keychainItem objectForKey:(__bridge id)(kSecAttrAccount)];
+    
+    // Configure the animated icon that is displayed
+    // while the user's credentials are being verified.
+    [self setIsWaiting:NO];
+    self.waitIndicator.hidden = YES;
+    self.waitIndicator.hidesWhenStopped = YES;
+    
+    // Set this object as the delegate for the text fields, so that
+    // when the user hits the RETURN key we can perform custom logic.
+    self.passwordTextField.delegate = self;
+    self.usernameTextField.delegate = self;
+    
+    // Login automatically if set as a preference else give input focus to the username field.
+    if ([[NSUserDefaults standardUserDefaults]boolForKey:kLoginAutomaticallySettingKey])
+        [self attemptLogin];
+    else
+        [self.usernameTextField becomeFirstResponder];
+}
+
+- (void)viewDidUnload
+{
+    [super viewDidUnload];
+    // Release any retained subviews of the main view.
+    // e.g. self.myOutlet = nil;
+    [self releaseOutlets];
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+	return UIInterfaceOrientationIsPortrait(interfaceOrientation);
+}
+
+-(void)handleFailureWithOperation:(RKObjectRequestOperation*)operation error:(NSError*)error{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Login Failure"
+                                                    message:[error localizedDescription]
+                                                   delegate:nil
+                                          cancelButtonTitle:@"OK"
+                                          otherButtonTitles:nil];
+    [alert show];
+    NSLog(@"Hit error: %@", error);
+};
 
 #pragma mark - Helper methods
 - (void)releaseOutlets
@@ -49,9 +95,6 @@
 #pragma mark - Actions
 - (IBAction)submit:(id)sender
 {
-//    if (!self.loginOperation)
-//        return;
-    
     NSString *username = self.usernameTextField.text;
     if (!username || [username length] == 0)
         return;
@@ -63,65 +106,51 @@
     KeychainItemWrapper *keychainItem = [[KeychainItemWrapper alloc]initWithIdentifier:@"TrafficLogin" accessGroup:nil];
     [keychainItem setObject:password forKey:(__bridge id)(kSecValueData)];
     [keychainItem setObject:username forKey:(__bridge id)(kSecAttrAccount)];
-
-    NSMutableDictionary *params = [[NSMutableDictionary alloc]initWithDictionary:@{@"filter" : [NSString stringWithFormat:@"emailAddress|EQ|\"%@\"",username]}];
     
     RKObjectManager *objectManager = [RKObjectManager sharedManager];
     
     [objectManager.HTTPClient setAuthorizationHeaderWithUsername:username password:password];
     
-    [objectManager getObjectsAtPath:@"staff/employee" parameters:params
-                     success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-                         NSArray *results = [mappingResult array];
-                         WS_TrafficEmployee *currentUser = [results objectAtIndex:0];
-                         if(currentUser.trafficVersion >= 0)
-                         {
-                             [GlobalModel sharedInstance].loggedInEmployee = currentUser;
-                             [self.delegate loginViewControllerLoggedIn:self];
-                         }
-                         else{
-                             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Login Failure"
-                                                                             message:@"The user name was not recognised."
-                                                                            delegate:nil
-                                                                   cancelButtonTitle:@"OK"
-                                                                   otherButtonTitles:nil];
-                             [alert show];
-                         }
-    } failure:^(RKObjectRequestOperation *operation, NSError *error) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Login Failure"
-                                                        message:[error localizedDescription]
-                                                       delegate:nil
-                                              cancelButtonTitle:@"OK"
-                                              otherButtonTitles:nil];
-        [alert show];
-        NSLog(@"Hit error: %@", error);
-
-    }];
-    [self setIsWaiting:NO];
+    [self attemptLogin];
 }
 
-#pragma mark - LoginOperationDelegate members
-//- (void)loginOperationCompleted:(LoginCommand *)loginOperation
-//                     withResult:(BOOL)successfulLogin
-//                   errorMessage:(NSString *)errorMessage
-//{
-//    [self setIsWaiting:NO];
-//    
-//    if (successfulLogin)
-//    {
-//        // Let this object's delegate know that the login was a success.
-//        [self.delegate loginViewControllerLoggedIn:self];
-//    }
-//    else
-//    {
-//        UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Login Failure"
-//                                                          message:errorMessage
-//                                                         delegate:nil
-//                                                cancelButtonTitle:@"OK"
-//                                                otherButtonTitles:nil];
-//        [message show];
-//    }
-//}
+-(void)attemptLogin{
+    
+    KeychainItemWrapper *keychainItem = [[KeychainItemWrapper alloc]initWithIdentifier:@"TrafficLogin" accessGroup:nil];
+    NSString *username = [keychainItem objectForKey:(__bridge id)(kSecAttrAccount)];
+
+    NSDictionary *params = @{@"filter" : [NSString stringWithFormat:@"emailAddress|EQ|\"%@\"",username]};
+    
+    RKObjectManager *objectManager = [RKObjectManager sharedManager];
+    [objectManager getObjectsAtPath:@"staff/employee" parameters:params
+                            success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                NSArray *results = [mappingResult array];
+                                WS_TrafficEmployee *currentUser = [results objectAtIndex:0];
+                                if(currentUser.trafficVersion >= 0)
+                                {
+                                    [self setIsWaiting:NO];
+                                    [GlobalModel sharedInstance].loggedInEmployee = currentUser;
+                                    [self.delegate loginViewControllerLoggedIn:self];
+                                }
+                                else{
+                                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Login Failure"
+                                                                                    message:@"The user name was not recognised."
+                                                                                   delegate:nil
+                                                                          cancelButtonTitle:@"OK"
+                                                                          otherButtonTitles:nil];
+                                    [alert show];
+                                }
+                            } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Login Failure"
+                                                                                message:[error localizedDescription]
+                                                                               delegate:nil
+                                                                      cancelButtonTitle:@"OK"
+                                                                      otherButtonTitles:nil];
+                                [self setIsWaiting:NO];
+                                [alert show];
+                                NSLog(@"Hit error: %@", error);
+                            }];
+}
 
 #pragma mark - UITextFieldDelegate members
 // Called when the 'return' key is pressed. Return NO to ignore.
@@ -139,55 +168,5 @@
     }
     return NO;
 }
-
-#pragma mark - View lifecycle
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
-    UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"login_background_landscape.png"]];
-    [self.tableView setBackgroundView:imageView];
-    self.passwordTextField.secureTextEntry = TRUE;
-    KeychainItemWrapper *keychainItem = [[KeychainItemWrapper alloc]initWithIdentifier:@"TrafficLogin" accessGroup:nil];
-    self.passwordTextField.text = [keychainItem objectForKey:(__bridge id)(kSecValueData)];
-    self.usernameTextField.text = [keychainItem objectForKey:(__bridge id)(kSecAttrAccount)];
-    
-    // Configure the animated icon that is displayed
-    // while the user's credentials are being verified.
-    [self setIsWaiting:NO];
-    self.waitIndicator.hidden = YES;
-    self.waitIndicator.hidesWhenStopped = YES;
-    
-    // Set this object as the delegate for the text fields, so that
-    // when the user hits the RETURN key we can perform custom logic.
-    self.passwordTextField.delegate = self;
-    self.usernameTextField.delegate = self;
-    
-    // Give input focus to the username field.
-    [self.usernameTextField becomeFirstResponder];
-}
-
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
-    [self releaseOutlets];
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-	return UIInterfaceOrientationIsPortrait(interfaceOrientation);
-}
-
--(void)handleFailureWithOperation:(RKObjectRequestOperation*)operation error:(NSError*)error{
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Login Failure"
-                                                    message:[error localizedDescription]
-                                                   delegate:nil
-                                          cancelButtonTitle:@"OK"
-                                          otherButtonTitles:nil];
-    [alert show];
-    NSLog(@"Hit error: %@", error);
-};
 
 @end

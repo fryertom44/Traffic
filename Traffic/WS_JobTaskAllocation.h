@@ -8,8 +8,12 @@
 
 #import "BaseObject.h"
 #import "WS_Client.h"
+#import "WS_TimeEntry.h"
+#import "WS_JobDetail.h"
+#import "WS_Job.h"
+#import "WS_Project.h"
 
-@interface WS_JobTaskAllocation : BaseObject
+@interface WS_JobTaskAllocation : BaseObject <NSCoding>
 
 @property (nonatomic,retain) NSDate *dependencyTaskDeadline;
 @property (nonatomic,retain) NSString* externalCalendarTag;
@@ -31,9 +35,13 @@
 @property (nonatomic,retain) NSString* internalNote;
 @property (nonatomic,retain) NSNumber* isTaskMilestone;
 @property (nonatomic,retain) NSMutableArray *allocationIntervals;
+@property (nonatomic,retain) WS_TimeEntry *timesheet;
 
-@property (nonatomic,retain)WS_Client *client;
+#pragma mark - enriched properties
+@property (nonatomic,retain) WS_Client *client;
+@property (nonatomic,retain) WS_JobDetail *jobDetail;
+@property (nonatomic,retain) WS_Job *job;
+@property (nonatomic,retain) WS_Project *project;
 
 -(int)daysUntilDeadline;
-//-(int)daysUntilDeadlineUnsigned;
 @end

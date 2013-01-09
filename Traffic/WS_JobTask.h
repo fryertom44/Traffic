@@ -9,7 +9,7 @@
 #import "BaseObject.h"
 #import "Money.h"
 
-@interface WS_JobTask : BaseObject
+@interface WS_JobTask : BaseObject <NSCoding>
 
 @property (nonatomic,retain) NSNumber* jobTaskId;
 @property (nonatomic,retain) NSNumber* version;

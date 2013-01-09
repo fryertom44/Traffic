@@ -18,15 +18,15 @@
 @end
 
 // Describes an object that is notified when the user credentials have been authenticated.
-@protocol LoginOperationDelegate <NSObject>
-// Invoked after a login attempt completes.
--(void)loginOperationCompleted:(LoginCommand *)loginOperation
-                     withResult:(BOOL)successfulLogin
-                   errorMessage:(NSString *)errorMessage;
-@end
+//@protocol LoginOperationDelegate <NSObject>
+//// Invoked after a login attempt completes.
+//-(void)loginOperationCompleted:(LoginCommand *)loginOperation
+//                     withResult:(BOOL)successfulLogin
+//                   errorMessage:(NSString *)errorMessage;
+//@end
 
 
-@interface LoginViewController : UITableViewController <LoginOperationDelegate,UITextFieldDelegate> {
+@interface LoginViewController : UITableViewController <UITextFieldDelegate> {
     
 }
 

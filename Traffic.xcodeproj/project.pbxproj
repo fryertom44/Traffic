@@ -47,8 +47,6 @@
 		9177C260162B4268004719B6 /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9177C25F162B4268004719B6 /* DetailViewController.m */; };
 		9177C268162B450C004719B6 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9177C267162B450C004719B6 /* LoginViewController.m */; };
 		917C3E88168E10AC00896A61 /* Money.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BA64831651949900B91A41 /* Money.m */; };
-		917C3E8E168FB1C900896A61 /* DatePickerWithToolbar.xib in Resources */ = {isa = PBXBuildFile; fileRef = 917C3E8D168FB1C900896A61 /* DatePickerWithToolbar.xib */; };
-		917C3E92168FB32E00896A61 /* DatePickerWithToolBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 917C3E91168FB32E00896A61 /* DatePickerWithToolBar.m */; };
 		91825CAC1679331000404C52 /* WS_JobTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 91825CAB1679330F00404C52 /* WS_JobTask.m */; };
 		91825CAF1679388000404C52 /* ParseJobTaskFromJobData.m in Sources */ = {isa = PBXBuildFile; fileRef = 91825CAE1679388000404C52 /* ParseJobTaskFromJobData.m */; };
 		91825CBC167D2B0100404C52 /* whiteLogo320.png in Resources */ = {isa = PBXBuildFile; fileRef = 91825CBB167D2B0000404C52 /* whiteLogo320.png */; };
@@ -167,9 +165,6 @@
 		9177C25F162B4268004719B6 /* DetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
 		9177C266162B450C004719B6 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
 		9177C267162B450C004719B6 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
-		917C3E8D168FB1C900896A61 /* DatePickerWithToolbar.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DatePickerWithToolbar.xib; sourceTree = "<group>"; };
-		917C3E90168FB32D00896A61 /* DatePickerWithToolBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatePickerWithToolBar.h; sourceTree = "<group>"; };
-		917C3E91168FB32E00896A61 /* DatePickerWithToolBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatePickerWithToolBar.m; sourceTree = "<group>"; };
 		91825CAA1679330F00404C52 /* WS_JobTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WS_JobTask.h; sourceTree = "<group>"; };
 		91825CAB1679330F00404C52 /* WS_JobTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WS_JobTask.m; sourceTree = "<group>"; };
 		91825CAD1679388000404C52 /* ParseJobTaskFromJobData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParseJobTaskFromJobData.h; sourceTree = "<group>"; };
@@ -336,9 +331,6 @@
 				91BA64B4165C3F7900B91A41 /* PGToggleButton.h */,
 				91BA64B5165C3F7A00B91A41 /* PGToggleButton.m */,
 				916A3ADF168515E800AEEEDF /* NothingSelectedView.xib */,
-				917C3E8D168FB1C900896A61 /* DatePickerWithToolbar.xib */,
-				917C3E90168FB32D00896A61 /* DatePickerWithToolBar.h */,
-				917C3E91168FB32E00896A61 /* DatePickerWithToolBar.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -422,6 +414,8 @@
 		9177C243162B4268004719B6 /* Traffic */ = {
 			isa = PBXGroup;
 			children = (
+				9177C24C162B4268004719B6 /* AppDelegate.h */,
+				9177C24D162B4268004719B6 /* AppDelegate.m */,
 				91110E5F167262C500BBB7F8 /* Constants.h */,
 				91110E60167262C600BBB7F8 /* Constants.m */,
 				9153CD2316765B6F00875EFB /* Model */,
@@ -429,8 +423,6 @@
 				9153CD2516765BE700875EFB /* Controller */,
 				9153CD22167657CD00875EFB /* Command */,
 				9153CD2616765C0200875EFB /* Utility */,
-				9177C24C162B4268004719B6 /* AppDelegate.h */,
-				9177C24D162B4268004719B6 /* AppDelegate.m */,
 				9177C244162B4268004719B6 /* Supporting Files */,
 			);
 			path = Traffic;
@@ -584,7 +576,6 @@
 				91825CBE167D2C0B00404C52 /* login_background_landscape.png in Resources */,
 				916A3AE0168515E800AEEEDF /* NothingSelectedView.xib in Resources */,
 				910390D01688829B0022F869 /* login_background_portrait_iphone.png in Resources */,
-				917C3E8E168FB1C900896A61 /* DatePickerWithToolbar.xib in Resources */,
 				918D5E7D1693897600696318 /* whiteLogo160.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -653,7 +644,6 @@
 				916A3AE916875D4300AEEEDF /* SettingsViewController.m in Sources */,
 				916A3AEC1687648800AEEEDF /* UIToolbar+Helper.m in Sources */,
 				916A3AEF1687816B00AEEEDF /* PutTimesheetCommand.m in Sources */,
-				917C3E92168FB32E00896A61 /* DatePickerWithToolBar.m in Sources */,
 				918D5E69169085EA00696318 /* WS_AllocationInterval.m in Sources */,
 				918D5E6D169090F000696318 /* PostJobTaskAllocationCommand.m in Sources */,
 				918D5E701690E30B00696318 /* HappyRatingHelper.m in Sources */,

@@ -14,10 +14,73 @@
 @implementation ServiceCommandLibrary
 
 +(void)loadClientsWithParams:(NSDictionary*)params{
-    [LoadClientCompanies execute];
+//    [LoadClientCompanies execute];
+    RKObjectManager *objectManager = [RKObjectManager sharedManager];
+    GlobalModel *sharedModel = [GlobalModel sharedInstance];
+    
+    [objectManager getObjectsAtPath:[NSString stringWithFormat:@"/TrafficLiteServer/openapi/crm/client"]
+                         parameters:params
+                            success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                NSArray* clients = [mappingResult array];
+                                NSLog(@"Loaded clients: %@", clients);
+                                NSMutableDictionary *clientDict = [[NSMutableDictionary alloc]init];
+                                
+                                if([clients count] > 0)
+                                {
+                                    for (WS_Client *client in clients) {
+                                        [clientDict setObject:client forKey:client.clientId.stringValue];
+                                    }
+                                    sharedModel.clients = [[NSMutableArray alloc]initWithArray:clients];
+                                    sharedModel.clientsDictionary = clientDict;
+                                    //Store result offline:
+                                    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+                                    [defaults setObject:[NSKeyedArchiver archivedDataWithRootObject:clientDict ] forKey:kClientsStoreKey];
+                                }
+                            }
+                            failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                                                message:[error localizedDescription]
+                                                                               delegate:nil
+                                                                      cancelButtonTitle:@"OK"
+                                                                      otherButtonTitles:nil];
+                                [alert show];
+                                NSLog(@"Hit error: %@", error);
+                            }];
 }
+
 +(void)loadJobsWithParams:(NSDictionary*)params{
-    [LoadJobsCommand execute];
+//    [LoadJobsCommand execute];
+    RKObjectManager *objectManager = [RKObjectManager sharedManager];
+    GlobalModel *sharedModel = [GlobalModel sharedInstance];
+    
+    [objectManager getObjectsAtPath:[NSString stringWithFormat:@"/TrafficLiteServer/openapi/job"]
+                         parameters:params
+                            success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                NSArray* jobs = [mappingResult array];
+                                NSLog(@"Loaded jobs: %@", jobs);
+                                NSMutableDictionary *jobDict = [[NSMutableDictionary alloc]init];
+                                
+                                if([jobs count] > 0)
+                                {
+                                    for (WS_Job *job in jobs) {
+                                        [jobDict setObject:job forKey:job.jobId.stringValue];
+                                    }
+                                    sharedModel.jobs = [[NSMutableArray alloc]initWithArray:jobs];
+                                    sharedModel.jobsDictionary = jobDict;
+                                    //Store result offline:
+                                    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+                                    [defaults setObject:[NSKeyedArchiver archivedDataWithRootObject:jobDict] forKey:kJobsStoreKey];
+                                }
+                            }
+                            failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                                                message:[error localizedDescription]
+                                                                               delegate:nil
+                                                                      cancelButtonTitle:@"OK"
+                                                                      otherButtonTitles:nil];
+                                [alert show];
+                                NSLog(@"Hit error: %@", error);
+                            }];
 }
 
 +(void)loadJobDetailsWithParams:(NSDictionary*)params{
@@ -38,6 +101,9 @@
                                     }
                                     sharedModel.jobDetails = [[NSMutableArray alloc]initWithArray:jobDetails];
                                     sharedModel.jobDetailsDictionary = jdDict;
+                                    //Store result offline:
+                                    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+                                    [defaults setObject:[NSKeyedArchiver archivedDataWithRootObject:jdDict] forKey:kJobDetailsStoreKey];
                                 }
                             }
                             failure:^(RKObjectRequestOperation *operation, NSError *error) {
@@ -59,10 +125,11 @@
                          parameters:params
                             success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
                                 NSArray* jtas = [mappingResult array];
-//                                NSLog(@"Loaded job task allocations: %@", [jtas description]);
                                 NSMutableArray *mutableJtas = [[NSMutableArray alloc]init];
                                 for (WS_JobTaskAllocation *jta in jtas) {
-                                    [mutableJtas addObject:jta];
+                                    if ([jta isKindOfClass:[WS_JobTaskAllocation class]]) {
+                                        [mutableJtas addObject:jta];
+                                    }
                                 }
                                 sharedModel.taskAllocations = mutableJtas;
                             }
@@ -86,7 +153,6 @@
                             success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
                                 NSArray* projects = [mappingResult array];
                                 NSMutableDictionary *projectsDict = [[NSMutableDictionary alloc]init];
-                                NSLog(@"Loaded projects: %@", projects);
                                 if([projects count] > 0){
                                     for (WS_Project *proj in projects) {
                                         [projectsDict setObject:proj forKey:proj.projectId.stringValue];
@@ -94,6 +160,10 @@
                                 }
                                 sharedModel.projects = [[NSMutableArray alloc]initWithArray:projects];
                                 sharedModel.projectsDictionary = projectsDict;
+                                //Store result offline:
+                                NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+                                [defaults setObject:[NSKeyedArchiver archivedDataWithRootObject:projectsDict] forKey:kProjectsStoreKey];
+                                
                             }
                             failure:^(RKObjectRequestOperation *operation, NSError *error) {
                                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"

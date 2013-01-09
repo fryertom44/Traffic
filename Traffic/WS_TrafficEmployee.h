@@ -9,7 +9,7 @@
 #import "BaseObject.h"
 #import "Money.h"
 
-@interface WS_TrafficEmployee : BaseObject
+@interface WS_TrafficEmployee : BaseObject <NSCoding>
 
 @property (nonatomic,retain) NSNumber *trafficEmployeeId;
 @property (nonatomic,retain) NSString *firstName;

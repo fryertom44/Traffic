@@ -8,7 +8,7 @@
 
 #import "BaseObject.h"
 
-@interface WS_JobDetail : BaseObject
+@interface WS_JobDetail : BaseObject <NSCoding>
 
 @property (nonatomic,retain) NSNumber *jobDetailId;
 @property (nonatomic,retain) NSNumber *ownerProjectId;

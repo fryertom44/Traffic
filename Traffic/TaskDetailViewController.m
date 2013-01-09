@@ -7,13 +7,7 @@
 //
 
 #import "TaskDetailViewController.h"
-#import "LoadJobDetailCommand.h"
-#import "LoadTrafficEmployeeCommand.h"
-#import "LoadProjectCommand.h"
-#import "LoadClientCommand.h"
 #import "GlobalModel.h"
-#import "ParseJobTaskFromJobData.h"
-#import "LoadJobCommand.h"
 #import <RestKit.h>
 #import "WS_JobTaskAllocation.h"
 
@@ -78,43 +72,6 @@
     // Dispose of any resources that can be recreated.
 }
 
-//- (void)loadProject
-//{
-//    if (self.sharedModel.selectedJobDetail) {
-//        LoadProjectCommand *loadProjectCommand = [[LoadProjectCommand alloc]init];
-//        [loadProjectCommand executeWithProjectId:self.sharedModel.selectedJobDetail.ownerProjectId];
-//    }
-//}
-//
-//- (void)loadJob
-//{
-//    if (self.sharedModel.selectedJobTaskAllocation) {
-//        LoadJobCommand *loadJobCommand = [[LoadJobCommand alloc]init];
-//        [loadJobCommand executeWithJobId:self.sharedModel.selectedJobTaskAllocation.jobId];
-//    }
-//}
-//
-//- (void)loadEmployee
-//{
-//    if (self.sharedModel.selectedJobDetail!=nil) {
-//        LoadTrafficEmployeeCommand *loadTrafficEmployeeCommand = [[LoadTrafficEmployeeCommand alloc]init];
-//        [loadTrafficEmployeeCommand executeWithTrafficEmployeeId:self.sharedModel.selectedJobDetail.accountManagerId];
-//    }
-//}
-//
-//- (void)loadClient
-//{
-//    if (self.sharedModel.selectedProject!=nil) {
-//        LoadClientCommand *loadClientCommand = [[LoadClientCommand alloc]init];
-//        [loadClientCommand executeWithClientCRMId:self.sharedModel.selectedProject.clientCRMEntryId];
-//    }
-//}
-//
-//- (void)loadJobDetail
-//{
-//    LoadJobDetailCommand *loadJobDetailCommand = [[LoadJobDetailCommand alloc]init];
-//    [loadJobDetailCommand executeWithJobDetailId:self.sharedModel.selectedJob.jobDetailId];
-//}
 
 - (void)observeValueForKeyPath:(NSString *)keyPath
                       ofObject:(id)object
@@ -204,6 +161,7 @@
     [self displayTaskAllocationDetails];
     [self displayEmployeeDetails];
     [self displayJobDetailDetails];
+    [self displayClientDetails];
     [self displayJobDetails];
     [self displayProjectDetails];
     [self.tableView reloadData];
@@ -237,11 +195,27 @@
         
         if (jobBriefWithHTML) {
             NSError *error = NULL;
-            NSRegularExpression *fontRegex = [NSRegularExpression regularExpressionWithPattern:@"</?FONT[^>]*>" options:NSRegularExpressionCaseInsensitive error:&error];
-            NSRegularExpression *textFormatRegex = [NSRegularExpression regularExpressionWithPattern:@"</?TEXTFORMAT[^>]*>" options:NSRegularExpressionCaseInsensitive error:&error];
+//            NSRegularExpression *fontRegex = [NSRegularExpression regularExpressionWithPattern:@"</?FONT[^>]*>" options:NSRegularExpressionCaseInsensitive error:&error];
+//            NSRegularExpression *textFormatRegex = [NSRegularExpression regularExpressionWithPattern:@"</?TEXTFORMAT[^>]*>" options:NSRegularExpressionCaseInsensitive error:&error];
+//            NSString *modifiedString = [fontRegex stringByReplacingMatchesInString:jobBriefWithHTML options:0 range:NSMakeRange(0, [jobBriefWithHTML length]) withTemplate:@""];
+//            modifiedString = [textFormatRegex stringByReplacingMatchesInString:modifiedString options:0 range:NSMakeRange(0, [modifiedString length]) withTemplate:@""];
             
-            NSString *modifiedString = [fontRegex stringByReplacingMatchesInString:jobBriefWithHTML options:0 range:NSMakeRange(0, [jobBriefWithHTML length]) withTemplate:@""];
-            modifiedString = [textFormatRegex stringByReplacingMatchesInString:modifiedString options:0 range:NSMakeRange(0, [modifiedString length]) withTemplate:@""];
+            NSRegularExpression *openingRegex = [NSRegularExpression regularExpressionWithPattern:@"]*>" options:NSRegularExpressionCaseInsensitive error:&error];
+            NSRegularExpression *kerningRegex = [NSRegularExpression regularExpressionWithPattern:@" KERNING=\"[0-9]*\"" options:NSRegularExpressionCaseInsensitive error:&error];
+            NSRegularExpression *letterSpacingRegex = [NSRegularExpression regularExpressionWithPattern:@" LETTERSPACING=\"[0-9]*\"" options:NSRegularExpressionCaseInsensitive error:&error];
+            NSRegularExpression *faceRegex = [NSRegularExpression regularExpressionWithPattern:@" FACE=\"[^\"]*\"" options:NSRegularExpressionCaseInsensitive error:&error];
+            NSRegularExpression *sizeRegex = [NSRegularExpression regularExpressionWithPattern:@" SIZE=\"([0-9]*)\"" options:NSRegularExpressionCaseInsensitive error:&error];
+            NSRegularExpression *colorRegex = [NSRegularExpression regularExpressionWithPattern:@" COLOR=\"([^\"]*)\"" options:NSRegularExpressionCaseInsensitive error:&error];
+            NSRegularExpression *closingRegex = [NSRegularExpression regularExpressionWithPattern:@"]*)>" options:NSRegularExpressionCaseInsensitive error:&error];
+            
+            
+            NSString *modifiedString = [openingRegex stringByReplacingMatchesInString:jobBriefWithHTML options:0 range:NSMakeRange(0, [jobBriefWithHTML length]) withTemplate:@""];
+            modifiedString = [kerningRegex stringByReplacingMatchesInString:modifiedString options:0 range:NSMakeRange(0, [modifiedString length]) withTemplate:@""];
+            modifiedString = [letterSpacingRegex stringByReplacingMatchesInString:modifiedString options:0 range:NSMakeRange(0, [modifiedString length]) withTemplate:@""];
+            modifiedString = [faceRegex stringByReplacingMatchesInString:modifiedString options:0 range:NSMakeRange(0, [modifiedString length]) withTemplate:@""];
+            modifiedString = [sizeRegex stringByReplacingMatchesInString:modifiedString options:0 range:NSMakeRange(0, [modifiedString length]) withTemplate:@" font-size: $1pt;"];
+            modifiedString = [colorRegex stringByReplacingMatchesInString:modifiedString options:0 range:NSMakeRange(0, [modifiedString length]) withTemplate:@" color: $1;"];
+            modifiedString = [closingRegex stringByReplacingMatchesInString:modifiedString options:0 range:NSMakeRange(0, [modifiedString length]) withTemplate:@""];
 
             //pass the string to the webview
             [self.briefLabel loadHTMLString:[modifiedString description] baseURL:nil];

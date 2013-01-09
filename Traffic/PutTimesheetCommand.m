@@ -14,7 +14,7 @@
 
 - (void)execute{
 	super.responseData = [NSMutableData data];
-    WS_TimeEntry *timesheet = self.sharedModel.timesheet;
+    WS_TimeEntry *timesheet = self.sharedModel.selectedJobTaskAllocation.timesheet;
     WS_JobTaskAllocation *allocation = self.sharedModel.selectedJobTaskAllocation;
     WS_JobTask *task = self.sharedModel.selectedJobTask;
     NSDateFormatter* df = [[NSDateFormatter alloc]init];
@@ -123,7 +123,7 @@
     [timeEntry setEndTime:[NSDate dateFromString:[dict objectForKey:@"endTime"]]];
     [timeEntry setValueOfTimeEntry:[super newMoneyFromDict:[dict objectForKey:@"valueOfTimeEntry"]]];
     
-    self.sharedModel.timesheet = timeEntry;
+    self.sharedModel.selectedJobTaskAllocation.timesheet = timeEntry;
     
     if(self.delegate){
         [self.delegate saveSuccessful];

@@ -10,7 +10,7 @@
 #import "Money.h"
 #import "BaseObject.h"
 
-@interface WS_TimeEntry : BaseObject
+@interface WS_TimeEntry : BaseObject <NSCoding>
 
 @property (nonatomic, retain) NSNumber *timeEntryId;
 @property (nonatomic, retain) NSNumber *jobTaskId;
@@ -35,5 +35,13 @@
 @property (nonatomic, retain) Money *timeEntryCost;
 @property (nonatomic, retain) Money *timeEntryPersonalRate;
 @property (nonatomic, retain) NSDate *dateModified;
+
+#pragma mark - Storing 'Timer' state
+@property (weak, nonatomic) NSTimer *myTimer;
+@property (nonatomic, retain) NSDate *timerStartDate;
+@property (nonatomic) NSTimeInterval timeElapsedInterval;
+@property BOOL isRecordingTime;
+
+- (void)updateTimeElapsed;
 
 @end

@@ -26,5 +26,11 @@ extern NSString *const kJSONDateFormat;
 extern NSString *const kTimeIntervalSettingKey;
 extern NSString *const kMaxResultsSettingKey;
 extern NSString *const kHideCompletedSettingKey;
+extern NSString *const kLoginAutomaticallySettingKey;
+
+extern NSString *const kProjectsStoreKey;
+extern NSString *const kJobsStoreKey;
+extern NSString *const kClientsStoreKey;
+extern NSString *const kJobDetailsStoreKey;
 
 @end

@@ -8,7 +8,7 @@
 
 #import "BaseObject.h"
 
-@interface WS_AllocationInterval : BaseObject
+@interface WS_AllocationInterval : BaseObject <NSCoding>
 
 @property (nonatomic,retain) NSNumber *allocationIntervalId;
 @property (nonatomic,retain) NSNumber *jobTaskTimeAllocationIntervalId;

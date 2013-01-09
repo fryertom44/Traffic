@@ -8,6 +8,7 @@
 
 #import "SettingsViewController.h"
 #import "UIToolbar+Helper.h"
+#import "ServiceCommandLibrary.h"
 
 @implementation SettingsViewController
 
@@ -134,6 +135,26 @@
     }
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults setBool:(self.hideCompletedCell.accessoryType == UITableViewCellAccessoryCheckmark) forKey:kHideCompletedSettingKey];
+    [defaults synchronize];
+}
+
+
+- (IBAction)onReloadDataCache:(id)sender {
+    NSDictionary *params = @{@"windowSize" : @"5000"};
+    [ServiceCommandLibrary loadClientsWithParams:params];
+    [ServiceCommandLibrary loadProjectsWithParams:params];
+    [ServiceCommandLibrary loadJobsWithParams:params];
+    [ServiceCommandLibrary loadJobDetailsWithParams:params];
+}
+
+- (IBAction)onLoginAutomaticallySelected:(id)sender {
+    if (self.loginAutomaticallyCell.accessoryType == UITableViewCellAccessoryCheckmark) {
+        self.loginAutomaticallyCell.accessoryType = UITableViewCellAccessoryNone;
+    }else if (self.loginAutomaticallyCell.accessoryType == UITableViewCellAccessoryNone) {
+        self.loginAutomaticallyCell.accessoryType = UITableViewCellAccessoryCheckmark;
+    }
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setBool:(self.loginAutomaticallyCell.accessoryType == UITableViewCellAccessoryCheckmark) forKey:kLoginAutomaticallySettingKey];
     [defaults synchronize];
 }
 

@@ -14,7 +14,6 @@
 #import "LoadJobDetailCommand.h"
 #import "PutTimesheetCommand.h"
 #import "UIToolbar+Helper.h"
-#import "DatePickerWithToolBar.h"
 #import "HappyRatingHelper.h"
 #import "PostJobTaskAllocationCommand.h"
 #import "GetJobTaskAllocationCommand.h"
@@ -27,7 +26,6 @@
 
 @implementation DetailViewController
 
-const NSTimeInterval unitOfTime=1;
 const NSInteger kSplashScreenTag=999;
 UIView *normalView;
 
@@ -37,6 +35,7 @@ UIView *normalView;
     
     //store the view for restoring later (when an item is selected)
     normalView = self.view;
+    isObservingTimesheet = FALSE;
     
     if(self.sharedModel.selectedJobTaskAllocation==nil){
         NSArray *xib = [[NSBundle mainBundle] loadNibNamed:@"NothingSelectedView" owner:self options:nil];
@@ -70,11 +69,10 @@ UIView *normalView;
     [self.sharedModel addObserver:self forKeyPath:@"selectedJob" options:NSKeyValueObservingOptionNew context:NULL];
     [self.sharedModel addObserver:self forKeyPath:@"selectedJobDetail" options:NSKeyValueObservingOptionNew context:NULL];
     [self.sharedModel addObserver:self forKeyPath:@"selectedClient" options:NSKeyValueObservingOptionNew context:NULL];
+    [self.sharedModel addObserver:self forKeyPath:@"selectedProject" options:NSKeyValueObservingOptionNew context:NULL];
     [self.sharedModel addObserver:self forKeyPath:@"selectedJobTaskAllocation" options:NSKeyValueObservingOptionNew context:NULL];
     [self.sharedModel addObserver:self forKeyPath:@"selectedJobTask" options:NSKeyValueObservingOptionNew context:NULL];
-    [self.sharedModel addObserver:self forKeyPath:@"selectedJobAsData" options:NSKeyValueObservingOptionNew context:NULL];
-    [self.sharedModel addObserver:self forKeyPath:@"timesheet" options:NSKeyValueObservingOptionNew context:NULL];
-    
+
     [super viewWillAppear:animated];
     [self configureView];
 
@@ -84,12 +82,23 @@ UIView *normalView;
     [self.sharedModel removeObserver:self forKeyPath:@"selectedJob"];
     [self.sharedModel removeObserver:self forKeyPath:@"selectedJobDetail"];
     [self.sharedModel removeObserver:self forKeyPath:@"selectedClient"];
+    [self.sharedModel removeObserver:self forKeyPath:@"selectedProject"];
     [self.sharedModel removeObserver:self forKeyPath:@"selectedJobTaskAllocation"];
     [self.sharedModel removeObserver:self forKeyPath:@"selectedJobTask"];
-    [self.sharedModel removeObserver:self forKeyPath:@"selectedJobAsData"];
-    [self.sharedModel removeObserver:self forKeyPath:@"timesheet"];
     
     [super viewWillDisappear:animated];
+}
+
+- (void)dealloc
+{
+    if (isObservingTimesheet) {
+        @try {
+            [self.sharedModel.selectedJobTaskAllocation.timesheet removeObserver:self forKeyPath:@"timeElapsedInterval"];
+        }
+        @catch (NSException *exception) {
+            //Do nothing, because observers do not exist
+        }
+    }
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath
@@ -97,6 +106,10 @@ UIView *normalView;
                         change:(NSDictionary *)change
                        context:(void *)context {
     
+    //update Timer
+    if ([keyPath isEqual:@"timeElapsedInterval"]) {
+        [self updateTimerDisplay];
+    }
     //selected job changed
     if ([keyPath isEqual:@"selectedJob"]) {
         if (self.sharedModel.selectedJob!=nil) {
@@ -105,6 +118,8 @@ UIView *normalView;
             [[RKObjectManager sharedManager]getObject:currentJobDetail path:nil parameters:nil
                                               success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
                                                   self.sharedModel.selectedJobDetail = (WS_JobDetail*)[mappingResult firstObject];
+                                                  [self.sharedModel.jobDetailsDictionary setObject:self.sharedModel.selectedJobDetail forKey:self.sharedModel.selectedJobDetail.jobDetailId.stringValue];
+
                                               } failure:^(RKObjectRequestOperation *operation, NSError *error) {
                                                   [self handleFailureWithOperation:operation error:error];
                                               }];
@@ -119,6 +134,7 @@ UIView *normalView;
             [[RKObjectManager sharedManager]getObject:currentProject path:nil parameters:nil
                                               success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
                                                   self.sharedModel.selectedProject = (WS_Project*)[mappingResult firstObject];
+                                                  [self.sharedModel.projectsDictionary setObject:self.sharedModel.selectedProject forKey:self.sharedModel.selectedProject.projectId.stringValue];
                                               } failure:^(RKObjectRequestOperation *operation, NSError *error) {
                                                   [self handleFailureWithOperation:operation error:error];
                                               }];
@@ -127,6 +143,7 @@ UIView *normalView;
             [[RKObjectManager sharedManager]getObject:currentOwner path:nil parameters:nil
                                               success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
                                                   self.sharedModel.selectedOwner = (WS_TrafficEmployee*)[mappingResult firstObject];
+
                                               } failure:^(RKObjectRequestOperation *operation, NSError *error) {
                                                   [self handleFailureWithOperation:operation error:error];
                                               }];
@@ -136,14 +153,30 @@ UIView *normalView;
     if ([keyPath isEqual:@"selectedClient"]) {
     }
     //selected allocation changed
-    if ([keyPath isEqual:@"selectedJobTaskAllocation"]) {
+    if ([keyPath isEqual:@"selectedJobTaskAllocation"]) {        
+        if(self.sharedModel.selectedJobTaskAllocation.timesheet){
+            WS_JobTaskAllocation *oldJta = (WS_JobTaskAllocation*)[change objectForKey:NSKeyValueChangeOldKey];
+            //Remove observer from old object
+            @try{
+                [oldJta removeObserver:self forKeyPath:@"timeElapsedInterval"];
+            }@catch(id anException){
+                //do nothing, obviously it wasn't attached because an exception was thrown
+            }
+            //Attach observer to new object
+            [self.sharedModel.selectedJobTaskAllocation.timesheet addObserver:self forKeyPath:@"timeElapsedInterval" options:NSKeyValueObservingOptionOld context:NULL];
+            isObservingTimesheet = TRUE;
+        }
         [self displayTaskAllocationDetails];
+        [self displayTimesheetDetails];
+
         if(self.sharedModel.selectedJobTaskAllocation!=nil){
             WS_Job *currentJob = [[WS_Job alloc]init];
             currentJob.jobId = self.sharedModel.selectedJobTaskAllocation.jobId;
             [[RKObjectManager sharedManager]getObject:currentJob path:nil parameters:nil
                                               success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
                                                   self.sharedModel.selectedJob = (WS_Job*)[mappingResult firstObject];
+                                                  [self.sharedModel.jobsDictionary setObject:self.sharedModel.selectedJob
+                                                                                      forKey:self.sharedModel.selectedJob.jobId.stringValue];
                                               } failure:^(RKObjectRequestOperation *operation, NSError *error) {
                                                   [self handleFailureWithOperation:operation error:error];
                                               }];
@@ -158,10 +191,10 @@ UIView *normalView;
             [[RKObjectManager sharedManager]getObject:currentClient path:nil parameters:nil
                                               success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
                                                   self.sharedModel.selectedClient = (WS_Client*)[mappingResult firstObject];
+                                                  [self.sharedModel.clientsDictionary setObject:self.sharedModel.selectedClient forKey:self.sharedModel.selectedClient.clientId.stringValue];
                                               } failure:^(RKObjectRequestOperation *operation, NSError *error) {
                                                   [self handleFailureWithOperation:operation error:error];
                                               }];
-            
         }
 
     }
@@ -169,6 +202,7 @@ UIView *normalView;
     if ([keyPath isEqual:@"timesheet"]) {
         [self displayTimesheetDetails];
     }
+
     if (self.masterPopoverController != nil) {
         [self.masterPopoverController dismissPopoverAnimated:YES];
     }
@@ -197,13 +231,13 @@ UIView *normalView;
 {
     // Update the user interface for the detail item.
     
-    if (self.sharedModel.timesheet!=nil) {
-        self.timerLabel.text = @"00:00:00";
-        self.startTimeInput.text = [self fullDateStringFromDate:self.sharedModel.timesheet.startTime];
-        self.startTimeInput.text = [self fullDateStringFromDate:self.sharedModel.timesheet.startTime];
-        self.endTimeInput.text = [self fullDateStringFromDate:self.sharedModel.timesheet.endTime];
-        self.durationInput.text = [NSDate timeStringFromMinutes:self.sharedModel.timesheet.minutes.intValue];
-        self.billableSwitch.on = self.sharedModel.timesheet.billable.boolValue;
+    if (self.sharedModel.selectedJobTaskAllocation.timesheet!=nil) {
+        [self updateTimerDisplay];
+        self.startTimeInput.text = [self fullDateStringFromDate:self.sharedModel.selectedJobTaskAllocation.timesheet.startTime];
+        self.startTimeInput.text = [self fullDateStringFromDate:self.sharedModel.selectedJobTaskAllocation.timesheet.startTime];
+        self.endTimeInput.text = [self fullDateStringFromDate:self.sharedModel.selectedJobTaskAllocation.timesheet.endTime];
+        self.durationInput.text = [NSDate timeStringFromMinutes:self.sharedModel.selectedJobTaskAllocation.timesheet.minutes.intValue];
+        self.billableSwitch.on = self.sharedModel.selectedJobTaskAllocation.timesheet.billable.boolValue;
     }
 }
 
@@ -279,29 +313,15 @@ UIView *normalView;
 }
 
 #pragma mark - Timer
-- (void)updateTimer
-{
-    if([[self recordButton]isOn]){
-        self.sharedModel.isRecordingTime = YES;
-        self.sharedModel.timeElapsedInterval=self.sharedModel.timeElapsedInterval+unitOfTime;
-        [self updateTimerDisplay];
-    }else{
-        self.sharedModel.isRecordingTime = NO;
-    }
-}
 
 - (void)updateTimerDisplay
 {
-    NSDate *timerDate = [NSDate dateWithTimeIntervalSince1970:self.sharedModel.timeElapsedInterval];
+    NSDate *timerDate = [NSDate dateWithTimeIntervalSince1970:self.sharedModel.selectedJobTaskAllocation.timesheet.timeElapsedInterval];
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"HH:mm:ss"];
     [dateFormatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0.0]];
     NSString *timeString=[dateFormatter stringFromDate:timerDate];
     self.timerLabel.text = timeString;
-    
-}
-
-- (IBAction)goToSettings:(id)sender {
 }
 
 - (IBAction)changeHappyRating:(id)sender {
@@ -315,34 +335,38 @@ UIView *normalView;
 
 - (IBAction)startTimer:(id)sender
 {
-    if(self.sharedModel.myTimer==nil){
+    if(self.sharedModel.selectedJobTaskAllocation.timesheet.myTimer==nil){
         [self setTimerToZero];
-        self.sharedModel.timerStartDate = [NSDate date];
-        self.sharedModel.myTimer= [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(updateTimer) userInfo:nil repeats:YES];
+        self.sharedModel.selectedJobTaskAllocation.timesheet.timerStartDate = [NSDate date];
+        self.sharedModel.selectedJobTaskAllocation.timesheet.myTimer= [NSTimer scheduledTimerWithTimeInterval:1.0 target:self.sharedModel.selectedJobTaskAllocation.timesheet selector:@selector(updateTimeElapsed) userInfo:nil repeats:YES];
     }
-//    [self.navigationController setToolbarHidden:FALSE animated:TRUE];
-
+    self.sharedModel.selectedJobTaskAllocation.timesheet.isRecordingTime = !self.sharedModel.selectedJobTaskAllocation.timesheet.isRecordingTime;
 }
 
 - (IBAction)stopTimer:(id)sender
 {
-    [self.sharedModel.myTimer invalidate];
-    self.sharedModel.myTimer = nil;
-    self.sharedModel.isRecordingTime = NO;
+    [self.sharedModel.selectedJobTaskAllocation.timesheet.myTimer invalidate];
+    self.sharedModel.selectedJobTaskAllocation.timesheet.myTimer = nil;
+    self.sharedModel.selectedJobTaskAllocation.timesheet.isRecordingTime = NO;
     [[self recordButton]setOn:FALSE];
     
     NSDate *dateNow = [NSDate date];
-    NSDate *dateAtBeginning = self.sharedModel.timerStartDate;
-    int minutesElapsed = [self regulatedTotalFromMinutes:(self.sharedModel.timeElapsedInterval/60)];
+//    NSDate *dateAtBeginning = self.sharedModel.selectedJobTaskAllocation.timesheet.timerStartDate;
+//    NSTimeInterval dateAtBeginning = self.sharedModel.selectedJobTaskAllocation.timesheet.timerStartDate;
+    int minutesElapsed = [self regulatedTotalFromMinutes:(self.sharedModel.selectedJobTaskAllocation.timesheet.timeElapsedInterval/60)];
     
-    self.startTimeInput.text = [self fullDateStringFromDate:dateAtBeginning];
+//    NSDate *date1 = [[NSDate alloc] init];
+    NSDate *timerStartDate = self.sharedModel.selectedJobTaskAllocation.timesheet.timerStartDate;
+    
+    self.startTimeInput.text = [self fullDateStringFromDate:timerStartDate];
     self.endTimeInput.text = [self fullDateStringFromDate:dateNow];
     self.durationInput.text = [NSDate timeStringFromMinutes:minutesElapsed];
     
-    self.sharedModel.timesheet.startTime = self.sharedModel.timerStartDate;
-    self.sharedModel.timesheet.endTime = dateNow;
-    self.sharedModel.timesheet.minutes = [NSNumber numberWithInt:minutesElapsed];
-    self.sharedModel.timesheet.timesheetWasChanged = [NSNumber numberWithBool:TRUE];
+    self.sharedModel.selectedJobTaskAllocation.timesheet.startTime = self.sharedModel.selectedJobTaskAllocation.timesheet.timerStartDate;
+    self.sharedModel.selectedJobTaskAllocation.timesheet.timerStartDate = nil;
+    self.sharedModel.selectedJobTaskAllocation.timesheet.endTime = dateNow;
+    self.sharedModel.selectedJobTaskAllocation.timesheet.minutes = [NSNumber numberWithInt:minutesElapsed];
+    self.sharedModel.selectedJobTaskAllocation.timesheet.timesheetWasChanged = [NSNumber numberWithBool:TRUE];
     [self setMinAndMaxDatesOnPickers];
 
     [self setTimerToZero];
@@ -353,22 +377,23 @@ UIView *normalView;
 
 -(void)setTimerToZero
 {
-    self.sharedModel.timerStartDate = [NSDate date];
-    self.sharedModel.timeElapsedInterval=[[NSDate date] timeIntervalSinceDate:self.sharedModel.timerStartDate];
+//    self.sharedModel.selectedJobTaskAllocation.timesheet.timerStartDate = [NSDate date];
+//    self.sharedModel.selectedJobTaskAllocation.timesheet.timeElapsedInterval=[[NSDate date] timeIntervalSinceDate:self.sharedModel.selectedJobTaskAllocation.timesheet.timerStartDate];
+    
 }
 
 #pragma mark - form actions
 - (IBAction)billableValueChanged:(id)sender {
     if(self.billableSwitch.isOn)
-        self.sharedModel.timesheet.billable = [NSNumber numberWithBool:TRUE];
+        self.sharedModel.selectedJobTaskAllocation.timesheet.billable = [NSNumber numberWithBool:TRUE];
     else
-        self.sharedModel.timesheet.billable = [NSNumber numberWithBool:FALSE];
+        self.sharedModel.selectedJobTaskAllocation.timesheet.billable = [NSNumber numberWithBool:FALSE];
 }
 
 - (IBAction)onSave:(id)sender {
     WS_JobTaskAllocation *allocation = self.sharedModel.selectedJobTaskAllocation;
     
-    WS_TimeEntry *timesheet = self.sharedModel.timesheet;
+    WS_TimeEntry *timesheet = self.sharedModel.selectedJobTaskAllocation.timesheet;
     timesheet.chargeBandId = self.sharedModel.selectedJobTask.chargeBandId;
     timesheet.jobId = self.sharedModel.selectedJobTaskAllocation.jobId;
     timesheet.jobTaskId = self.sharedModel.selectedJobTaskAllocation.jobTaskId;
@@ -378,21 +403,25 @@ UIView *normalView;
     //Hide, but re-show if either one of these calls fails
     [self.navigationController setToolbarHidden:TRUE animated:TRUE];
     
-    if(timesheet.timesheetWasChanged && timesheet.trafficVersion.intValue == -1){
+    if(timesheet.timesheetWasChanged && [self isValidTimesheet] && timesheet.trafficVersion.intValue == -1){
         [[RKObjectManager sharedManager] putObject:timesheet path:nil parameters:nil
                                            success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
                                                WS_TimeEntry *updatedTimesheet = (WS_TimeEntry*)[mappingResult firstObject];
-                                               self.sharedModel.timesheet = updatedTimesheet;
+                                               self.sharedModel.selectedJobTaskAllocation.timesheet = updatedTimesheet;
+                                               [self displayTaskAllocationDetails];
+                                               [self displayTimesheetDetails];
                                            }
                                            failure:^(RKObjectRequestOperation *operation, NSError *error) {
                                                [self handleFailureWithOperation:operation error:error];
                                                [self.navigationController setToolbarHidden:FALSE animated:TRUE];
                                            }];
-    }else if(timesheet.timesheetWasChanged && timesheet.trafficVersion.intValue>=0){
+    }else if(timesheet.timesheetWasChanged && [self isValidTimesheet] && timesheet.trafficVersion.intValue>=0){
         [[RKObjectManager sharedManager] postObject:timesheet path:nil parameters:nil
                                             success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
                                                 WS_TimeEntry *updatedTimesheet = (WS_TimeEntry*)[mappingResult firstObject];
-                                                self.sharedModel.timesheet = updatedTimesheet;
+                                                self.sharedModel.selectedJobTaskAllocation.timesheet = updatedTimesheet;
+                                                [self displayTaskAllocationDetails];
+                                                [self displayTimesheetDetails];
                                             }
                                             failure:^(RKObjectRequestOperation *operation, NSError *error) {
                                                 [self handleFailureWithOperation:operation error:error];
@@ -421,11 +450,11 @@ UIView *normalView;
 }
 
 - (IBAction)onCancel:(id)sender {
-    self.sharedModel.timesheet.startTime = nil;
-    self.sharedModel.timesheet.endTime = nil;
-    self.sharedModel.timesheet.minutes = 0;
-    self.sharedModel.timesheet.comment = nil;
-    self.sharedModel.timesheet.billable = [NSNumber numberWithBool:TRUE];
+    self.sharedModel.selectedJobTaskAllocation.timesheet.startTime = nil;
+    self.sharedModel.selectedJobTaskAllocation.timesheet.endTime = nil;
+    self.sharedModel.selectedJobTaskAllocation.timesheet.minutes = 0;
+    self.sharedModel.selectedJobTaskAllocation.timesheet.comment = nil;
+    self.sharedModel.selectedJobTaskAllocation.timesheet.billable = [NSNumber numberWithBool:TRUE];
 //    [self.sharedModel.selectedJobTaskAllocation restoreState];
     [self configureView];
 }
@@ -481,28 +510,37 @@ UIView *normalView;
             int totalMinutes = 60*hour+minute;
             totalMinutes = [self regulatedTotalFromMinutes:totalMinutes];
             
-            self.sharedModel.timesheet.minutes = [NSNumber numberWithInt:totalMinutes];
+            self.sharedModel.selectedJobTaskAllocation.timesheet.minutes = [NSNumber numberWithInt:totalMinutes];
             self.durationInput.text = [NSDate timeStringFromMinutes:totalMinutes];
             
         }
         else if ([self.txtActiveComponent isEqual:self.startTimeInput]) {
             self.startTimeInput.text = [self fullDateStringFromDate:datePicker.date];
-            self.sharedModel.timesheet.startTime = datePicker.date;
+            self.sharedModel.selectedJobTaskAllocation.timesheet.startTime = datePicker.date;
         }
         else if([self.txtActiveComponent isEqual:self.endTimeInput]){
             self.endTimeInput.text = [self fullDateStringFromDate:datePicker.date];
-            self.sharedModel.timesheet.endTime = datePicker.date;
+            self.sharedModel.selectedJobTaskAllocation.timesheet.endTime = datePicker.date;
         }
         [self setMinAndMaxDatesOnPickers];
     }
 
     else if ([self.txtActiveComponent isEqual:self.timesheetNotes]) {
-        self.sharedModel.timesheet.comment = self.timesheetNotes.text;
+        self.sharedModel.selectedJobTaskAllocation.timesheet.comment = self.timesheetNotes.text;
     }
     [self.txtActiveComponent resignFirstResponder];
     self.txtActiveComponent  = nil;
-    self.sharedModel.timesheet.timesheetWasChanged = [NSNumber numberWithBool:TRUE];
-    [self.navigationController setToolbarHidden:FALSE animated:TRUE];
+    self.sharedModel.selectedJobTaskAllocation.timesheet.timesheetWasChanged = [NSNumber numberWithBool:TRUE];
+    
+    if ([self isValidTimesheet]) {
+        [self.navigationController setToolbarHidden:FALSE animated:TRUE];
+    }
+}
+
+-(BOOL)isValidTimesheet{
+    return self.sharedModel.selectedJobTaskAllocation.timesheet
+    && self.sharedModel.selectedJobTaskAllocation.timesheet.endTime
+    && self.sharedModel.selectedJobTaskAllocation.timesheet.minutes;
 }
 
 -(void)inputViewCancelled:(id)sender{

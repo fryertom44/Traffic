@@ -24,8 +24,16 @@ NSString *const kHappyRatingCompletedImage = @"happyRatingCompletedSmall320.png"
 
 NSString *const kJSONDateFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSSZ";
 
+#pragma mark - keys for settings
 NSString *const kTimeIntervalSettingKey = @"timeInterval";
 NSString *const kMaxResultsSettingKey = @"maxAllocationResults";
 NSString *const kHideCompletedSettingKey = @"hideCompletedAllocations";
+NSString *const kLoginAutomaticallySettingKey = @"loginAutomatically";
+
+#pragma mark - keys for dictionaries of offline-stored data
+NSString *const kProjectsStoreKey = @"projectsStore";
+NSString *const kJobsStoreKey = @"jobsStore";
+NSString *const kClientsStoreKey = @"clientsStore";
+NSString *const kJobDetailsStoreKey = @"jobDetailsStore";
 
 @end

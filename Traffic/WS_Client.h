@@ -8,8 +8,9 @@
 
 #import "BaseObject.h"
 
-@interface WS_Client : BaseObject
+@interface WS_Client : BaseObject <NSCoding>
 
 @property (nonatomic,retain) NSString *clientName;
 @property (nonatomic,retain)NSNumber*clientId;
+
 @end

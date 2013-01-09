@@ -198,7 +198,7 @@
     
     RKResponseDescriptor *jobResponseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:jobMapping pathPattern:@"job/:jobId" keyPath:nil statusCodes:[NSIndexSet indexSetWithIndex:200]];
     
-    RKResponseDescriptor *jobPutPostDeleteResponseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:jobMapping pathPattern:@"job" keyPath:nil statusCodes:[NSIndexSet indexSetWithIndex:200]];
+//    RKResponseDescriptor *jobPutPostDeleteResponseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:jobMapping pathPattern:@"job" keyPath:nil statusCodes:[NSIndexSet indexSetWithIndex:200]];
     
     RKResponseDescriptor *jobDetailsResponseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:jobDetailMapping                                                                                            pathPattern:@"jobdetail" keyPath:@"resultList" statusCodes:[NSIndexSet indexSetWithIndex:200]];
     

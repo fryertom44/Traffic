@@ -13,13 +13,13 @@
 #import "TaskAllocationCell.h"
 #import <QuartzCore/QuartzCore.h>
 #import "UIColor+CreateMethods.h"
-#import "LoadTimeEntriesCommand.h"
-#import "LoadJobTaskAllocationsCommand.h"
-#import "RefreshJobTaskAllocationsCommand.h"
+//#import "LoadTimeEntriesCommand.h"
+//#import "LoadJobTaskAllocationsCommand.h"
+//#import "RefreshJobTaskAllocationsCommand.h"
 #import "GlobalModel.h"
 #import "HappyRatingHelper.h"
 #import "NSDate+Helper.h"
-#import "LoadClientCompanies.h"
+//#import "LoadClientCompanies.h"
 #import "ServiceCommandLibrary.h"
 #import <RestKit/RestKit.h>
 
@@ -46,16 +46,8 @@
                                         init];
     [refreshControl addTarget:self action:@selector(refreshList:) forControlEvents:UIControlEventValueChanged];
     self.refreshControl = refreshControl;
-
-//    [self loadTaskAllocationsWithPageNumber:self.sharedModel.pageNumber andWindowSize:10];
     
-    //Setting up...
-//    NSDictionary *params = @{@"windowSize" : @"5000"};
-//    [ServiceCommandLibrary loadClientsWithParams:params];
-//    [ServiceCommandLibrary loadProjectsWithParams:params];
-//    [ServiceCommandLibrary loadJobsWithParams:params];
-//    [ServiceCommandLibrary loadJobDetailsWithParams:params];
-    
+    //Load Job Task Allocations
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSMutableDictionary *allocationParams = [[NSMutableDictionary alloc]initWithDictionary:@{@"currentPage" : [NSNumber numberWithInt:self.sharedModel.pageNumber]}];
     BOOL hideCompleted = [defaults boolForKey:kHideCompletedSettingKey];
@@ -89,21 +81,10 @@
 
 -(void)viewDidAppear:(BOOL)animated{
     [self.sharedModel addObserver:self forKeyPath:@"taskAllocations" options:NSKeyValueObservingOptionNew context:NULL];
-//    [self.sharedModel addObserver:self forKeyPath:@"jobDetailsDictionary" options:NSKeyValueObservingOptionNew context:NULL];
-//    [self.sharedModel addObserver:self forKeyPath:@"jobsDictionary" options:NSKeyValueObservingOptionNew context:NULL];
-//    [self.sharedModel addObserver:self forKeyPath:@"projectsDictionary" options:NSKeyValueObservingOptionNew context:NULL];
-//    [self.sharedModel addObserver:self forKeyPath:@"jobTasksDictionary" options:NSKeyValueObservingOptionNew context:NULL];
-//    [self.sharedModel addObserver:self forKeyPath:@"clientsDictionary" options:NSKeyValueObservingOptionNew context:NULL];
-
 }
 
 -(void)viewDidDisappear:(BOOL)animated{
     [self.sharedModel removeObserver:self forKeyPath:@"taskAllocations"];
-//    [self.sharedModel removeObserver:self forKeyPath:@"jobDetailsDictionary"];
-//    [self.sharedModel removeObserver:self forKeyPath:@"jobsDictionary"];
-//    [self.sharedModel removeObserver:self forKeyPath:@"projectsDictionary"];
-//    [self.sharedModel removeObserver:self forKeyPath:@"clientsDictionary"];
-//    [self.sharedModel removeObserver:self forKeyPath:@"jobTasksDictionary"];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath
@@ -114,30 +95,8 @@
     if ([keyPath isEqual:@"taskAllocations"]) {
         [self.tableView reloadData];
     }
-//    if ([keyPath isEqual:@"jobDetailsDictionary"]) {
-//    }
-//    if ([keyPath isEqual:@"jobsDictionary"]) {
-//    }
-//    if ([keyPath isEqual:@"projectsDictionary"]) {
-//    }
-//    if ([keyPath isEqual:@"clientsDictionary"]) {
-//    }
-//    if ([keyPath isEqual:@"jobTasksDictionary"]) {
-//    }
-//    [self refreshListLabels];
 
 }
-
-//-(void)refreshListLabels{
-//    if (self.sharedModel.jobDetailsDictionary
-//        && self.sharedModel.jobsDictionary
-//        && self.sharedModel.jobTasksDictionary
-//        && self.sharedModel.projectsDictionary
-//        && self.sharedModel.clientsDictionary) {
-//
-//        [self.tableView reloadData];
-//    }
-//}
 
 - (void)didReceiveMemoryWarning
 {
@@ -182,19 +141,13 @@
     
     [cell setBackgroundView:[[UIView alloc] init]];
     [cell.backgroundView.layer insertSublayer:grad atIndex:0];
-
-    WS_JobTaskAllocation *allocation = self.sharedModel.taskAllocations[indexPath.row];
-           
-    //    cell.companyLabel.text = [NSString stringWithFormat:@"Company Name: %@",relatedClient.clientName];
-    //    cell.jobLabel.text = [NSString stringWithFormat:@"Job: %@-%@",relatedJob.jobNumber, relatedJobDetail.jobTitle];
-    cell.timesheetLabel.text = allocation.taskDescription;
-    cell.daysToDeadlineLabel.text = [NSString stringWithFormat:@"%d days %@",abs(allocation.daysUntilDeadline), allocation.daysUntilDeadline < 0 ? @"overdue" : @"remaining"];
-    cell.timeCompletedLabel.text = [NSString stringWithFormat:@"%@ of %@", [NSDate timeStringFromMinutes:allocation.totalTimeLoggedMinutes.integerValue],[NSDate timeStringFromMinutes:allocation.durationInMinutes.integerValue]];
-    cell.timeCompletedLabel.textColor = allocation.totalTimeLoggedMinutes.integerValue > allocation.durationInMinutes.integerValue ? [UIColor redColor] : [UIColor blackColor];
-    cell.happyRating.image = [HappyRatingHelper happyRatingImageFromString:allocation.happyRating];
     
+    WS_JobTaskAllocation *allocation = self.sharedModel.taskAllocations[indexPath.row];
+    cell.allocation = [self enrichAllocation:allocation];
+
     return cell;
 }
+
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -233,7 +186,6 @@
 {
     WS_JobTaskAllocation *taskAllocation = self.sharedModel.taskAllocations[indexPath.row];
     self.sharedModel.selectedJobTaskAllocation = taskAllocation;
-    self.sharedModel.timesheet = [[WS_TimeEntry alloc]init];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -243,14 +195,32 @@
     }
 }
 
+
 - (GlobalModel*)sharedModel{
     return [GlobalModel sharedInstance];
 }
 
-- (void)loadTaskAllocationsWithPageNumber:(int)page andWindowSize:(int)windowSize
-{
-    LoadJobTaskAllocationsCommand *loadJobTaskAllocationsCommand = [[LoadJobTaskAllocationsCommand alloc]init];
-    [loadJobTaskAllocationsCommand executeWithPageNumber:page windowSize:windowSize];
+//- (void)loadTaskAllocationsWithPageNumber:(int)page andWindowSize:(int)windowSize
+//{
+//    LoadJobTaskAllocationsCommand *loadJobTaskAllocationsCommand = [[LoadJobTaskAllocationsCommand alloc]init];
+//    [loadJobTaskAllocationsCommand executeWithPageNumber:page windowSize:windowSize];
+//}
+
+
+-(WS_JobTaskAllocation*)enrichAllocation:(WS_JobTaskAllocation*)allocation{
+    if (!allocation.job && self.sharedModel.jobsDictionary) {
+        allocation.job = [self.sharedModel.jobsDictionary objectForKey:allocation.jobId.stringValue];
+    }
+    if (!allocation.jobDetail && allocation.job && self.sharedModel.jobDetailsDictionary) {
+        allocation.jobDetail = [self.sharedModel.jobDetailsDictionary objectForKey:allocation.job.jobDetailId.stringValue];
+    }
+    if (!allocation.project && allocation.jobDetail && self.sharedModel.projectsDictionary) {
+        allocation.project = [self.sharedModel.projectsDictionary objectForKey:allocation.jobDetail.ownerProjectId.stringValue];
+    }
+    if (!allocation.client && allocation.project && self.sharedModel.clientsDictionary) {
+        allocation.client = [self.sharedModel.clientsDictionary objectForKey:allocation.project.clientCRMEntryId.stringValue];
+    }
+    return allocation;
 }
 
 - (IBAction)onLoadMoreSelected:(id)sender {    
@@ -325,5 +295,9 @@
     [alert show];
     NSLog(@"Hit error: %@", error);
 };
+
+- (void) didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
+    [self.tableView reloadData];
+}
 
 @end

@@ -12,6 +12,7 @@
 #import "MasterViewController.h"
 #import "GlobalModel.h"
 #import "ConfigureRestkitCommand.h"
+#import "ServiceCommandLibrary.h"
 
 @implementation AppDelegate
 
@@ -22,26 +23,15 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
-//    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-//        UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
-//        UINavigationController *navigationController = [splitViewController.viewControllers lastObject];
-//        splitViewController.delegate = (id)navigationController.topViewController;
-//        
-//        [_window makeKeyAndVisible];
-//        UIStoryboard *storyboard = [UIApplication sharedApplication].delegate.window.rootViewController.storyboard;
-//        UIViewController *loginController = [storyboard instantiateViewControllerWithIdentifier:@"loginViewController"];
-//        [loginController setModalPresentationStyle:UIModalPresentationFullScreen];
-//        [splitViewController presentViewController:loginController animated:YES completion:NULL];
-//    }
-
-//    return YES;
     
     // Initialize RestKit
     [ConfigureRestkitCommand execute];
     
+    //Get Big Data from store or load from server
+    [self LoadStoredData];
+    
     self.loginViewController = (LoginViewController *)self.window.rootViewController;
     self.loginViewController.delegate = self;
-//    self.loginViewController.loginOperation = [[LoginOperation alloc] init];
 
     // Show the window.
     [self.window makeKeyAndVisible];
@@ -49,19 +39,47 @@
     return YES;
 }
 
+- (void)LoadStoredData
+{
+    NSDictionary *params = @{@"windowSize" : @"5000"};
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    NSData *storedClientData = [defaults objectForKey:kClientsStoreKey];
+    
+    if(!storedClientData)
+        [ServiceCommandLibrary loadClientsWithParams:params];
+    else{
+        self.sharedModel.clientsDictionary = [(NSDictionary*)[NSKeyedUnarchiver unarchiveObjectWithData:storedClientData]mutableCopy];
+        NSLog(@"Unarchived Clients Dictionary: %@", [self.sharedModel.clientsDictionary description]);
+    }
+    
+    NSData *storedProjectsData = [defaults objectForKey:kProjectsStoreKey];
+    if(!storedProjectsData)
+        [ServiceCommandLibrary loadProjectsWithParams:params];
+    else{
+        self.sharedModel.projectsDictionary = [(NSDictionary*)[NSKeyedUnarchiver unarchiveObjectWithData:storedProjectsData]mutableCopy];
+        NSLog(@"Unarchived Projects Dictionary: %@", [self.sharedModel.projectsDictionary description]);
+    }
+    NSData *storedJobsData = [defaults objectForKey:kJobsStoreKey];
+    if(!storedJobsData)
+        [ServiceCommandLibrary loadJobsWithParams:params];
+    else{
+        self.sharedModel.jobsDictionary = [(NSDictionary*)[NSKeyedUnarchiver unarchiveObjectWithData:storedJobsData]mutableCopy];
+        NSLog(@"Unarchived Jobs Dictionary: %@", [self.sharedModel.jobsDictionary description]);
+    }
+    
+    NSData *storedJobDetailsData = [defaults objectForKey:kJobDetailsStoreKey];
+    if(!storedJobDetailsData)
+        [ServiceCommandLibrary loadJobDetailsWithParams:params];
+    else{
+        self.sharedModel.jobDetailsDictionary = [(NSDictionary*)[NSKeyedUnarchiver unarchiveObjectWithData:storedJobDetailsData]mutableCopy];
+        NSLog(@"Unarchived Job Details Dictionary: %@", [self.sharedModel.jobDetailsDictionary description]);
+    }
+}
 
 // Invoked when the user is successfully logged in.
 - (void)loginViewControllerLoggedIn:(LoginViewController *)loginViewController
 {
-//    [self.splitViewController dismissViewControllerAnimated:YES completion:NULL];
-//    
-//    LoginOperation *loginOp = self.loginViewController.loginOperation;
-//    
-//    NSLog(@"Logged in. User Name='%@' Password='%@'",
-//          loginOp.authenticatedUsername,
-//          loginOp.authenticatedPassword);
-    
-//    [loginOp deleteAuthenticatedData];
     self.loginViewController = nil;
     
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
@@ -90,9 +108,10 @@
 {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-//    if(self.sharedModel.isRecordingTime){
-//        self.sharedModel.timerStartDate = [NSDate date];
-//    }
+
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setObject:[NSDate date] forKey:@"timeOnEnteringBackground"];
+    [defaults synchronize];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
@@ -103,8 +122,13 @@
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-    if(self.sharedModel.isRecordingTime){
-        self.sharedModel.timeElapsedInterval=[[NSDate date] timeIntervalSinceDate:self.sharedModel.timerStartDate];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSDate *timeOnEnteringBackground = [defaults objectForKey:@"timeOnEnteringBackground"];
+    
+    for (WS_JobTaskAllocation *jta in self.sharedModel.taskAllocations) {
+        if (jta.timesheet && jta.timesheet.isRecordingTime) {
+            jta.timesheet.timeElapsedInterval = jta.timesheet.timeElapsedInterval + [[NSDate date] timeIntervalSinceDate:timeOnEnteringBackground];
+        }
     }
 }
 

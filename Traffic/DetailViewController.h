@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import "PGToggleButton.h"
-#import "DatePickerWithToolBar.h"
 #import <RestKit.h>
 
 @class DetailViewController;
@@ -17,7 +16,9 @@
 -(void)saveSuccessful;
 @end
 
-@interface DetailViewController : UITableViewController <UISplitViewControllerDelegate,UITextViewDelegate,UITextFieldDelegate,DetailViewControllerDelegate>
+@interface DetailViewController : UITableViewController <UISplitViewControllerDelegate,UITextViewDelegate,UITextFieldDelegate,DetailViewControllerDelegate>{
+    BOOL isObservingTimesheet;
+}
 
 @property (weak, nonatomic) IBOutlet UILabel *taskDescription;
 @property (weak, nonatomic) IBOutlet UILabel *jobTitle;
@@ -37,7 +38,6 @@
 @property (nonatomic) id txtActiveComponent;
 @property (nonatomic,retain) UIView *subview;
 
--(IBAction)goToSettings:(id)sender;
 -(IBAction)changeHappyRating:(id)sender;
 -(IBAction)startTimer:(id)sender;
 -(IBAction)stopTimer:(id)sender;
