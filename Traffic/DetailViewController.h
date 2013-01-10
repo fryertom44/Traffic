@@ -12,11 +12,7 @@
 
 @class DetailViewController;
 
-@protocol DetailViewControllerDelegate <NSObject>
--(void)saveSuccessful;
-@end
-
-@interface DetailViewController : UITableViewController <UISplitViewControllerDelegate,UITextViewDelegate,UITextFieldDelegate,DetailViewControllerDelegate>{
+@interface DetailViewController : UITableViewController <UISplitViewControllerDelegate,UITextViewDelegate,UITextFieldDelegate>{
     BOOL isObservingTimesheet;
 }
 

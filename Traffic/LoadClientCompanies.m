@@ -22,11 +22,6 @@
                             success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
                                 NSArray* clients = [mappingResult array];
                                 NSLog(@"Loaded clients: %@", clients);
-                                NSMutableDictionary* clientsDict = [[NSMutableDictionary alloc]init];
-                                for (WS_Client* client in clients) {
-                                    [clientsDict setObject:client forKey:client.clientId.stringValue];
-                                }
-                                sharedModel.clientsDictionary = clientsDict;
                                 sharedModel.clients = [[NSMutableArray alloc]initWithArray:clients];
  
                             }

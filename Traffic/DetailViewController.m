@@ -10,13 +10,8 @@
 #import "NSDate+Helper.h"
 #import "Constants.h"
 #import "GlobalModel.h"
-#import "LoadJobCommand.h"
-#import "LoadJobDetailCommand.h"
-#import "PutTimesheetCommand.h"
 #import "UIToolbar+Helper.h"
 #import "HappyRatingHelper.h"
-#import "PostJobTaskAllocationCommand.h"
-#import "GetJobTaskAllocationCommand.h"
 #import <RestKit.h>
 
 @interface DetailViewController ()
@@ -251,14 +246,15 @@ UIView *normalView;
 - (void)displayTaskAllocationDetails
 {
     if(self.sharedModel.selectedJobTaskAllocation!=nil) {
-        self.taskDescription.text = self.sharedModel.selectedJobTaskAllocation.taskDescription;
-        [self.happyRatingButton setImage:[HappyRatingHelper happyRatingImageFromString:self.sharedModel.selectedJobTaskAllocation.happyRating] forState:UIControlStateNormal];
-        self.daysRemainingLabel.text = [NSString stringWithFormat:@"%d",self.sharedModel.selectedJobTaskAllocation.daysUntilDeadline];
-        float progressFloat = self.sharedModel.selectedJobTaskAllocation.totalTimeLoggedMinutes.floatValue / self.sharedModel.selectedJobTaskAllocation.durationInMinutes.floatValue;
-        BOOL taskIsOverWorked = self.sharedModel.selectedJobTaskAllocation.totalTimeLoggedMinutes.floatValue > self.sharedModel.selectedJobTaskAllocation.durationInMinutes.floatValue;
+        WS_JobTaskAllocation *allocation = self.sharedModel.selectedJobTaskAllocation;
+        self.taskDescription.text = allocation.taskDescription;
+        [self.happyRatingButton setImage:[HappyRatingHelper happyRatingImageFromString:allocation.happyRating] forState:UIControlStateNormal];
+        self.daysRemainingLabel.text = [NSString stringWithFormat:@"%d",allocation.daysUntilDeadline];
+        float progressFloat = allocation.totalTimeLoggedMinutes.floatValue / allocation.durationInMinutes.floatValue;
+        BOOL taskIsOverWorked = allocation.totalTimeLoggedMinutes.floatValue > allocation.durationInMinutes.floatValue;
         [self.taskProgress setProgressTintColor:(taskIsOverWorked ? [UIColor redColor] : nil)];
         [self.taskProgress setProgress:progressFloat animated:YES];
-        self.progressLabel.text = [NSString stringWithFormat:@"%@ of %@",[NSDate timeStringFromMinutes:self.sharedModel.selectedJobTaskAllocation.totalTimeLoggedMinutes.intValue],[NSDate timeStringFromMinutes:self.sharedModel.selectedJobTaskAllocation.durationInMinutes.intValue]];
+        self.progressLabel.text = [NSString stringWithFormat:@"%@ of %@",[NSDate timeStringFromMinutes:allocation.totalTimeLoggedMinutes.intValue],[NSDate timeStringFromMinutes:allocation.durationInMinutes.intValue]];
     }
 }
 
@@ -403,35 +399,43 @@ UIView *normalView;
     //Hide, but re-show if either one of these calls fails
     [self.navigationController setToolbarHidden:TRUE animated:TRUE];
     
-    if(timesheet.timesheetWasChanged && [self isValidTimesheet] && timesheet.trafficVersion.intValue == -1){
+    if(timesheet.timesheetWasChanged && [self isValidTimesheet] && timesheet.isUnsaved){
         [[RKObjectManager sharedManager] putObject:timesheet path:nil parameters:nil
                                            success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-                                               WS_TimeEntry *updatedTimesheet = (WS_TimeEntry*)[mappingResult firstObject];
-                                               self.sharedModel.selectedJobTaskAllocation.timesheet = updatedTimesheet;
-                                               [self displayTaskAllocationDetails];
-                                               [self displayTimesheetDetails];
+//                                               WS_TimeEntry *updatedTimesheet = (WS_TimeEntry*)[mappingResult firstObject];
+//                                               self.sharedModel.selectedJobTaskAllocation.timesheet = updatedTimesheet;
+//                                               [self displayTimesheetDetails];
+
+                                               if (!allocation.happyRatingWasChanged)
+                                                   [self getSelectedAllocationFromServer];
                                            }
                                            failure:^(RKObjectRequestOperation *operation, NSError *error) {
                                                [self handleFailureWithOperation:operation error:error];
                                                [self.navigationController setToolbarHidden:FALSE animated:TRUE];
                                            }];
-    }else if(timesheet.timesheetWasChanged && [self isValidTimesheet] && timesheet.trafficVersion.intValue>=0){
-        [[RKObjectManager sharedManager] postObject:timesheet path:nil parameters:nil
-                                            success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-                                                WS_TimeEntry *updatedTimesheet = (WS_TimeEntry*)[mappingResult firstObject];
-                                                self.sharedModel.selectedJobTaskAllocation.timesheet = updatedTimesheet;
-                                                [self displayTaskAllocationDetails];
-                                                [self displayTimesheetDetails];
-                                            }
-                                            failure:^(RKObjectRequestOperation *operation, NSError *error) {
-                                                [self handleFailureWithOperation:operation error:error];
-                                                [self.navigationController setToolbarHidden:FALSE animated:TRUE];
-                                            }];
-    }
+        }
+//Currently only possible to create new timesheet; should we be able to update an existing one?
+    
+//  else if(timesheet.timesheetWasChanged && [self isValidTimesheet] && timesheet.trafficVersion.intValue>=0){
+//        [[RKObjectManager sharedManager] postObject:timesheet path:nil parameters:nil
+//                                            success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+//                                                WS_TimeEntry *updatedTimesheet = (WS_TimeEntry*)[mappingResult firstObject];
+//                                                self.sharedModel.selectedJobTaskAllocation.timesheet = updatedTimesheet;
+//                                                [self displayTimesheetDetails];
+//                                                if (!allocation.happyRatingWasChanged)
+//                                                    [self getSelectedAllocationFromServer];
+//                                            }
+//                                            failure:^(RKObjectRequestOperation *operation, NSError *error) {
+//                                                [self handleFailureWithOperation:operation error:error];
+//                                                [self.navigationController setToolbarHidden:FALSE animated:TRUE];
+//                                            }];
+//    }
     if (allocation.happyRatingWasChanged) {
+        NSLog(@"Allocation description: %@", [allocation description]);
         [[RKObjectManager sharedManager] postObject:allocation path:nil parameters:nil
                                             success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
                                                 WS_JobTaskAllocation *updatedJobTaskAllocation = (WS_JobTaskAllocation*)[mappingResult firstObject];
+                                                updatedJobTaskAllocation.happyRatingWasChanged = FALSE;
                                                 for (int i=0; i < [self.sharedModel.taskAllocations count]; i++) {
                                                     WS_JobTaskAllocation *jta = self.sharedModel.taskAllocations[i];
                                                     if ([jta.jobTaskAllocationGroupId isEqualToNumber:updatedJobTaskAllocation.jobTaskAllocationGroupId]) {
@@ -440,13 +444,36 @@ UIView *normalView;
                                                     }
                                                 }
                                                 self.sharedModel.selectedJobTaskAllocation = updatedJobTaskAllocation;
+                                                [self displayTaskAllocationDetails];
                                             }
                                             failure:^(RKObjectRequestOperation *operation, NSError *error) {
                                                 [self handleFailureWithOperation:operation error:error];
                                                 [self.navigationController setToolbarHidden:FALSE animated:TRUE];
                                             }];
     }
+}
 
+-(void)getSelectedAllocationFromServer{
+    WS_JobTaskAllocation *allocation = self.sharedModel.selectedJobTaskAllocation;
+    
+    [[RKObjectManager sharedManager] getObject:allocation path:nil parameters:nil
+                                       success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                           WS_JobTaskAllocation *updatedJobTaskAllocation = (WS_JobTaskAllocation*)[mappingResult firstObject];
+                                           for (int i=0; i < [self.sharedModel.taskAllocations count]; i++) {
+                                               WS_JobTaskAllocation *jta = self.sharedModel.taskAllocations[i];
+                                               if ([jta.jobTaskAllocationGroupId isEqualToNumber:updatedJobTaskAllocation.jobTaskAllocationGroupId]) {
+                                                   [self.sharedModel.taskAllocations setObject:updatedJobTaskAllocation atIndexedSubscript:i];
+                                                   break;
+                                               }
+                                           }
+                                           self.sharedModel.selectedJobTaskAllocation = updatedJobTaskAllocation;
+                                           [self displayTaskAllocationDetails];
+                                           [self displayTimesheetDetails];
+                                       }
+                                       failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                           [self handleFailureWithOperation:operation error:error];
+                                           [self.navigationController setToolbarHidden:FALSE animated:TRUE];
+                                       }];
 }
 
 - (IBAction)onCancel:(id)sender {

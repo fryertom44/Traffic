@@ -126,5 +126,10 @@ const NSTimeInterval unitOfTime=1;
     }
 }
 
+- (void)dealloc
+{
+    if(self.myTimer)
+       [self.myTimer invalidate];
+}
 
 @end

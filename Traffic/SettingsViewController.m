@@ -50,8 +50,9 @@
     NSInteger minutes = storedInterval.integerValue % 60;
     self.timeIntervalTextInput.text = [NSString stringWithFormat:@"%02d:%02d",hours,minutes];
     self.maxAllocationResultsTextInput.text = [NSString stringWithFormat:@"%d",[defaults integerForKey:kMaxResultsSettingKey]];
-    self.hideCompletedCell.accessoryType = [defaults boolForKey:kHideCompletedSettingKey] ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
-
+    self.loginAutomaticallySwitch.on = [defaults boolForKey:kLoginAutomaticallySettingKey];
+    self.hideCompletedTasksSwitch.on = [defaults boolForKey:kHideCompletedSettingKey];
+    
     [super viewWillAppear:animated];
     
 }
@@ -128,13 +129,8 @@
 }
 
 - (IBAction)onHideCompletedToggle:(id)sender {
-    if (self.hideCompletedCell.accessoryType == UITableViewCellAccessoryCheckmark) {
-        self.hideCompletedCell.accessoryType = UITableViewCellAccessoryNone;
-    }else if (self.hideCompletedCell.accessoryType == UITableViewCellAccessoryNone) {
-        self.hideCompletedCell.accessoryType = UITableViewCellAccessoryCheckmark;
-    }
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setBool:(self.hideCompletedCell.accessoryType == UITableViewCellAccessoryCheckmark) forKey:kHideCompletedSettingKey];
+    [defaults setBool:self.hideCompletedTasksSwitch.on forKey:kHideCompletedSettingKey];
     [defaults synchronize];
 }
 
@@ -148,13 +144,8 @@
 }
 
 - (IBAction)onLoginAutomaticallySelected:(id)sender {
-    if (self.loginAutomaticallyCell.accessoryType == UITableViewCellAccessoryCheckmark) {
-        self.loginAutomaticallyCell.accessoryType = UITableViewCellAccessoryNone;
-    }else if (self.loginAutomaticallyCell.accessoryType == UITableViewCellAccessoryNone) {
-        self.loginAutomaticallyCell.accessoryType = UITableViewCellAccessoryCheckmark;
-    }
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setBool:(self.loginAutomaticallyCell.accessoryType == UITableViewCellAccessoryCheckmark) forKey:kLoginAutomaticallySettingKey];
+    [defaults setBool:self.loginAutomaticallySwitch.on forKey:kLoginAutomaticallySettingKey];
     [defaults synchronize];
 }
 

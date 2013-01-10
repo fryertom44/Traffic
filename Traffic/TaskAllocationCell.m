@@ -57,7 +57,7 @@
         _allocation = allocation;
         
         if (allocation.client) {
-            companyLabel.text = [NSString stringWithFormat:@"Company Name: %@",allocation.client.clientName];
+            companyLabel.text = [NSString stringWithFormat:@"Company: %@",allocation.client.clientName];
         }
         if(allocation.job && allocation.jobDetail) {
         jobLabel.text = [NSString stringWithFormat:@"Job: %@-%@",allocation.job.jobNumber, allocation.jobDetail.jobTitle];

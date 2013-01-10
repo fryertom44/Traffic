@@ -30,11 +30,11 @@
 @property (nonatomic,strong) NSMutableArray *projects;
 
 #pragma mark - Dictionaries for fast lookups
-@property (nonatomic,strong) NSMutableDictionary *clientsDictionary;
-@property (nonatomic,strong) NSMutableDictionary *jobsDictionary;
-@property (nonatomic,strong) NSMutableDictionary *jobDetailsDictionary;
-@property (nonatomic,strong) NSMutableDictionary *jobTasksDictionary;
-@property (nonatomic,strong) NSMutableDictionary *projectsDictionary;
+@property (readonly,nonatomic,strong) NSMutableDictionary *clientsDictionary;
+@property (readonly,nonatomic,strong) NSMutableDictionary *jobsDictionary;
+@property (readonly,nonatomic,strong) NSMutableDictionary *jobDetailsDictionary;
+@property (readonly,nonatomic,strong) NSMutableDictionary *jobTaskAllocationsDictionary;
+@property (readonly,nonatomic,strong) NSMutableDictionary *projectsDictionary;
 
 @property (nonatomic) int pageNumber;
 

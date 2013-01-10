@@ -9,31 +9,20 @@
 /* Begin PBXBuildFile section */
 		910390D01688829B0022F869 /* login_background_portrait_iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = 910390CF1688829B0022F869 /* login_background_portrait_iphone.png */; };
 		91110E49166EACDE00BBB7F8 /* GlobalModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 91110E48166EACDE00BBB7F8 /* GlobalModel.m */; };
-		91110E4C166FE68D00BBB7F8 /* LoadJobTaskAllocationsCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 91110E4B166FE68D00BBB7F8 /* LoadJobTaskAllocationsCommand.m */; };
 		91110E4F166FEA3700BBB7F8 /* WS_JobTaskAllocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 91110E4E166FEA3700BBB7F8 /* WS_JobTaskAllocation.m */; };
-		91110E52166FEA9E00BBB7F8 /* ParserJobTaskAllocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 91110E51166FEA9D00BBB7F8 /* ParserJobTaskAllocation.m */; };
 		91110E61167262C600BBB7F8 /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 91110E60167262C600BBB7F8 /* Constants.m */; };
-		91110E6416729DBC00BBB7F8 /* LoginCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 91110E6316729DBB00BBB7F8 /* LoginCommand.m */; };
 		91110E6A1674EF0F00BBB7F8 /* TaskDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 91110E691674EF0F00BBB7F8 /* TaskDetailViewController.m */; };
-		91110E6D1674F38B00BBB7F8 /* LoadJobCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 91110E6C1674F38A00BBB7F8 /* LoadJobCommand.m */; };
 		9153CD0816750C8700875EFB /* WS_Job.m in Sources */ = {isa = PBXBuildFile; fileRef = 9153CD0716750C8700875EFB /* WS_Job.m */; };
 		9153CD0C167513C200875EFB /* WS_Project.m in Sources */ = {isa = PBXBuildFile; fileRef = 9153CD0B167513C200875EFB /* WS_Project.m */; };
 		9153CD0F167513D200875EFB /* WS_Client.m in Sources */ = {isa = PBXBuildFile; fileRef = 9153CD0E167513D100875EFB /* WS_Client.m */; };
 		9153CD121675146E00875EFB /* WS_TrafficEmployee.m in Sources */ = {isa = PBXBuildFile; fileRef = 9153CD111675146E00875EFB /* WS_TrafficEmployee.m */; };
 		9153CD151675166D00875EFB /* WS_JobDetail.m in Sources */ = {isa = PBXBuildFile; fileRef = 9153CD141675166D00875EFB /* WS_JobDetail.m */; };
-		9153CD1816751A7300875EFB /* LoadJobDetailCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 9153CD1716751A7300875EFB /* LoadJobDetailCommand.m */; };
-		9153CD1B167524D000875EFB /* LoadTrafficEmployeeCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 9153CD1A167524CF00875EFB /* LoadTrafficEmployeeCommand.m */; };
-		9153CD1E1675299F00875EFB /* LoadProjectCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 9153CD1D1675299E00875EFB /* LoadProjectCommand.m */; };
-		9153CD2116752AA700875EFB /* LoadClientCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 9153CD2016752AA700875EFB /* LoadClientCommand.m */; };
 		916222021695F59E00464616 /* ConfigureRestkitCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 916222011695F59D00464616 /* ConfigureRestkitCommand.m */; };
 		916222061695FF2000464616 /* ServiceCommandLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = 916222051695FF2000464616 /* ServiceCommandLibrary.m */; };
 		916222091696001700464616 /* LoadJobsCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 916222081696001600464616 /* LoadJobsCommand.m */; };
 		916A3AE0168515E800AEEEDF /* NothingSelectedView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 916A3ADF168515E800AEEEDF /* NothingSelectedView.xib */; };
-		916A3AE31686881400AEEEDF /* RefreshJobTaskAllocationsCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 916A3AE21686880F00AEEEDF /* RefreshJobTaskAllocationsCommand.m */; };
-		916A3AE6168689FD00AEEEDF /* AbstractServiceCallCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 916A3AE5168689FC00AEEEDF /* AbstractServiceCallCommand.m */; };
 		916A3AE916875D4300AEEEDF /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 916A3AE816875D4300AEEEDF /* SettingsViewController.m */; };
 		916A3AEC1687648800AEEEDF /* UIToolbar+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 916A3AEB1687648700AEEEDF /* UIToolbar+Helper.m */; };
-		916A3AEF1687816B00AEEEDF /* PutTimesheetCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 916A3AEE1687816A00AEEEDF /* PutTimesheetCommand.m */; };
 		91709B7116768CDA00078DCA /* greyLogo320.png in Resources */ = {isa = PBXBuildFile; fileRef = 91709B7016768CDA00078DCA /* greyLogo320.png */; };
 		9177C23E162B4268004719B6 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9177C23D162B4268004719B6 /* UIKit.framework */; };
 		9177C240162B4268004719B6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9177C23F162B4268004719B6 /* Foundation.framework */; };
@@ -48,7 +37,6 @@
 		9177C268162B450C004719B6 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9177C267162B450C004719B6 /* LoginViewController.m */; };
 		917C3E88168E10AC00896A61 /* Money.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BA64831651949900B91A41 /* Money.m */; };
 		91825CAC1679331000404C52 /* WS_JobTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 91825CAB1679330F00404C52 /* WS_JobTask.m */; };
-		91825CAF1679388000404C52 /* ParseJobTaskFromJobData.m in Sources */ = {isa = PBXBuildFile; fileRef = 91825CAE1679388000404C52 /* ParseJobTaskFromJobData.m */; };
 		91825CBC167D2B0100404C52 /* whiteLogo320.png in Resources */ = {isa = PBXBuildFile; fileRef = 91825CBB167D2B0000404C52 /* whiteLogo320.png */; };
 		91825CBE167D2C0B00404C52 /* login_background_landscape.png in Resources */ = {isa = PBXBuildFile; fileRef = 91825CBD167D2C0A00404C52 /* login_background_landscape.png */; };
 		9185847D165D40D200A2950E /* libobjc.A.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9185847C165D40D200A2950E /* libobjc.A.dylib */; };
@@ -57,17 +45,12 @@
 		918AD3B6166E466A00DFC21C /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 918AD3B5166E466A00DFC21C /* Default@2x.png */; };
 		918AD3B8166E468C00DFC21C /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 918AD3B7166E468C00DFC21C /* Default-568h@2x.png */; };
 		918D5E69169085EA00696318 /* WS_AllocationInterval.m in Sources */ = {isa = PBXBuildFile; fileRef = 918D5E68169085EA00696318 /* WS_AllocationInterval.m */; };
-		918D5E6D169090F000696318 /* PostJobTaskAllocationCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 918D5E6C169090EF00696318 /* PostJobTaskAllocationCommand.m */; };
 		918D5E701690E30B00696318 /* HappyRatingHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 918D5E6F1690E30B00696318 /* HappyRatingHelper.m */; };
-		918D5E731691027C00696318 /* GetJobTaskAllocationCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 918D5E721691027C00696318 /* GetJobTaskAllocationCommand.m */; };
 		918D5E761691FA0800696318 /* NSNull+Addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 918D5E751691FA0800696318 /* NSNull+Addition.m */; };
 		918D5E7816922AF800696318 /* NSDictionary+Helpers.m in Sources */ = {isa = PBXBuildFile; fileRef = 918D5E7716922AF700696318 /* NSDictionary+Helpers.m */; };
 		918D5E7D1693897600696318 /* whiteLogo160.png in Resources */ = {isa = PBXBuildFile; fileRef = 918D5E7C1693897600696318 /* whiteLogo160.png */; };
 		918D638116950AEA00696318 /* LoadClientCompanies.m in Sources */ = {isa = PBXBuildFile; fileRef = 918D638016950AE600696318 /* LoadClientCompanies.m */; };
-		91BA647B16516A8900B91A41 /* LoadTimeEntriesCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BA647A16516A8900B91A41 /* LoadTimeEntriesCommand.m */; };
-		91BA647F16516BB400B91A41 /* ParserTimeEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BA647D16516BB300B91A41 /* ParserTimeEntry.m */; };
 		91BA648116516BDF00B91A41 /* WS_TimeEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BA648016516BDF00B91A41 /* WS_TimeEntry.m */; };
-		91BA64861653E87900B91A41 /* LoginOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BA64851653E87900B91A41 /* LoginOperation.m */; };
 		91BA648B16557C8800B91A41 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91BA648A16557C8800B91A41 /* Security.framework */; };
 		91BA648E1655A6E300B91A41 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BA648D1655A6E300B91A41 /* KeychainItemWrapper.m */; };
 		91BA64911657F99200B91A41 /* TaskAllocationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BA64901657F99100B91A41 /* TaskAllocationCell.m */; };
@@ -97,20 +80,12 @@
 		910390CF1688829B0022F869 /* login_background_portrait_iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = login_background_portrait_iphone.png; sourceTree = "<group>"; };
 		91110E47166EACDE00BBB7F8 /* GlobalModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GlobalModel.h; sourceTree = "<group>"; };
 		91110E48166EACDE00BBB7F8 /* GlobalModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GlobalModel.m; sourceTree = "<group>"; };
-		91110E4A166FE68C00BBB7F8 /* LoadJobTaskAllocationsCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadJobTaskAllocationsCommand.h; sourceTree = "<group>"; };
-		91110E4B166FE68D00BBB7F8 /* LoadJobTaskAllocationsCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadJobTaskAllocationsCommand.m; sourceTree = "<group>"; };
 		91110E4D166FEA3700BBB7F8 /* WS_JobTaskAllocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WS_JobTaskAllocation.h; sourceTree = "<group>"; };
 		91110E4E166FEA3700BBB7F8 /* WS_JobTaskAllocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WS_JobTaskAllocation.m; sourceTree = "<group>"; };
-		91110E50166FEA9D00BBB7F8 /* ParserJobTaskAllocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParserJobTaskAllocation.h; sourceTree = "<group>"; };
-		91110E51166FEA9D00BBB7F8 /* ParserJobTaskAllocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParserJobTaskAllocation.m; sourceTree = "<group>"; };
 		91110E5F167262C500BBB7F8 /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		91110E60167262C600BBB7F8 /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
-		91110E6216729DBB00BBB7F8 /* LoginCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginCommand.h; sourceTree = "<group>"; };
-		91110E6316729DBB00BBB7F8 /* LoginCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginCommand.m; sourceTree = "<group>"; };
 		91110E681674EF0E00BBB7F8 /* TaskDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskDetailViewController.h; sourceTree = "<group>"; };
 		91110E691674EF0F00BBB7F8 /* TaskDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskDetailViewController.m; sourceTree = "<group>"; };
-		91110E6B1674F38900BBB7F8 /* LoadJobCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadJobCommand.h; sourceTree = "<group>"; };
-		91110E6C1674F38A00BBB7F8 /* LoadJobCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadJobCommand.m; sourceTree = "<group>"; };
 		9153CD0616750C8700875EFB /* WS_Job.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WS_Job.h; sourceTree = "<group>"; };
 		9153CD0716750C8700875EFB /* WS_Job.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WS_Job.m; sourceTree = "<group>"; };
 		9153CD0A167513C100875EFB /* WS_Project.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WS_Project.h; sourceTree = "<group>"; };
@@ -121,14 +96,6 @@
 		9153CD111675146E00875EFB /* WS_TrafficEmployee.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WS_TrafficEmployee.m; sourceTree = "<group>"; };
 		9153CD131675166D00875EFB /* WS_JobDetail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WS_JobDetail.h; sourceTree = "<group>"; };
 		9153CD141675166D00875EFB /* WS_JobDetail.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WS_JobDetail.m; sourceTree = "<group>"; };
-		9153CD1616751A7300875EFB /* LoadJobDetailCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadJobDetailCommand.h; sourceTree = "<group>"; };
-		9153CD1716751A7300875EFB /* LoadJobDetailCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadJobDetailCommand.m; sourceTree = "<group>"; };
-		9153CD19167524CF00875EFB /* LoadTrafficEmployeeCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadTrafficEmployeeCommand.h; sourceTree = "<group>"; };
-		9153CD1A167524CF00875EFB /* LoadTrafficEmployeeCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadTrafficEmployeeCommand.m; sourceTree = "<group>"; };
-		9153CD1C1675299E00875EFB /* LoadProjectCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadProjectCommand.h; sourceTree = "<group>"; };
-		9153CD1D1675299E00875EFB /* LoadProjectCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadProjectCommand.m; sourceTree = "<group>"; };
-		9153CD1F16752AA700875EFB /* LoadClientCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadClientCommand.h; sourceTree = "<group>"; };
-		9153CD2016752AA700875EFB /* LoadClientCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadClientCommand.m; sourceTree = "<group>"; };
 		916222001695F59D00464616 /* ConfigureRestkitCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigureRestkitCommand.h; sourceTree = "<group>"; };
 		916222011695F59D00464616 /* ConfigureRestkitCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConfigureRestkitCommand.m; sourceTree = "<group>"; };
 		916222041695FF2000464616 /* ServiceCommandLibrary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServiceCommandLibrary.h; sourceTree = "<group>"; };
@@ -136,16 +103,10 @@
 		916222071696001600464616 /* LoadJobsCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadJobsCommand.h; sourceTree = "<group>"; };
 		916222081696001600464616 /* LoadJobsCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadJobsCommand.m; sourceTree = "<group>"; };
 		916A3ADF168515E800AEEEDF /* NothingSelectedView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NothingSelectedView.xib; sourceTree = "<group>"; };
-		916A3AE11686880E00AEEEDF /* RefreshJobTaskAllocationsCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RefreshJobTaskAllocationsCommand.h; sourceTree = "<group>"; };
-		916A3AE21686880F00AEEEDF /* RefreshJobTaskAllocationsCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RefreshJobTaskAllocationsCommand.m; sourceTree = "<group>"; };
-		916A3AE4168689FB00AEEEDF /* AbstractServiceCallCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AbstractServiceCallCommand.h; sourceTree = "<group>"; };
-		916A3AE5168689FC00AEEEDF /* AbstractServiceCallCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AbstractServiceCallCommand.m; sourceTree = "<group>"; };
 		916A3AE716875D4300AEEEDF /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		916A3AE816875D4300AEEEDF /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
 		916A3AEA1687648700AEEEDF /* UIToolbar+Helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIToolbar+Helper.h"; sourceTree = "<group>"; };
 		916A3AEB1687648700AEEEDF /* UIToolbar+Helper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIToolbar+Helper.m"; sourceTree = "<group>"; };
-		916A3AED1687816800AEEEDF /* PutTimesheetCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PutTimesheetCommand.h; sourceTree = "<group>"; };
-		916A3AEE1687816A00AEEEDF /* PutTimesheetCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PutTimesheetCommand.m; sourceTree = "<group>"; };
 		91709B7016768CDA00078DCA /* greyLogo320.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = greyLogo320.png; sourceTree = "<group>"; };
 		9177C239162B4268004719B6 /* Traffic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Traffic.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9177C23D162B4268004719B6 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -167,8 +128,6 @@
 		9177C267162B450C004719B6 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
 		91825CAA1679330F00404C52 /* WS_JobTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WS_JobTask.h; sourceTree = "<group>"; };
 		91825CAB1679330F00404C52 /* WS_JobTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WS_JobTask.m; sourceTree = "<group>"; };
-		91825CAD1679388000404C52 /* ParseJobTaskFromJobData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParseJobTaskFromJobData.h; sourceTree = "<group>"; };
-		91825CAE1679388000404C52 /* ParseJobTaskFromJobData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParseJobTaskFromJobData.m; sourceTree = "<group>"; };
 		91825CBB167D2B0000404C52 /* whiteLogo320.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = whiteLogo320.png; sourceTree = "<group>"; };
 		91825CBD167D2C0A00404C52 /* login_background_landscape.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = login_background_landscape.png; sourceTree = "<group>"; };
 		9185847C165D40D200A2950E /* libobjc.A.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libobjc.A.dylib; path = usr/lib/libobjc.A.dylib; sourceTree = SDKROOT; };
@@ -179,12 +138,8 @@
 		918AD3B7166E468C00DFC21C /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "../Default-568h@2x.png"; sourceTree = "<group>"; };
 		918D5E67169085EA00696318 /* WS_AllocationInterval.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WS_AllocationInterval.h; sourceTree = "<group>"; };
 		918D5E68169085EA00696318 /* WS_AllocationInterval.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WS_AllocationInterval.m; sourceTree = "<group>"; };
-		918D5E6B169090EF00696318 /* PostJobTaskAllocationCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PostJobTaskAllocationCommand.h; sourceTree = "<group>"; };
-		918D5E6C169090EF00696318 /* PostJobTaskAllocationCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PostJobTaskAllocationCommand.m; sourceTree = "<group>"; };
 		918D5E6E1690E30B00696318 /* HappyRatingHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HappyRatingHelper.h; sourceTree = "<group>"; };
 		918D5E6F1690E30B00696318 /* HappyRatingHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HappyRatingHelper.m; sourceTree = "<group>"; };
-		918D5E711691027C00696318 /* GetJobTaskAllocationCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetJobTaskAllocationCommand.h; sourceTree = "<group>"; };
-		918D5E721691027C00696318 /* GetJobTaskAllocationCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetJobTaskAllocationCommand.m; sourceTree = "<group>"; };
 		918D5E741691FA0700696318 /* NSNull+Addition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSNull+Addition.h"; sourceTree = "<group>"; };
 		918D5E751691FA0800696318 /* NSNull+Addition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSNull+Addition.m"; sourceTree = "<group>"; };
 		918D5E7716922AF700696318 /* NSDictionary+Helpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+Helpers.m"; sourceTree = "<group>"; };
@@ -192,16 +147,10 @@
 		918D5E7C1693897600696318 /* whiteLogo160.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = whiteLogo160.png; sourceTree = "<group>"; };
 		918D637F16950AE500696318 /* LoadClientCompanies.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadClientCompanies.h; sourceTree = "<group>"; };
 		918D638016950AE600696318 /* LoadClientCompanies.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadClientCompanies.m; sourceTree = "<group>"; };
-		91BA647916516A8900B91A41 /* LoadTimeEntriesCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadTimeEntriesCommand.h; sourceTree = "<group>"; };
-		91BA647A16516A8900B91A41 /* LoadTimeEntriesCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadTimeEntriesCommand.m; sourceTree = "<group>"; };
-		91BA647C16516BB300B91A41 /* ParserTimeEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParserTimeEntry.h; sourceTree = "<group>"; };
-		91BA647D16516BB300B91A41 /* ParserTimeEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParserTimeEntry.m; sourceTree = "<group>"; };
 		91BA647E16516BB400B91A41 /* WS_TimeEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WS_TimeEntry.h; sourceTree = "<group>"; };
 		91BA648016516BDF00B91A41 /* WS_TimeEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WS_TimeEntry.m; sourceTree = "<group>"; };
 		91BA64821651949900B91A41 /* Money.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Money.h; sourceTree = "<group>"; };
 		91BA64831651949900B91A41 /* Money.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Money.m; sourceTree = "<group>"; };
-		91BA64841653E87900B91A41 /* LoginOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginOperation.h; sourceTree = "<group>"; };
-		91BA64851653E87900B91A41 /* LoginOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginOperation.m; sourceTree = "<group>"; };
 		91BA648A16557C8800B91A41 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		91BA648C1655A6E300B91A41 /* KeychainItemWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainItemWrapper.h; sourceTree = "<group>"; };
 		91BA648D1655A6E300B91A41 /* KeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
@@ -250,36 +199,8 @@
 		9153CD22167657CD00875EFB /* Command */ = {
 			isa = PBXGroup;
 			children = (
-				916A3AE4168689FB00AEEEDF /* AbstractServiceCallCommand.h */,
-				916A3AE5168689FC00AEEEDF /* AbstractServiceCallCommand.m */,
-				91110E6216729DBB00BBB7F8 /* LoginCommand.h */,
-				91110E6316729DBB00BBB7F8 /* LoginCommand.m */,
-				918D5E711691027C00696318 /* GetJobTaskAllocationCommand.h */,
-				918D5E721691027C00696318 /* GetJobTaskAllocationCommand.m */,
-				916A3AE11686880E00AEEEDF /* RefreshJobTaskAllocationsCommand.h */,
-				916A3AE21686880F00AEEEDF /* RefreshJobTaskAllocationsCommand.m */,
-				91BA647916516A8900B91A41 /* LoadTimeEntriesCommand.h */,
-				91BA647A16516A8900B91A41 /* LoadTimeEntriesCommand.m */,
-				91110E6B1674F38900BBB7F8 /* LoadJobCommand.h */,
-				91110E6C1674F38A00BBB7F8 /* LoadJobCommand.m */,
 				916222071696001600464616 /* LoadJobsCommand.h */,
 				916222081696001600464616 /* LoadJobsCommand.m */,
-				9153CD1616751A7300875EFB /* LoadJobDetailCommand.h */,
-				9153CD1716751A7300875EFB /* LoadJobDetailCommand.m */,
-				9153CD19167524CF00875EFB /* LoadTrafficEmployeeCommand.h */,
-				9153CD1A167524CF00875EFB /* LoadTrafficEmployeeCommand.m */,
-				91110E4A166FE68C00BBB7F8 /* LoadJobTaskAllocationsCommand.h */,
-				91110E4B166FE68D00BBB7F8 /* LoadJobTaskAllocationsCommand.m */,
-				9153CD1C1675299E00875EFB /* LoadProjectCommand.h */,
-				9153CD1D1675299E00875EFB /* LoadProjectCommand.m */,
-				9153CD1F16752AA700875EFB /* LoadClientCommand.h */,
-				9153CD2016752AA700875EFB /* LoadClientCommand.m */,
-				916A3AED1687816800AEEEDF /* PutTimesheetCommand.h */,
-				916A3AEE1687816A00AEEEDF /* PutTimesheetCommand.m */,
-				918D5E6B169090EF00696318 /* PostJobTaskAllocationCommand.h */,
-				918D5E6C169090EF00696318 /* PostJobTaskAllocationCommand.m */,
-				91BA64841653E87900B91A41 /* LoginOperation.h */,
-				91BA64851653E87900B91A41 /* LoginOperation.m */,
 				918D637F16950AE500696318 /* LoadClientCompanies.h */,
 				918D638016950AE600696318 /* LoadClientCompanies.m */,
 				916222001695F59D00464616 /* ConfigureRestkitCommand.h */,
@@ -357,12 +278,6 @@
 			children = (
 				91BA648C1655A6E300B91A41 /* KeychainItemWrapper.h */,
 				91BA648D1655A6E300B91A41 /* KeychainItemWrapper.m */,
-				91110E50166FEA9D00BBB7F8 /* ParserJobTaskAllocation.h */,
-				91110E51166FEA9D00BBB7F8 /* ParserJobTaskAllocation.m */,
-				91825CAD1679388000404C52 /* ParseJobTaskFromJobData.h */,
-				91825CAE1679388000404C52 /* ParseJobTaskFromJobData.m */,
-				91BA647C16516BB300B91A41 /* ParserTimeEntry.h */,
-				91BA647D16516BB300B91A41 /* ParserTimeEntry.m */,
 				91BA64A91659927D00B91A41 /* UIColor+CreateMethods.h */,
 				91BA64AA1659927D00B91A41 /* UIColor+CreateMethods.m */,
 				91BA64B1165BDDD900B91A41 /* NSDate+Helper.h */,
@@ -610,10 +525,7 @@
 				9177C25D162B4268004719B6 /* MasterViewController.m in Sources */,
 				9177C260162B4268004719B6 /* DetailViewController.m in Sources */,
 				9177C268162B450C004719B6 /* LoginViewController.m in Sources */,
-				91BA647B16516A8900B91A41 /* LoadTimeEntriesCommand.m in Sources */,
-				91BA647F16516BB400B91A41 /* ParserTimeEntry.m in Sources */,
 				91BA648116516BDF00B91A41 /* WS_TimeEntry.m in Sources */,
-				91BA64861653E87900B91A41 /* LoginOperation.m in Sources */,
 				91BA648E1655A6E300B91A41 /* KeychainItemWrapper.m in Sources */,
 				91BA64911657F99200B91A41 /* TaskAllocationCell.m in Sources */,
 				91BA64AB1659927D00B91A41 /* UIColor+CreateMethods.m in Sources */,
@@ -621,33 +533,19 @@
 				91BA64B6165C3F7B00B91A41 /* PGToggleButton.m in Sources */,
 				91858481165D484200A2950E /* BaseObject.m in Sources */,
 				91110E49166EACDE00BBB7F8 /* GlobalModel.m in Sources */,
-				91110E4C166FE68D00BBB7F8 /* LoadJobTaskAllocationsCommand.m in Sources */,
 				91110E4F166FEA3700BBB7F8 /* WS_JobTaskAllocation.m in Sources */,
-				91110E52166FEA9E00BBB7F8 /* ParserJobTaskAllocation.m in Sources */,
 				91110E61167262C600BBB7F8 /* Constants.m in Sources */,
-				91110E6416729DBC00BBB7F8 /* LoginCommand.m in Sources */,
 				91110E6A1674EF0F00BBB7F8 /* TaskDetailViewController.m in Sources */,
-				91110E6D1674F38B00BBB7F8 /* LoadJobCommand.m in Sources */,
 				9153CD0816750C8700875EFB /* WS_Job.m in Sources */,
 				9153CD0C167513C200875EFB /* WS_Project.m in Sources */,
 				9153CD0F167513D200875EFB /* WS_Client.m in Sources */,
 				9153CD121675146E00875EFB /* WS_TrafficEmployee.m in Sources */,
 				9153CD151675166D00875EFB /* WS_JobDetail.m in Sources */,
-				9153CD1816751A7300875EFB /* LoadJobDetailCommand.m in Sources */,
-				9153CD1B167524D000875EFB /* LoadTrafficEmployeeCommand.m in Sources */,
-				9153CD1E1675299F00875EFB /* LoadProjectCommand.m in Sources */,
-				9153CD2116752AA700875EFB /* LoadClientCommand.m in Sources */,
 				91825CAC1679331000404C52 /* WS_JobTask.m in Sources */,
-				91825CAF1679388000404C52 /* ParseJobTaskFromJobData.m in Sources */,
-				916A3AE31686881400AEEEDF /* RefreshJobTaskAllocationsCommand.m in Sources */,
-				916A3AE6168689FD00AEEEDF /* AbstractServiceCallCommand.m in Sources */,
 				916A3AE916875D4300AEEEDF /* SettingsViewController.m in Sources */,
 				916A3AEC1687648800AEEEDF /* UIToolbar+Helper.m in Sources */,
-				916A3AEF1687816B00AEEEDF /* PutTimesheetCommand.m in Sources */,
 				918D5E69169085EA00696318 /* WS_AllocationInterval.m in Sources */,
-				918D5E6D169090F000696318 /* PostJobTaskAllocationCommand.m in Sources */,
 				918D5E701690E30B00696318 /* HappyRatingHelper.m in Sources */,
-				918D5E731691027C00696318 /* GetJobTaskAllocationCommand.m in Sources */,
 				918D5E761691FA0800696318 /* NSNull+Addition.m in Sources */,
 				918D5E7816922AF800696318 /* NSDictionary+Helpers.m in Sources */,
 				918D638116950AEA00696318 /* LoadClientCompanies.m in Sources */,

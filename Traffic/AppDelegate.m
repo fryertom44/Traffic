@@ -44,36 +44,46 @@
     NSDictionary *params = @{@"windowSize" : @"5000"};
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
+    //Way to clear the store
+    [defaults removeObjectForKey:kClientsStoreKey];
+    [defaults removeObjectForKey:kProjectsStoreKey];
+    [defaults removeObjectForKey:kJobDetailsStoreKey];
+    [defaults removeObjectForKey:kJobsStoreKey];
+    [defaults synchronize];
+    
+    
+    
+    
     NSData *storedClientData = [defaults objectForKey:kClientsStoreKey];
     
     if(!storedClientData)
         [ServiceCommandLibrary loadClientsWithParams:params];
     else{
-        self.sharedModel.clientsDictionary = [(NSDictionary*)[NSKeyedUnarchiver unarchiveObjectWithData:storedClientData]mutableCopy];
-        NSLog(@"Unarchived Clients Dictionary: %@", [self.sharedModel.clientsDictionary description]);
+        self.sharedModel.clients = [NSKeyedUnarchiver unarchiveObjectWithData:storedClientData];
+        NSLog(@"Unarchived Clients: %@", [self.sharedModel.clients description]);
     }
     
     NSData *storedProjectsData = [defaults objectForKey:kProjectsStoreKey];
     if(!storedProjectsData)
         [ServiceCommandLibrary loadProjectsWithParams:params];
     else{
-        self.sharedModel.projectsDictionary = [(NSDictionary*)[NSKeyedUnarchiver unarchiveObjectWithData:storedProjectsData]mutableCopy];
-        NSLog(@"Unarchived Projects Dictionary: %@", [self.sharedModel.projectsDictionary description]);
+        self.sharedModel.projects = [NSKeyedUnarchiver unarchiveObjectWithData:storedProjectsData];
+        NSLog(@"Unarchived Projects: %@", [self.sharedModel.projects description]);
     }
     NSData *storedJobsData = [defaults objectForKey:kJobsStoreKey];
     if(!storedJobsData)
         [ServiceCommandLibrary loadJobsWithParams:params];
     else{
-        self.sharedModel.jobsDictionary = [(NSDictionary*)[NSKeyedUnarchiver unarchiveObjectWithData:storedJobsData]mutableCopy];
-        NSLog(@"Unarchived Jobs Dictionary: %@", [self.sharedModel.jobsDictionary description]);
+        self.sharedModel.jobs = [NSKeyedUnarchiver unarchiveObjectWithData:storedJobsData];
+        NSLog(@"Unarchived Jobs: %@", [self.sharedModel.jobs description]);
     }
     
     NSData *storedJobDetailsData = [defaults objectForKey:kJobDetailsStoreKey];
     if(!storedJobDetailsData)
         [ServiceCommandLibrary loadJobDetailsWithParams:params];
     else{
-        self.sharedModel.jobDetailsDictionary = [(NSDictionary*)[NSKeyedUnarchiver unarchiveObjectWithData:storedJobDetailsData]mutableCopy];
-        NSLog(@"Unarchived Job Details Dictionary: %@", [self.sharedModel.jobDetailsDictionary description]);
+        self.sharedModel.jobDetails = [NSKeyedUnarchiver unarchiveObjectWithData:storedJobDetailsData];
+        NSLog(@"Unarchived Job Details: %@", [self.sharedModel.jobDetails description]);
     }
 }
 

@@ -18,5 +18,5 @@
 
 - (void)saveState;
 - (void)restoreState;
-
+- (BOOL)isUnsaved;
 @end

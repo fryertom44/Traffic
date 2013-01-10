@@ -7,7 +7,6 @@
 //
 
 #import "LoginViewController.h"
-#import "LoginCommand.h"
 #import "GlobalModel.h"
 #import <RestKit.h>
 #import "ConfigureRestkitCommand.h"

@@ -23,23 +23,20 @@
                                             <rect key="frame" x="43" y="1" width="617" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="kfm-jb-BZn">
-                                                    <rect key="frame" x="20" y="0.0" width="577" height="44"/>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Login Automatically:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="EEg-Fj-sbU">
+                                                    <rect key="frame" x="20" y="11" width="492" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
-                                                    <state key="normal" title="Login Automatically:">
-                                                        <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                    </state>
-                                                    <state key="highlighted">
-                                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    </state>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </label>
+                                                <switch opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" id="wjx-ch-Ru9">
+                                                    <rect key="frame" x="520" y="8" width="79" height="27"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <connections>
-                                                        <action selector="onFollowTwitterSelected:" destination="Qbq-7I-Hbc" eventType="touchUpInside" id="17T-1r-Y7G"/>
-                                                        <action selector="onLoginAutomaticallySelected:" destination="Qbq-7I-Hbc" eventType="touchUpInside" id="S9D-RC-SLA"/>
-                                                        <action selector="onReloadDataCache:" destination="Qbq-7I-Hbc" eventType="touchUpInside" id="feH-Y1-cYJ"/>
+                                                        <action selector="onLoginAutomaticallySelected:" destination="Qbq-7I-Hbc" eventType="valueChanged" id="WWG-dc-wQ6"/>
                                                     </connections>
-                                                </button>
+                                                </switch>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
@@ -107,21 +104,20 @@
                                             <rect key="frame" x="43" y="0.0" width="617" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <button autoresizesSubviews="NO" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" id="iR2-c4-Fe9">
-                                                    <rect key="frame" x="20" y="0.0" width="577" height="44"/>
-                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Hide Completed Tasks:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="vGt-WC-wFj">
+                                                    <rect key="frame" x="20" y="11" width="492" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
-                                                    <state key="normal" title="Hide Completed Tasks:">
-                                                        <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                    </state>
-                                                    <state key="highlighted">
-                                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    </state>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </label>
+                                                <switch opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" id="vqY-66-mYP">
+                                                    <rect key="frame" x="520" y="8" width="79" height="27"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <connections>
-                                                        <action selector="onHideCompletedToggle:" destination="Qbq-7I-Hbc" eventType="touchUpInside" id="lci-SL-HRQ"/>
+                                                        <action selector="onHideCompletedToggle:" destination="Qbq-7I-Hbc" eventType="valueChanged" id="biT-dL-fGU"/>
                                                     </connections>
-                                                </button>
+                                                </switch>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
@@ -223,10 +219,8 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="Settings" id="biI-Sa-rHv"/>
                     <connections>
-                        <outlet property="hideCompletedCell" destination="SnK-pB-nP2" id="nOF-uy-u4n"/>
-                        <outlet property="hideCompletedToggleButton" destination="iR2-c4-Fe9" id="xAu-GA-vRv"/>
-                        <outlet property="loginAutomaticallyCell" destination="1kK-2T-hf5" id="i9M-Ce-QuY"/>
-                        <outlet property="loginAutomaticallyToggleButton" destination="kfm-jb-BZn" id="6AJ-8F-ByI"/>
+                        <outlet property="hideCompletedTasksSwitch" destination="vqY-66-mYP" id="wMO-pY-vpu"/>
+                        <outlet property="loginAutomaticallySwitch" destination="wjx-ch-Ru9" id="eha-fK-nfc"/>
                         <outlet property="maxAllocationResultsTextInput" destination="4ag-Ob-ykb" id="zZj-1G-se6"/>
                         <outlet property="timeIntervalTextInput" destination="wb2-OF-jry" id="BE9-xN-8C0"/>
                     </connections>
@@ -1000,6 +994,7 @@
                                                             <rect key="frame" x="0.0" y="0.0" width="617" height="103"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                            <dataDetectorType key="dataDetectorTypes" phoneNumber="YES" link="YES" address="YES" calendarEvent="YES"/>
                                                         </webView>
                                                     </subviews>
                                                 </scrollView>

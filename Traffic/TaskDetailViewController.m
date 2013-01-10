@@ -191,32 +191,31 @@
     if(self.sharedModel.selectedJobDetail!=nil) {
         self.jobNameLabel.text = [NSString stringWithFormat:@"%@",self.sharedModel.selectedJobDetail.jobTitle];
         
-        NSString *jobBriefWithHTML = self.sharedModel.selectedJobDetail.notes;
+        WS_JobDetail *jobDetail = self.sharedModel.selectedJobDetail;
         
-        if (jobBriefWithHTML) {
+        if (jobDetail && jobDetail.notes) {
             NSError *error = NULL;
-//            NSRegularExpression *fontRegex = [NSRegularExpression regularExpressionWithPattern:@"</?FONT[^>]*>" options:NSRegularExpressionCaseInsensitive error:&error];
-//            NSRegularExpression *textFormatRegex = [NSRegularExpression regularExpressionWithPattern:@"</?TEXTFORMAT[^>]*>" options:NSRegularExpressionCaseInsensitive error:&error];
-//            NSString *modifiedString = [fontRegex stringByReplacingMatchesInString:jobBriefWithHTML options:0 range:NSMakeRange(0, [jobBriefWithHTML length]) withTemplate:@""];
-//            modifiedString = [textFormatRegex stringByReplacingMatchesInString:modifiedString options:0 range:NSMakeRange(0, [modifiedString length]) withTemplate:@""];
-            
-            NSRegularExpression *openingRegex = [NSRegularExpression regularExpressionWithPattern:@"]*>" options:NSRegularExpressionCaseInsensitive error:&error];
+
+            //Define Regex search strings
+            NSRegularExpression *textFormatRegex = [NSRegularExpression regularExpressionWithPattern:@"</?TEXTFORMAT[^>]*>" options:NSRegularExpressionCaseInsensitive error:&error];
             NSRegularExpression *kerningRegex = [NSRegularExpression regularExpressionWithPattern:@" KERNING=\"[0-9]*\"" options:NSRegularExpressionCaseInsensitive error:&error];
             NSRegularExpression *letterSpacingRegex = [NSRegularExpression regularExpressionWithPattern:@" LETTERSPACING=\"[0-9]*\"" options:NSRegularExpressionCaseInsensitive error:&error];
             NSRegularExpression *faceRegex = [NSRegularExpression regularExpressionWithPattern:@" FACE=\"[^\"]*\"" options:NSRegularExpressionCaseInsensitive error:&error];
             NSRegularExpression *sizeRegex = [NSRegularExpression regularExpressionWithPattern:@" SIZE=\"([0-9]*)\"" options:NSRegularExpressionCaseInsensitive error:&error];
             NSRegularExpression *colorRegex = [NSRegularExpression regularExpressionWithPattern:@" COLOR=\"([^\"]*)\"" options:NSRegularExpressionCaseInsensitive error:&error];
-            NSRegularExpression *closingRegex = [NSRegularExpression regularExpressionWithPattern:@"]*)>" options:NSRegularExpressionCaseInsensitive error:&error];
+            NSRegularExpression *openingFontRegex = [NSRegularExpression regularExpressionWithPattern:@"<FONT ([^>]*)>" options:NSRegularExpressionCaseInsensitive error:&error];
+            NSRegularExpression *closingFontRegex = [NSRegularExpression regularExpressionWithPattern:@"</FONT>" options:NSRegularExpressionCaseInsensitive error:&error];
             
-            
-            NSString *modifiedString = [openingRegex stringByReplacingMatchesInString:jobBriefWithHTML options:0 range:NSMakeRange(0, [jobBriefWithHTML length]) withTemplate:@""];
+            //Replace the regexes found
+            NSString *modifiedString = [textFormatRegex stringByReplacingMatchesInString:jobDetail.notes options:0 range:NSMakeRange(0, [jobDetail.notes length]) withTemplate:@""];
             modifiedString = [kerningRegex stringByReplacingMatchesInString:modifiedString options:0 range:NSMakeRange(0, [modifiedString length]) withTemplate:@""];
             modifiedString = [letterSpacingRegex stringByReplacingMatchesInString:modifiedString options:0 range:NSMakeRange(0, [modifiedString length]) withTemplate:@""];
             modifiedString = [faceRegex stringByReplacingMatchesInString:modifiedString options:0 range:NSMakeRange(0, [modifiedString length]) withTemplate:@""];
             modifiedString = [sizeRegex stringByReplacingMatchesInString:modifiedString options:0 range:NSMakeRange(0, [modifiedString length]) withTemplate:@" font-size: $1pt;"];
             modifiedString = [colorRegex stringByReplacingMatchesInString:modifiedString options:0 range:NSMakeRange(0, [modifiedString length]) withTemplate:@" color: $1;"];
-            modifiedString = [closingRegex stringByReplacingMatchesInString:modifiedString options:0 range:NSMakeRange(0, [modifiedString length]) withTemplate:@""];
-
+            modifiedString = [openingFontRegex stringByReplacingMatchesInString:modifiedString options:0 range:NSMakeRange(0, [modifiedString length]) withTemplate:@"<span style=\"$1\">"];
+            modifiedString = [closingFontRegex stringByReplacingMatchesInString:modifiedString options:0 range:NSMakeRange(0, [modifiedString length]) withTemplate:@"</span>"];
+            
             //pass the string to the webview
             [self.briefLabel loadHTMLString:[modifiedString description] baseURL:nil];
         }
