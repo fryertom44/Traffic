@@ -9,6 +9,7 @@
 #import "BaseObject.h"
 #import "WS_Client.h"
 #import "WS_TimeEntry.h"
+#import "WS_TrafficEmployee.h"
 #import "WS_JobDetail.h"
 #import "WS_Job.h"
 #import "WS_Project.h"
@@ -42,6 +43,7 @@
 @property (nonatomic,retain) WS_JobDetail *jobDetail;
 @property (nonatomic,retain) WS_Job *job;
 @property (nonatomic,retain) WS_Project *project;
+@property (nonatomic,retain) WS_TrafficEmployee *employee;
 
 -(int)daysUntilDeadline;
 @end

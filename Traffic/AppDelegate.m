@@ -49,10 +49,8 @@
     [defaults removeObjectForKey:kProjectsStoreKey];
     [defaults removeObjectForKey:kJobDetailsStoreKey];
     [defaults removeObjectForKey:kJobsStoreKey];
+    [defaults removeObjectForKey:kEmployeesStoreKey];
     [defaults synchronize];
-    
-    
-    
     
     NSData *storedClientData = [defaults objectForKey:kClientsStoreKey];
     
@@ -70,6 +68,7 @@
         self.sharedModel.projects = [NSKeyedUnarchiver unarchiveObjectWithData:storedProjectsData];
         NSLog(@"Unarchived Projects: %@", [self.sharedModel.projects description]);
     }
+    
     NSData *storedJobsData = [defaults objectForKey:kJobsStoreKey];
     if(!storedJobsData)
         [ServiceCommandLibrary loadJobsWithParams:params];
@@ -84,6 +83,14 @@
     else{
         self.sharedModel.jobDetails = [NSKeyedUnarchiver unarchiveObjectWithData:storedJobDetailsData];
         NSLog(@"Unarchived Job Details: %@", [self.sharedModel.jobDetails description]);
+    }
+    
+    NSData *storedEmployeesData = [defaults objectForKey:kEmployeesStoreKey];
+    if(!storedEmployeesData)
+        [ServiceCommandLibrary loadEmployeesWithParams:params];
+    else{
+        self.sharedModel.employees = [NSKeyedUnarchiver unarchiveObjectWithData:storedEmployeesData];
+        NSLog(@"Unarchived Employees: %@", [self.sharedModel.employees description]);
     }
 }
 

@@ -129,4 +129,31 @@
                             }];
 }
 
++(void)loadEmployeesWithParams:(NSDictionary*)params{
+    RKObjectManager *objectManager = [RKObjectManager sharedManager];
+    GlobalModel *sharedModel = [GlobalModel sharedInstance];
+    
+    [objectManager getObjectsAtPath:[NSString stringWithFormat:@"/TrafficLiteServer/openapi/staff/employee"]
+                         parameters:params
+                            success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                NSArray* employees = [mappingResult array];
+                                NSLog(@"Employees array: %@", [employees description]);
+                                NSMutableArray *mutableEmployees = [[NSMutableArray alloc]init];
+                                for (WS_TrafficEmployee *employee in employees) {
+                                    if (employee.trafficEmployeeId &&[employee isKindOfClass:[WS_TrafficEmployee class]]) {
+                                        [mutableEmployees addObject:employee];
+                                    }
+                                }
+                                sharedModel.employees = mutableEmployees;
+                            }
+                            failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                                                message:[error localizedDescription]
+                                                                               delegate:nil
+                                                                      cancelButtonTitle:@"OK"
+                                                                      otherButtonTitles:nil];
+                                [alert show];
+                                NSLog(@"Hit error: %@", error);
+                            }];
+}
 @end

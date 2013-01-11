@@ -224,7 +224,10 @@
 
 - (void)displayEmployeeDetails
 {
-    if (self.sharedModel.selectedOwner!=nil) {
+    if (self.sharedModel.selectedOwner!=nil || self.sharedModel.selectedJobTaskAllocation.employee !=nil) {
+        WS_TrafficEmployee *owner = self.sharedModel.selectedOwner;
+        WS_TrafficEmployee *employee = self.sharedModel.selectedJobTaskAllocation.employee;
+        
         self.ownerLabel.text = [NSString stringWithFormat:@"%@ %@",self.sharedModel.selectedOwner.firstName,self.sharedModel.selectedOwner.lastName];
     }
 }

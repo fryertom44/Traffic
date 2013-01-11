@@ -32,5 +32,6 @@ extern NSString *const kProjectsStoreKey;
 extern NSString *const kJobsStoreKey;
 extern NSString *const kClientsStoreKey;
 extern NSString *const kJobDetailsStoreKey;
+extern NSString *const kEmployeesStoreKey;
 
 @end

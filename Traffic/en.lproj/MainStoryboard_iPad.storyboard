@@ -32,7 +32,7 @@
                                                 </label>
                                                 <switch opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" id="wjx-ch-Ru9">
                                                     <rect key="frame" x="520" y="8" width="79" height="27"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                                     <connections>
                                                         <action selector="onLoginAutomaticallySelected:" destination="Qbq-7I-Hbc" eventType="valueChanged" id="WWG-dc-wQ6"/>
                                                     </connections>
@@ -113,7 +113,7 @@
                                                 </label>
                                                 <switch opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" id="vqY-66-mYP">
                                                     <rect key="frame" x="520" y="8" width="79" height="27"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                                     <connections>
                                                         <action selector="onHideCompletedToggle:" destination="Qbq-7I-Hbc" eventType="valueChanged" id="biT-dL-fGU"/>
                                                     </connections>
@@ -145,7 +145,6 @@
                                                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
                                                     <connections>
-                                                        <action selector="onFollowTwitterSelected:" destination="Qbq-7I-Hbc" eventType="touchUpInside" id="yjz-gd-0SD"/>
                                                         <action selector="onReloadDataCache:" destination="Qbq-7I-Hbc" eventType="touchUpInside" id="0da-mB-9AR"/>
                                                     </connections>
                                                 </button>
@@ -1182,7 +1181,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Company" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="3c7-sn-8yE">
-                                            <rect key="frame" x="20" y="5" width="169" height="21"/>
+                                            <rect key="frame" x="20" y="5" width="183" height="21"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -1190,6 +1189,7 @@
                                         </label>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Job" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="kh9-YY-f6z">
                                             <rect key="frame" x="20" y="34" width="280" height="21"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>

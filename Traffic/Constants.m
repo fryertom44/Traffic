@@ -35,5 +35,6 @@ NSString *const kProjectsStoreKey = @"projectsStore";
 NSString *const kJobsStoreKey = @"jobsStore";
 NSString *const kClientsStoreKey = @"clientsStore";
 NSString *const kJobDetailsStoreKey = @"jobDetailsStore";
+NSString *const kEmployeesStoreKey = @"employeesStore";
 
 @end

@@ -30,7 +30,6 @@ UIView *normalView;
     
     //store the view for restoring later (when an item is selected)
     normalView = self.view;
-    isObservingTimesheet = FALSE;
     
     if(self.sharedModel.selectedJobTaskAllocation==nil){
         NSArray *xib = [[NSBundle mainBundle] loadNibNamed:@"NothingSelectedView" owner:self options:nil];
@@ -67,10 +66,14 @@ UIView *normalView;
     [self.sharedModel addObserver:self forKeyPath:@"selectedProject" options:NSKeyValueObservingOptionNew context:NULL];
     [self.sharedModel addObserver:self forKeyPath:@"selectedJobTaskAllocation" options:NSKeyValueObservingOptionNew context:NULL];
     [self.sharedModel addObserver:self forKeyPath:@"selectedJobTask" options:NSKeyValueObservingOptionNew context:NULL];
+    [self.sharedModel addObserver:self forKeyPath:@"currentTimesheet" options:NSKeyValueObservingOptionOld context:NULL];
+    
+    for (WS_JobTaskAllocation *allocation in self.sharedModel.taskAllocations) {
+        [allocation.timesheet addObserver:self forKeyPath:@"timeElapsedInterval" options:NSKeyValueObservingOptionOld context:NULL];
+    }
 
     [super viewWillAppear:animated];
     [self configureView];
-
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
@@ -80,20 +83,12 @@ UIView *normalView;
     [self.sharedModel removeObserver:self forKeyPath:@"selectedProject"];
     [self.sharedModel removeObserver:self forKeyPath:@"selectedJobTaskAllocation"];
     [self.sharedModel removeObserver:self forKeyPath:@"selectedJobTask"];
+    [self.sharedModel removeObserver:self forKeyPath:@"currentTimesheet"];
     
-    [super viewWillDisappear:animated];
-}
-
-- (void)dealloc
-{
-    if (isObservingTimesheet) {
-        @try {
-            [self.sharedModel.selectedJobTaskAllocation.timesheet removeObserver:self forKeyPath:@"timeElapsedInterval"];
-        }
-        @catch (NSException *exception) {
-            //Do nothing, because observers do not exist
-        }
+    for (WS_JobTaskAllocation *allocation in self.sharedModel.taskAllocations) {
+        [allocation.timesheet removeObserver:self forKeyPath:@"timeElapsedInterval"];
     }
+    [super viewWillDisappear:animated];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath
@@ -148,19 +143,7 @@ UIView *normalView;
     if ([keyPath isEqual:@"selectedClient"]) {
     }
     //selected allocation changed
-    if ([keyPath isEqual:@"selectedJobTaskAllocation"]) {        
-        if(self.sharedModel.selectedJobTaskAllocation.timesheet){
-            WS_JobTaskAllocation *oldJta = (WS_JobTaskAllocation*)[change objectForKey:NSKeyValueChangeOldKey];
-            //Remove observer from old object
-            @try{
-                [oldJta removeObserver:self forKeyPath:@"timeElapsedInterval"];
-            }@catch(id anException){
-                //do nothing, obviously it wasn't attached because an exception was thrown
-            }
-            //Attach observer to new object
-            [self.sharedModel.selectedJobTaskAllocation.timesheet addObserver:self forKeyPath:@"timeElapsedInterval" options:NSKeyValueObservingOptionOld context:NULL];
-            isObservingTimesheet = TRUE;
-        }
+    if ([keyPath isEqual:@"selectedJobTaskAllocation"]) {
         [self displayTaskAllocationDetails];
         [self displayTimesheetDetails];
 
@@ -170,13 +153,16 @@ UIView *normalView;
             [[RKObjectManager sharedManager]getObject:currentJob path:nil parameters:nil
                                               success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
                                                   self.sharedModel.selectedJob = (WS_Job*)[mappingResult firstObject];
-                                                  [self.sharedModel.jobsDictionary setObject:self.sharedModel.selectedJob
-                                                                                      forKey:self.sharedModel.selectedJob.jobId.stringValue];
+                                                  [self.sharedModel.jobsDictionary setObject:self.sharedModel.selectedJob forKey:self.sharedModel.selectedJob.jobId.stringValue];
                                               } failure:^(RKObjectRequestOperation *operation, NSError *error) {
                                                   [self handleFailureWithOperation:operation error:error];
                                               }];
         }
-        self.view = normalView;
+        if (self.view != normalView) {
+            [self viewWillAppear:TRUE];
+            self.view = normalView;
+        }
+
         [self.navigationController setToolbarHidden:TRUE animated:TRUE];
     }
     if ([keyPath isEqual:@"selectedProject"]) {
@@ -191,10 +177,9 @@ UIView *normalView;
                                                   [self handleFailureWithOperation:operation error:error];
                                               }];
         }
-
     }
     //selected timesheet changed
-    if ([keyPath isEqual:@"timesheet"]) {
+    if ([keyPath isEqual:@"currentTimesheet"]) {
         [self displayTimesheetDetails];
     }
 
@@ -253,7 +238,7 @@ UIView *normalView;
         float progressFloat = allocation.totalTimeLoggedMinutes.floatValue / allocation.durationInMinutes.floatValue;
         BOOL taskIsOverWorked = allocation.totalTimeLoggedMinutes.floatValue > allocation.durationInMinutes.floatValue;
         [self.taskProgress setProgressTintColor:(taskIsOverWorked ? [UIColor redColor] : nil)];
-        [self.taskProgress setProgress:progressFloat animated:YES];
+        [self.taskProgress setProgress:progressFloat animated:NO];
         self.progressLabel.text = [NSString stringWithFormat:@"%@ of %@",[NSDate timeStringFromMinutes:allocation.totalTimeLoggedMinutes.intValue],[NSDate timeStringFromMinutes:allocation.durationInMinutes.intValue]];
     }
 }
@@ -359,7 +344,6 @@ UIView *normalView;
     self.durationInput.text = [NSDate timeStringFromMinutes:minutesElapsed];
     
     self.sharedModel.selectedJobTaskAllocation.timesheet.startTime = self.sharedModel.selectedJobTaskAllocation.timesheet.timerStartDate;
-    self.sharedModel.selectedJobTaskAllocation.timesheet.timerStartDate = nil;
     self.sharedModel.selectedJobTaskAllocation.timesheet.endTime = dateNow;
     self.sharedModel.selectedJobTaskAllocation.timesheet.minutes = [NSNumber numberWithInt:minutesElapsed];
     self.sharedModel.selectedJobTaskAllocation.timesheet.timesheetWasChanged = [NSNumber numberWithBool:TRUE];
@@ -373,9 +357,8 @@ UIView *normalView;
 
 -(void)setTimerToZero
 {
-//    self.sharedModel.selectedJobTaskAllocation.timesheet.timerStartDate = [NSDate date];
-//    self.sharedModel.selectedJobTaskAllocation.timesheet.timeElapsedInterval=[[NSDate date] timeIntervalSinceDate:self.sharedModel.selectedJobTaskAllocation.timesheet.timerStartDate];
-    
+    self.sharedModel.selectedJobTaskAllocation.timesheet.timeElapsedInterval = 0;
+    self.sharedModel.selectedJobTaskAllocation.timesheet.timerStartDate = nil;
 }
 
 #pragma mark - form actions
@@ -395,6 +378,8 @@ UIView *normalView;
     timesheet.jobTaskId = self.sharedModel.selectedJobTaskAllocation.jobTaskId;
     timesheet.trafficEmployeeId = self.sharedModel.selectedJobTaskAllocation.trafficEmployeeId;
     timesheet.jobTaskAllocationGroupId = self.sharedModel.selectedJobTaskAllocation.jobTaskAllocationGroupId;
+    timesheet.trafficVersion = [NSNumber numberWithInt:-1];
+    timesheet.timeEntryId = [NSNumber numberWithInt:-1];
     
     //Hide, but re-show if either one of these calls fails
     [self.navigationController setToolbarHidden:TRUE animated:TRUE];
@@ -405,7 +390,7 @@ UIView *normalView;
 //                                               WS_TimeEntry *updatedTimesheet = (WS_TimeEntry*)[mappingResult firstObject];
 //                                               self.sharedModel.selectedJobTaskAllocation.timesheet = updatedTimesheet;
 //                                               [self displayTimesheetDetails];
-
+                                               timesheet.timesheetWasChanged = FALSE;
                                                if (!allocation.happyRatingWasChanged)
                                                    [self getSelectedAllocationFromServer];
                                            }
@@ -422,6 +407,8 @@ UIView *normalView;
 //                                                WS_TimeEntry *updatedTimesheet = (WS_TimeEntry*)[mappingResult firstObject];
 //                                                self.sharedModel.selectedJobTaskAllocation.timesheet = updatedTimesheet;
 //                                                [self displayTimesheetDetails];
+//                                                timesheet.timesheetWasChanged = FALSE;
+
 //                                                if (!allocation.happyRatingWasChanged)
 //                                                    [self getSelectedAllocationFromServer];
 //                                            }
@@ -434,15 +421,18 @@ UIView *normalView;
         NSLog(@"Allocation description: %@", [allocation description]);
         [[RKObjectManager sharedManager] postObject:allocation path:nil parameters:nil
                                             success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+//                                                WS_JobTaskAllocation *previousJobTaskAllocation = self.sharedModel.selectedJobTaskAllocation;
                                                 WS_JobTaskAllocation *updatedJobTaskAllocation = (WS_JobTaskAllocation*)[mappingResult firstObject];
-                                                updatedJobTaskAllocation.happyRatingWasChanged = FALSE;
                                                 for (int i=0; i < [self.sharedModel.taskAllocations count]; i++) {
                                                     WS_JobTaskAllocation *jta = self.sharedModel.taskAllocations[i];
                                                     if ([jta.jobTaskAllocationGroupId isEqualToNumber:updatedJobTaskAllocation.jobTaskAllocationGroupId]) {
+                                                        //keep the timesheet, in case we're recording time
+                                                        updatedJobTaskAllocation.timesheet = jta.timesheet;
                                                         [self.sharedModel.taskAllocations setObject:updatedJobTaskAllocation atIndexedSubscript:i];
                                                         break;
                                                     }
                                                 }
+                                                updatedJobTaskAllocation.happyRatingWasChanged = FALSE;
                                                 self.sharedModel.selectedJobTaskAllocation = updatedJobTaskAllocation;
                                                 [self displayTaskAllocationDetails];
                                             }
@@ -458,10 +448,14 @@ UIView *normalView;
     
     [[RKObjectManager sharedManager] getObject:allocation path:nil parameters:nil
                                        success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+//                                           WS_JobTaskAllocation *previousJobTaskAllocation = self.sharedModel.selectedJobTaskAllocation;
                                            WS_JobTaskAllocation *updatedJobTaskAllocation = (WS_JobTaskAllocation*)[mappingResult firstObject];
+                                           updatedJobTaskAllocation.happyRatingWasChanged = FALSE;
                                            for (int i=0; i < [self.sharedModel.taskAllocations count]; i++) {
                                                WS_JobTaskAllocation *jta = self.sharedModel.taskAllocations[i];
                                                if ([jta.jobTaskAllocationGroupId isEqualToNumber:updatedJobTaskAllocation.jobTaskAllocationGroupId]) {
+                                                   //keep the timesheet, in case we're recording time
+                                                   updatedJobTaskAllocation.timesheet = jta.timesheet;
                                                    [self.sharedModel.taskAllocations setObject:updatedJobTaskAllocation atIndexedSubscript:i];
                                                    break;
                                                }

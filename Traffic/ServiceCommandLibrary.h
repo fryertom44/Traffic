@@ -15,5 +15,6 @@
 +(void)loadJobTaskAllocationsWithParams:(NSDictionary*)params;
 +(void)loadJobDetailsWithParams:(NSDictionary*)params;
 +(void)loadProjectsWithParams:(NSDictionary*)params;
++(void)loadEmployeesWithParams:(NSDictionary*)params;
 
 @end

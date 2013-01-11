@@ -28,6 +28,7 @@
 @property (nonatomic,strong) NSMutableArray *jobs;
 @property (nonatomic,strong) NSMutableArray *jobDetails;
 @property (nonatomic,strong) NSMutableArray *projects;
+@property (nonatomic,strong) NSMutableArray *employees;
 
 #pragma mark - Dictionaries for fast lookups
 @property (readonly,nonatomic,strong) NSMutableDictionary *clientsDictionary;
@@ -35,6 +36,7 @@
 @property (readonly,nonatomic,strong) NSMutableDictionary *jobDetailsDictionary;
 @property (readonly,nonatomic,strong) NSMutableDictionary *jobTaskAllocationsDictionary;
 @property (readonly,nonatomic,strong) NSMutableDictionary *projectsDictionary;
+@property (readonly,nonatomic,strong) NSMutableDictionary *employeesDictionary;
 
 @property (nonatomic) int pageNumber;
 
@@ -47,6 +49,7 @@
 @property (nonatomic,strong) WS_Job *selectedJob;
 @property (nonatomic,strong) WS_JobDetail *selectedJobDetail;
 @property (nonatomic,strong) WS_Project *selectedProject;
-//@property (nonatomic,strong) WS_TimeEntry *timesheet;
+
+@property (readwrite,nonatomic) WS_TimeEntry *currentTimesheet;
 
 @end

@@ -134,13 +134,13 @@
     [defaults synchronize];
 }
 
-
 - (IBAction)onReloadDataCache:(id)sender {
     NSDictionary *params = @{@"windowSize" : @"5000"};
     [ServiceCommandLibrary loadClientsWithParams:params];
     [ServiceCommandLibrary loadProjectsWithParams:params];
     [ServiceCommandLibrary loadJobsWithParams:params];
     [ServiceCommandLibrary loadJobDetailsWithParams:params];
+    [ServiceCommandLibrary loadEmployeesWithParams:params];
 }
 
 - (IBAction)onLoginAutomaticallySelected:(id)sender {

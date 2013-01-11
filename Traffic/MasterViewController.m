@@ -72,10 +72,16 @@
                                 [self handleFailureWithOperation:operation error:error];
                             }];
 
+    for (int i=0; i < [self.sharedModel.taskAllocations count]; i++) {
+        WS_JobTaskAllocation *allocation = [self.sharedModel.taskAllocations objectAtIndex:i];
+        allocation = [self enrichAllocation:allocation];
+    }
+    [self.tableView reloadData];
 
 }
 
 -(void)viewDidAppear:(BOOL)animated{
+    [self.tableView reloadData];
     [self.sharedModel addObserver:self forKeyPath:@"taskAllocations" options:NSKeyValueObservingOptionNew context:NULL];
 }
 
@@ -89,9 +95,12 @@
                        context:(void *)context {
     
     if ([keyPath isEqual:@"taskAllocations"]) {
+        for (int i=0; i < [self.sharedModel.taskAllocations count]; i++) {
+            WS_JobTaskAllocation *allocation = [self.sharedModel.taskAllocations objectAtIndex:i];
+            allocation = [self enrichAllocation:allocation];
+        }
         [self.tableView reloadData];
     }
-
 }
 
 - (void)didReceiveMemoryWarning
@@ -191,17 +200,9 @@
     }
 }
 
-
 - (GlobalModel*)sharedModel{
     return [GlobalModel sharedInstance];
 }
-
-//- (void)loadTaskAllocationsWithPageNumber:(int)page andWindowSize:(int)windowSize
-//{
-//    LoadJobTaskAllocationsCommand *loadJobTaskAllocationsCommand = [[LoadJobTaskAllocationsCommand alloc]init];
-//    [loadJobTaskAllocationsCommand executeWithPageNumber:page windowSize:windowSize];
-//}
-
 
 -(WS_JobTaskAllocation*)enrichAllocation:(WS_JobTaskAllocation*)allocation{
     if (!allocation.job && self.sharedModel.jobsDictionary) {
@@ -215,6 +216,9 @@
     }
     if (!allocation.client && allocation.project && self.sharedModel.clientsDictionary) {
         allocation.client = [self.sharedModel.clientsDictionary objectForKey:allocation.project.clientCRMEntryId.stringValue];
+    }
+    if (!allocation.employee && allocation.jobDetail && self.sharedModel.employeesDictionary) {
+        allocation.employee = [self.sharedModel.employeesDictionary objectForKey:allocation.jobDetail.accountManagerId.stringValue];
     }
     return allocation;
 }
@@ -270,7 +274,12 @@
                                 NSMutableArray *mutableJtas = [[NSMutableArray alloc]init];
                                 for (WS_JobTaskAllocation *jta in jtas) {
                                     if ([jta isMemberOfClass:[WS_JobTaskAllocation class]])
+                                    {
+                                        WS_JobTaskAllocation *existingAllocation = [self.sharedModel.jobTaskAllocationsDictionary objectForKey:jta.jobTaskAllocationGroupId.stringValue];
+                                        jta.timesheet = existingAllocation.timesheet;
                                         [mutableJtas addObject:jta];
+                                    }
+                                
                                 }
                                 self.sharedModel.taskAllocations = mutableJtas;
                             }

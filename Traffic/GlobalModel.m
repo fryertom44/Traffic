@@ -56,6 +56,17 @@ static GlobalModel *sharedInstance = nil;
 }
 
 #pragma mark - overwritten setters
+-(void)setSelectedJobTaskAllocation:(WS_JobTaskAllocation *)selectedJobTaskAllocation{
+    if (_selectedJobTaskAllocation != selectedJobTaskAllocation) {
+        _selectedJobTaskAllocation = selectedJobTaskAllocation;
+//        _currentTimesheet = _selectedJobTaskAllocation.timesheet;
+//        _selectedJob = _selectedJobTaskAllocation.job;
+//        _selectedJobDetail = _selectedJobTaskAllocation.jobDetail;
+//        _selectedProject = _selectedJobTaskAllocation.project;
+//        _selectedOwner = _selectedJobTaskAllocation.employee;
+//        _selectedClient = _selectedJobTaskAllocation.client;
+    }
+}
 
 -(void)setClients:(NSMutableArray *)clients{
     if (_clients != clients)
@@ -149,4 +160,21 @@ static GlobalModel *sharedInstance = nil;
     }
 }
 
+-(void)setEmployees:(NSMutableArray *)employees{
+    if(_employees != employees){
+        _employees = employees;
+        
+        if ([_employees count] > 0) {
+            NSMutableDictionary* employeesDict = [[NSMutableDictionary alloc]init];
+            
+            for (WS_TrafficEmployee *employee in _employees) {
+                [employeesDict setObject:employee forKey:employee.trafficEmployeeId];
+            }
+            _employeesDictionary = employeesDict;
+            //Store result offline:
+            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+            [defaults setObject:[NSKeyedArchiver archivedDataWithRootObject:_employees] forKey:kEmployeesStoreKey];
+        }
+    }
+}
 @end

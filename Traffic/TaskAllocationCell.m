@@ -44,7 +44,7 @@
 
 - (void)setAllocation:(WS_JobTaskAllocation *)allocation{
     
-    if(![_allocation isEqual:allocation]){
+    if(_allocation != allocation){
         if (isObservingTimesheet) {
             @try {
                 [_allocation.timesheet removeObserver:self forKeyPath:@"timeElapsedInterval"];
@@ -82,8 +82,11 @@
             timesheetTime.text = @"";
             isRecordingIcon.hidden = TRUE;
         }
-        [_allocation.timesheet addObserver:self forKeyPath:@"timeElapsedInterval" options:NSKeyValueObservingOptionOld context:nil];
-        isObservingTimesheet = TRUE;
+        
+        if(_allocation!=nil){
+            [_allocation.timesheet addObserver:self forKeyPath:@"timeElapsedInterval" options:NSKeyValueObservingOptionOld context:nil];
+            isObservingTimesheet = TRUE;
+        }
     }
 }
 
