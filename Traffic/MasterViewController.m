@@ -48,7 +48,7 @@
         NSString *requestString = [NSString stringWithFormat:@"/TrafficLiteServer/openapi/staff/employee/%@/jobtaskallocations?currentPage=:currentPage&windowSize=:perPage",self.sharedModel.loggedInEmployee.trafficEmployeeId];
         
         RKPaginator *paginator = [[RKObjectManager sharedManager] paginatorWithPathPattern:requestString];
-        paginator.perPage = windowSize;
+        paginator.perPage = windowSize ? windowSize : 10;
         
         [paginator setCompletionBlockWithSuccess:^(RKPaginator *paginator, NSArray *objects, NSUInteger page) {
             

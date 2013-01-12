@@ -49,7 +49,7 @@
     NSInteger hours = storedInterval.integerValue / 60;
     NSInteger minutes = storedInterval.integerValue % 60;
     self.timeIntervalTextInput.text = [NSString stringWithFormat:@"%02d:%02d",hours,minutes];
-    self.maxAllocationResultsTextInput.text = [NSString stringWithFormat:@"%d",[defaults integerForKey:kMaxResultsSettingKey]];
+    self.maxAllocationResultsTextInput.text = [defaults integerForKey:kMaxResultsSettingKey] > 0 ?[NSString stringWithFormat:@"%d",[defaults integerForKey:kMaxResultsSettingKey]] : @"";
     self.loginAutomaticallySwitch.on = [defaults boolForKey:kLoginAutomaticallySettingKey];
     self.hideCompletedTasksSwitch.on = [defaults boolForKey:kHideCompletedSettingKey];
     
