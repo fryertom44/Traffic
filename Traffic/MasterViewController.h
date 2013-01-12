@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <RestKit.h>
 
 @class DetailViewController;
 
@@ -14,8 +15,9 @@
 {
     NSMutableData *responseData;
 }
-
+@property (strong, nonatomic) RKPaginator *paginator;
 @property (strong, nonatomic) DetailViewController *detailViewController;
+
 - (IBAction)onLoadMoreSelected:(id)sender;
 
 @end

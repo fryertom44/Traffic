@@ -48,7 +48,17 @@
     [RKObjectMapping setPreferredDateFormatter:df];
     
 #pragma mark - Object Mapping
+
     // Setup our object mappings
+    RKObjectMapping *paginationMapping = [RKObjectMapping mappingForClass:[RKPaginator class]];
+    [paginationMapping addAttributeMappingsFromDictionary:@{
+     @"windowSize":        @"perPage",
+     @"maxResults":   @"objectCount",
+     @"currentPage": @"currentPage",
+     }];
+    
+    [objectManager setPaginationMapping:paginationMapping];
+    
     RKObjectMapping *moneyMapping = [RKObjectMapping mappingForClass:[Money class]];
     [moneyMapping addAttributeMappingsFromDictionary:@{
      @"amountString" : @"amount",
@@ -174,7 +184,6 @@
      @"comment" : @"comment",
      @"exported" : @"exported",
      @"endTime" : @"endTime",
-//     @"workPoints" : @"workPoints",
      @"startTime" : @"startTime",
      @"taskComplete" : @"isTaskComplete",
      @"lockedByApprovalDate" : @"lockedByApprovalDate",

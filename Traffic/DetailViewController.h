@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "PGToggleButton.h"
 #import <RestKit.h>
+#import "WS_TimeEntry.h"
 
 @class DetailViewController;
 
@@ -33,6 +34,8 @@
 @property (weak, nonatomic) IBOutlet UIButton *happyRatingButton;
 @property (nonatomic) id txtActiveComponent;
 @property (nonatomic,retain) UIView *subview;
+
+@property (strong, nonatomic) WS_TimeEntry *currentTimesheet;
 
 -(IBAction)changeHappyRating:(id)sender;
 -(IBAction)startTimer:(id)sender;

@@ -50,6 +50,9 @@
 @property (nonatomic,strong) WS_JobDetail *selectedJobDetail;
 @property (nonatomic,strong) WS_Project *selectedProject;
 
-@property (readwrite,nonatomic) WS_TimeEntry *currentTimesheet;
+@property (readonly,strong) WS_TimeEntry *currentTimesheet;
+@property (nonatomic) BOOL isFullyLoaded;
+
+-(void)checkAndSetIsFullyLoaded;
 
 @end

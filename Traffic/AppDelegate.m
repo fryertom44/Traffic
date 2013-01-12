@@ -8,7 +8,6 @@
 
 #import "AppDelegate.h"
 #import "LoginViewController.h"
-//#import "LoginOperation.h"
 #import "MasterViewController.h"
 #import "GlobalModel.h"
 #import "ConfigureRestkitCommand.h"

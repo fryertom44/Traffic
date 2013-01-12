@@ -51,20 +51,16 @@ static GlobalModel *sharedInstance = nil;
         NSLog(@"%@:%@", @"happyRating", jt.happyRating);
         NSLog(@"%@:%@", @"isTaskComplete", jt.isTaskComplete);
         NSLog(@"%@:%@", @"taskDeadline", jt.taskDeadline);
-
     }
 }
 
-#pragma mark - overwritten setters
 -(void)setSelectedJobTaskAllocation:(WS_JobTaskAllocation *)selectedJobTaskAllocation{
-    if (_selectedJobTaskAllocation != selectedJobTaskAllocation) {
+    if(_selectedJobTaskAllocation != selectedJobTaskAllocation){
         _selectedJobTaskAllocation = selectedJobTaskAllocation;
-//        _currentTimesheet = _selectedJobTaskAllocation.timesheet;
-//        _selectedJob = _selectedJobTaskAllocation.job;
-//        _selectedJobDetail = _selectedJobTaskAllocation.jobDetail;
-//        _selectedProject = _selectedJobTaskAllocation.project;
-//        _selectedOwner = _selectedJobTaskAllocation.employee;
-//        _selectedClient = _selectedJobTaskAllocation.client;
+    }
+    
+    if (_selectedJobTaskAllocation) {
+        _currentTimesheet = _selectedJobTaskAllocation.timesheet;
     }
 }
 
@@ -84,6 +80,7 @@ static GlobalModel *sharedInstance = nil;
             //Store result offline:
             NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
             [defaults setObject:[NSKeyedArchiver archivedDataWithRootObject:_clients] forKey:kClientsStoreKey];
+            [self checkAndSetIsFullyLoaded];
         }
     }
 }
@@ -103,6 +100,7 @@ static GlobalModel *sharedInstance = nil;
             //Store result offline:
             NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
             [defaults setObject:[NSKeyedArchiver archivedDataWithRootObject:_jobs] forKey:kJobsStoreKey];
+            [self checkAndSetIsFullyLoaded];
         }
     }
 }
@@ -122,6 +120,7 @@ static GlobalModel *sharedInstance = nil;
             //Store result offline:
             NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
             [defaults setObject:[NSKeyedArchiver archivedDataWithRootObject:_projects] forKey:kProjectsStoreKey];
+            [self checkAndSetIsFullyLoaded];
         }
     }
 }
@@ -141,6 +140,7 @@ static GlobalModel *sharedInstance = nil;
             //Store result offline:
             NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
             [defaults setObject:[NSKeyedArchiver archivedDataWithRootObject:_jobDetails] forKey:kJobDetailsStoreKey];
+            [self checkAndSetIsFullyLoaded];
         }
     }
 }
@@ -156,6 +156,7 @@ static GlobalModel *sharedInstance = nil;
                 [allocationsDict setObject:jta forKey:jta.jobTaskAllocationGroupId.stringValue];
             }
             _jobTaskAllocationsDictionary = allocationsDict;
+            [self checkAndSetIsFullyLoaded];
         }
     }
 }
@@ -174,7 +175,22 @@ static GlobalModel *sharedInstance = nil;
             //Store result offline:
             NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
             [defaults setObject:[NSKeyedArchiver archivedDataWithRootObject:_employees] forKey:kEmployeesStoreKey];
+            [self checkAndSetIsFullyLoaded];
         }
     }
 }
+
+-(void)checkAndSetIsFullyLoaded{
+    if (self.employees
+        && self.taskAllocations
+        && self.projects
+        && self.clients
+        && self.jobs
+        && self.jobDetails) {
+        self.isFullyLoaded = TRUE;
+    }
+    else
+        _isFullyLoaded = FALSE;
+}
+
 @end

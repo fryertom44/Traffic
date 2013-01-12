@@ -119,6 +119,25 @@
     }
 }
 
+-(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+    if([self.txtActiveComponent isEqual:self.maxAllocationResultsTextInput]){
+        /*  limit to only numeric characters  */
+        NSCharacterSet *myCharSet = [NSCharacterSet characterSetWithCharactersInString:@"0123456789"];
+        for (int i = 0; i < [string length]; i++) {
+            unichar c = [string characterAtIndex:i];
+            if (![myCharSet characterIsMember:c]) {
+                return NO;
+            }
+        }
+        
+        /*  limit the users input to only 4 characters  */
+        NSUInteger newLength = [self.maxAllocationResultsTextInput.text length] + [string length] - range.length;
+        return (newLength > 4) ? NO : YES;
+    }
+    return YES;
+}
+
 #pragma mark - IBActions
 - (IBAction)onFollowTwitterSelected:(id)sender {
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://twitter.com/TrafficLive"]];

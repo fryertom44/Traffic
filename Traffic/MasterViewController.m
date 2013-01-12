@@ -38,55 +38,60 @@
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
     }
-    UIRefreshControl *refreshControl = [[UIRefreshControl alloc]
-                                        init];
-    [refreshControl addTarget:self action:@selector(refreshList:) forControlEvents:UIControlEventValueChanged];
-    self.refreshControl = refreshControl;
-    
-    //Load Job Task Allocations
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSMutableDictionary *allocationParams = [[NSMutableDictionary alloc]initWithDictionary:@{@"currentPage" : [NSNumber numberWithInt:self.sharedModel.pageNumber]}];
-    BOOL hideCompleted = [defaults boolForKey:kHideCompletedSettingKey];
-    
-    if(hideCompleted){
-        [allocationParams setObject:@"happyRating|NOT_EQUAL|\"COMPLETE\"" forKey:@"filter"];
-    }
-    
-    NSUInteger windowSize = [defaults integerForKey:kMaxResultsSettingKey];
-    windowSize = windowSize ? windowSize : 10;
-    [allocationParams setObject:[NSString stringWithFormat:@"%d",windowSize] forKey:@"windowSize"];
-    
-    RKObjectManager *objectManager = [RKObjectManager sharedManager];
-    [objectManager getObjectsAtPath:[NSString stringWithFormat:@"/TrafficLiteServer/openapi/staff/employee/%@/jobtaskallocations",self.sharedModel.loggedInEmployee.trafficEmployeeId]
-                         parameters:allocationParams
-                            success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-                                NSArray* jtas = [mappingResult array];
-                                NSMutableArray *mutableJtas = [[NSMutableArray alloc]init];
-                                for (WS_JobTaskAllocation *jta in jtas) {
-                                    if ([jta isMemberOfClass:[WS_JobTaskAllocation class]])
-                                        [mutableJtas addObject:jta];
-                                }
-                                self.sharedModel.taskAllocations = mutableJtas;
-                            }
-                            failure:^(RKObjectRequestOperation *operation, NSError *error) {
-                                [self handleFailureWithOperation:operation error:error];
-                            }];
 
-    for (int i=0; i < [self.sharedModel.taskAllocations count]; i++) {
-        WS_JobTaskAllocation *allocation = [self.sharedModel.taskAllocations objectAtIndex:i];
-        allocation = [self enrichAllocation:allocation];
-    }
-    [self.tableView reloadData];
+    if (!_paginator) {
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        
+        NSUInteger windowSize = [defaults integerForKey:kMaxResultsSettingKey];
+        BOOL hideCompleted = [defaults boolForKey:kHideCompletedSettingKey];
+        
+        NSString *requestString = [NSString stringWithFormat:@"/TrafficLiteServer/openapi/staff/employee/%@/jobtaskallocations?currentPage=:currentPage&windowSize=:perPage",self.sharedModel.loggedInEmployee.trafficEmployeeId];
+        
+        RKPaginator *paginator = [[RKObjectManager sharedManager] paginatorWithPathPattern:requestString];
+        paginator.perPage = windowSize;
+        
+        [paginator setCompletionBlockWithSuccess:^(RKPaginator *paginator, NSArray *objects, NSUInteger page) {
+            
+            if (page == 1) {
+                [self.sharedModel.taskAllocations removeAllObjects];
+            }
+            
+            if (!self.sharedModel.taskAllocations) {
+                self.sharedModel.taskAllocations = [[NSMutableArray alloc]init];
+            }
+            for (WS_JobTaskAllocation *allocation in objects) {
+                if([allocation isKindOfClass:[WS_JobTaskAllocation class]]){
+                    WS_JobTaskAllocation *existingTimeEntry = [self.sharedModel.jobTaskAllocationsDictionary objectForKey:allocation.jobTaskAllocationGroupId.stringValue];
+                    if (existingTimeEntry) {
+                        allocation.timesheet = existingTimeEntry.timesheet;
+                    }
+                    
+                    if (!hideCompleted || (hideCompleted && ![allocation.happyRating isEqualToString:kHappyRatingCompleted])) {
+                        [self.sharedModel.taskAllocations addObject:[self enrichAllocation:allocation]];
+                        [self.sharedModel.jobTaskAllocationsDictionary setObject:allocation forKey:allocation.jobTaskAllocationGroupId.stringValue];
+                    }
+                }
+            }
+            
+            [self.tableView reloadData];
+            
+        } failure:^(RKPaginator *paginator, NSError *error) {
+            [self handleFailureWithOperation:nil error:error];
+        }];
+        
+        self.paginator = paginator;
+        [self.tableView reloadData];
 
+        [_paginator loadPage:1];
+    }
 }
 
 -(void)viewDidAppear:(BOOL)animated{
-    [self.tableView reloadData];
-    [self.sharedModel addObserver:self forKeyPath:@"taskAllocations" options:NSKeyValueObservingOptionNew context:NULL];
+    [self.sharedModel addObserver:self forKeyPath:@"isFullyLoaded" options:NSKeyValueObservingOptionNew context:NULL];
 }
 
 -(void)viewDidDisappear:(BOOL)animated{
-    [self.sharedModel removeObserver:self forKeyPath:@"taskAllocations"];
+    [self.sharedModel removeObserver:self forKeyPath:@"isFullyLoaded"];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath
@@ -94,10 +99,9 @@
                         change:(NSDictionary *)change
                        context:(void *)context {
     
-    if ([keyPath isEqual:@"taskAllocations"]) {
-        for (int i=0; i < [self.sharedModel.taskAllocations count]; i++) {
-            WS_JobTaskAllocation *allocation = [self.sharedModel.taskAllocations objectAtIndex:i];
-            allocation = [self enrichAllocation:allocation];
+    if ([keyPath isEqualToString:@"isFullyLoaded"]) {
+        for (WS_JobTaskAllocation *allocation in self.sharedModel.taskAllocations) {
+            [self enrichAllocation:allocation];
         }
         [self.tableView reloadData];
     }
@@ -132,7 +136,6 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *kCellIdentifier = @"Cell";
-
     TaskAllocationCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellIdentifier forIndexPath:indexPath];
     if (cell == nil) {
         cell = [[TaskAllocationCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kCellIdentifier];
@@ -149,7 +152,6 @@
     
     WS_JobTaskAllocation *allocation = self.sharedModel.taskAllocations[indexPath.row];
     cell.allocation = [self enrichAllocation:allocation];
-
     return cell;
 }
 
@@ -157,7 +159,7 @@
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Return NO if you do not want the specified item to be editable.
-    return YES;
+    return NO;
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
@@ -223,69 +225,75 @@
     return allocation;
 }
 
-- (IBAction)onLoadMoreSelected:(id)sender {    
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSMutableDictionary *allocationParams = [[NSMutableDictionary alloc]initWithDictionary:@{@"currentPage" : [NSNumber numberWithInt:self.sharedModel.pageNumber+1]}];
-    BOOL hideCompleted = [defaults boolForKey:kHideCompletedSettingKey];
-    
-    if(hideCompleted){
-        [allocationParams setObject:@"happyRating|NOT_EQUAL|\"COMPLETE\"" forKey:@"filter"];
+- (IBAction)onLoadMoreSelected:(id)sender {
+    if (self.paginator) {
+        [self.paginator loadNextPage];
     }
-    
-    NSUInteger windowSize = [defaults integerForKey:kMaxResultsSettingKey];
-    windowSize = windowSize ? windowSize : 10;
-    [allocationParams setObject:[NSString stringWithFormat:@"%d",windowSize] forKey:@"windowSize"];
-    
-    RKObjectManager *objectManager = [RKObjectManager sharedManager];
-    [objectManager getObjectsAtPath:[NSString stringWithFormat:@"/TrafficLiteServer/openapi/staff/employee/%@/jobtaskallocations",self.sharedModel.loggedInEmployee.trafficEmployeeId]
-                         parameters:allocationParams
-                            success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-                                NSArray* jtas = [mappingResult array];
-                                for (WS_JobTaskAllocation *jta in jtas) {
-                                    if ([jta isMemberOfClass:[WS_JobTaskAllocation class]])
-                                        [self.sharedModel.taskAllocations addObject:jta];
-                                }
-                                [self.tableView reloadData];
-                            }
-                            failure:^(RKObjectRequestOperation *operation, NSError *error) {
-                                [self handleFailureWithOperation:operation error:error];
-                            }];
+//    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+//    NSMutableDictionary *allocationParams = [[NSMutableDictionary alloc]initWithDictionary:@{@"currentPage" : [NSNumber numberWithInt:self.sharedModel.pageNumber+1]}];
+//    BOOL hideCompleted = [defaults boolForKey:kHideCompletedSettingKey];
+//    
+//    if(hideCompleted){
+//        [allocationParams setObject:@"happyRating|NOT_EQUAL|\"COMPLETE\"" forKey:@"filter"];
+//    }
+//    
+//    NSUInteger windowSize = [defaults integerForKey:kMaxResultsSettingKey];
+//    windowSize = windowSize ? windowSize : 10;
+//    [allocationParams setObject:[NSString stringWithFormat:@"%d",windowSize] forKey:@"windowSize"];
+//    
+//    RKObjectManager *objectManager = [RKObjectManager sharedManager];
+//    [objectManager getObjectsAtPath:[NSString stringWithFormat:@"/TrafficLiteServer/openapi/staff/employee/%@/jobtaskallocations",self.sharedModel.loggedInEmployee.trafficEmployeeId]
+//                         parameters:allocationParams
+//                            success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+//                                NSArray* jtas = [mappingResult array];
+//                                for (WS_JobTaskAllocation *jta in jtas) {
+//                                    if ([jta isMemberOfClass:[WS_JobTaskAllocation class]])
+//                                        [self.sharedModel.taskAllocations addObject:jta];
+//
+//                                }
+//                                [self.tableView reloadData];
+//                            }
+//                            failure:^(RKObjectRequestOperation *operation, NSError *error) {
+//                                [self handleFailureWithOperation:operation error:error];
+//                            }];
 }
 
 -(void)refreshList:(id)sender{
     int rowCount = [self.sharedModel.taskAllocations count];
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSMutableDictionary *allocationParams = [[NSMutableDictionary alloc]initWithDictionary:@{@"currentPage" : [NSNumber numberWithInt:1]}];
-    BOOL hideCompleted = [defaults boolForKey:kHideCompletedSettingKey];
-    
-    if(hideCompleted){
-        [allocationParams setObject:@"happyRating|NOT_EQUAL|\"COMPLETE\"" forKey:@"filter"];
-    }
-    
-    NSUInteger windowSize = rowCount;
-    windowSize = windowSize ? windowSize : 10;
-    [allocationParams setObject:[NSString stringWithFormat:@"%d",windowSize] forKey:@"windowSize"];
-    
-    RKObjectManager *objectManager = [RKObjectManager sharedManager];
-    [objectManager getObjectsAtPath:[NSString stringWithFormat:@"/TrafficLiteServer/openapi/staff/employee/%@/jobtaskallocations",self.sharedModel.loggedInEmployee.trafficEmployeeId]
-                         parameters:allocationParams
-                            success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-                                NSArray* jtas = [mappingResult array];
-                                NSMutableArray *mutableJtas = [[NSMutableArray alloc]init];
-                                for (WS_JobTaskAllocation *jta in jtas) {
-                                    if ([jta isMemberOfClass:[WS_JobTaskAllocation class]])
-                                    {
-                                        WS_JobTaskAllocation *existingAllocation = [self.sharedModel.jobTaskAllocationsDictionary objectForKey:jta.jobTaskAllocationGroupId.stringValue];
-                                        jta.timesheet = existingAllocation.timesheet;
-                                        [mutableJtas addObject:jta];
-                                    }
-                                
-                                }
-                                self.sharedModel.taskAllocations = mutableJtas;
-                            }
-                            failure:^(RKObjectRequestOperation *operation, NSError *error) {
-                                [self handleFailureWithOperation:operation error:error];
-                            }];
+    self.paginator.perPage = rowCount;
+    [self.paginator loadPage:1];
+//    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+//    NSMutableDictionary *allocationParams = [[NSMutableDictionary alloc]initWithDictionary:@{@"currentPage" : [NSNumber numberWithInt:1]}];
+//    BOOL hideCompleted = [defaults boolForKey:kHideCompletedSettingKey];
+//    
+//    if(hideCompleted){
+//        [allocationParams setObject:@"happyRating|NOT_EQUAL|\"COMPLETE\"" forKey:@"filter"];
+//    }
+//    
+//    NSUInteger windowSize = rowCount;
+//    windowSize = windowSize ? windowSize : 10;
+//    [allocationParams setObject:[NSString stringWithFormat:@"%d",windowSize] forKey:@"windowSize"];
+//    
+//    RKObjectManager *objectManager = [RKObjectManager sharedManager];
+//    [objectManager getObjectsAtPath:[NSString stringWithFormat:@"/TrafficLiteServer/openapi/staff/employee/%@/jobtaskallocations",self.sharedModel.loggedInEmployee.trafficEmployeeId]
+//                         parameters:allocationParams
+//                            success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+//                                NSArray* jtas = [mappingResult array];
+//                                NSMutableArray *mutableJtas = [[NSMutableArray alloc]init];
+//                                for (WS_JobTaskAllocation *jta in jtas) {
+//                                    if ([jta isMemberOfClass:[WS_JobTaskAllocation class]])
+//                                    {
+//                                        WS_JobTaskAllocation *existingAllocation = [self.sharedModel.jobTaskAllocationsDictionary objectForKey:jta.jobTaskAllocationGroupId.stringValue];
+//                                        jta.timesheet = existingAllocation.timesheet;
+//                                        [mutableJtas addObject:jta];
+//                                    }
+//                                
+//                                }
+//                                self.sharedModel.taskAllocations = mutableJtas;
+//                            }
+//                            failure:^(RKObjectRequestOperation *operation, NSError *error) {
+//                                [self handleFailureWithOperation:operation error:error];
+//                            }];
     
     [self.refreshControl endRefreshing];
 
