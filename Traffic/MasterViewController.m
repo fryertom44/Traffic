@@ -39,6 +39,9 @@
         self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
     }
 
+    //Get Big Data from store or load from server
+    [self LoadStoredData];
+    
     if (!_paginator) {
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         
@@ -198,7 +201,7 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if ([[segue identifier] isEqualToString:@"showDetail"]) {
-        //Do any necessary config here
+        [[segue destinationViewController] setCurrentTimesheet:self.sharedModel.selectedJobTaskAllocation.timesheet];
     }
 }
 
@@ -297,6 +300,62 @@
     
     [self.refreshControl endRefreshing];
 
+}
+
+
+- (void)LoadStoredData
+{
+    NSDictionary *params = @{@"windowSize" : @"5000"};
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    //Way to clear the store
+    [defaults removeObjectForKey:kClientsStoreKey];
+    [defaults removeObjectForKey:kProjectsStoreKey];
+    [defaults removeObjectForKey:kJobDetailsStoreKey];
+    [defaults removeObjectForKey:kJobsStoreKey];
+    [defaults removeObjectForKey:kEmployeesStoreKey];
+    [defaults synchronize];
+    
+    NSData *storedClientData = [defaults objectForKey:kClientsStoreKey];
+    
+    if(!storedClientData)
+        [ServiceCommandLibrary loadClientsWithParams:params];
+    else{
+        self.sharedModel.clients = [NSKeyedUnarchiver unarchiveObjectWithData:storedClientData];
+        NSLog(@"Unarchived Clients: %@", [self.sharedModel.clients description]);
+    }
+    
+    NSData *storedProjectsData = [defaults objectForKey:kProjectsStoreKey];
+    if(!storedProjectsData)
+        [ServiceCommandLibrary loadProjectsWithParams:params];
+    else{
+        self.sharedModel.projects = [NSKeyedUnarchiver unarchiveObjectWithData:storedProjectsData];
+        NSLog(@"Unarchived Projects: %@", [self.sharedModel.projects description]);
+    }
+    
+    NSData *storedJobsData = [defaults objectForKey:kJobsStoreKey];
+    if(!storedJobsData)
+        [ServiceCommandLibrary loadJobsWithParams:params];
+    else{
+        self.sharedModel.jobs = [NSKeyedUnarchiver unarchiveObjectWithData:storedJobsData];
+        NSLog(@"Unarchived Jobs: %@", [self.sharedModel.jobs description]);
+    }
+    
+    NSData *storedJobDetailsData = [defaults objectForKey:kJobDetailsStoreKey];
+    if(!storedJobDetailsData)
+        [ServiceCommandLibrary loadJobDetailsWithParams:params];
+    else{
+        self.sharedModel.jobDetails = [NSKeyedUnarchiver unarchiveObjectWithData:storedJobDetailsData];
+        NSLog(@"Unarchived Job Details: %@", [self.sharedModel.jobDetails description]);
+    }
+    
+    NSData *storedEmployeesData = [defaults objectForKey:kEmployeesStoreKey];
+    if(!storedEmployeesData)
+        [ServiceCommandLibrary loadEmployeesWithParams:params];
+    else{
+        self.sharedModel.employees = [NSKeyedUnarchiver unarchiveObjectWithData:storedEmployeesData];
+        NSLog(@"Unarchived Employees: %@", [self.sharedModel.employees description]);
+    }
 }
 
 -(void)handleFailureWithOperation:(RKObjectRequestOperation*)operation error:(NSError*)error{

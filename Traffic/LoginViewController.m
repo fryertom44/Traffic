@@ -141,7 +141,7 @@
                                 }
                             } failure:^(RKObjectRequestOperation *operation, NSError *error) {
                                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Login Failure"
-                                                                                message:[error localizedDescription]
+                                                                                message:@"Please check username/password and internet connection and try again."
                                                                                delegate:nil
                                                                       cancelButtonTitle:@"OK"
                                                                       otherButtonTitles:nil];

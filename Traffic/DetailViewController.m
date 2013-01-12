@@ -30,13 +30,14 @@ UIView *normalView;
     
     //store the view for restoring later (when an item is selected)
     normalView = self.view;
-    
-    if(self.sharedModel.selectedJobTaskAllocation==nil){
-        NSArray *xib = [[NSBundle mainBundle] loadNibNamed:@"NothingSelectedView" owner:self options:nil];
-        self.view = [xib objectAtIndex:0];
-        [self.navigationController setToolbarHidden:TRUE];
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+        if(self.sharedModel.selectedJobTaskAllocation==nil){
+            NSArray *xib = [[NSBundle mainBundle] loadNibNamed:@"NothingSelectedView" owner:self options:nil];
+            self.view = [xib objectAtIndex:0];
+            [self.navigationController setToolbarHidden:TRUE];
+        }
     }
-
+    
 	// Do any additional setup after loading the view, typically from a nib.
     [[self recordButton]setImage:[UIImage imageNamed:kPlayButtonImage] forState:UIControlStateNormal];
     [[self recordButton]setOffStateImage:[UIImage imageNamed:kPlayButtonImage]];
@@ -59,16 +60,17 @@ UIView *normalView;
     [self configureInputAccessoryViews];
 }
 
--(void)viewDidAppear:(BOOL)animated{
+-(void)viewWillAppear:(BOOL)animated{
     [self.sharedModel addObserver:self forKeyPath:@"selectedJob" options:NSKeyValueObservingOptionNew context:NULL];
     [self.sharedModel addObserver:self forKeyPath:@"selectedJobDetail" options:NSKeyValueObservingOptionNew context:NULL];
     [self.sharedModel addObserver:self forKeyPath:@"selectedClient" options:NSKeyValueObservingOptionNew context:NULL];
     [self.sharedModel addObserver:self forKeyPath:@"selectedProject" options:NSKeyValueObservingOptionNew context:NULL];
     [self.sharedModel addObserver:self forKeyPath:@"selectedJobTaskAllocation" options:NSKeyValueObservingOptionNew context:NULL];
     [self.sharedModel addObserver:self forKeyPath:@"selectedJobTask" options:NSKeyValueObservingOptionNew context:NULL];
-    [self.currentTimesheet addObserver:self forKeyPath:@"timeElapsedInterval" options:NSKeyValueObservingOptionOld context:NULL];
+//    [self.currentTimesheet addObserver:self forKeyPath:@"timeElapsedInterval" options:NSKeyValueObservingOptionOld context:NULL];
+    self.currentTimesheet = self.sharedModel.selectedJobTaskAllocation.timesheet;
     
-    [super viewDidAppear:animated];
+    [super viewWillAppear:animated];
     [self configureView];
 }
 
@@ -79,8 +81,9 @@ UIView *normalView;
     [self.sharedModel removeObserver:self forKeyPath:@"selectedProject"];
     [self.sharedModel removeObserver:self forKeyPath:@"selectedJobTaskAllocation"];
     [self.sharedModel removeObserver:self forKeyPath:@"selectedJobTask"];
-    [self.currentTimesheet removeObserver:self forKeyPath:@"timeElapsedInterval"];
-
+//    [self.currentTimesheet removeObserver:self forKeyPath:@"timeElapsedInterval"];
+    self.currentTimesheet = nil;
+    
     [super viewWillDisappear:animated];
 }
 
@@ -166,12 +169,13 @@ UIView *normalView;
                                                   [self handleFailureWithOperation:operation error:error];
                                               }];
         }
-        if (self.view != normalView) {
-            [self viewWillDisappear:TRUE];
-            self.view = normalView;
-            [self viewDidAppear:TRUE];
+        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+            if (self.view != normalView) {
+                [self viewWillDisappear:TRUE];
+                self.view = normalView;
+                [self viewDidAppear:TRUE];
+            }
         }
-
         [self.navigationController setToolbarHidden:TRUE animated:TRUE];
     }
     if ([keyPath isEqual:@"selectedProject"]) {
@@ -585,6 +589,9 @@ UIView *normalView;
 -(int)regulatedTotalFromMinutes:(int)minutes{
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     int storedInterval = [defaults integerForKey:kTimeIntervalSettingKey];
+    
+    //In case the interval is zero, set it to 1 as default
+    storedInterval = storedInterval ? storedInterval : 1;
     
     //Make sure the duration we've selected is divisible by the interval setting (if not, round it up to the next divisible number)
     int leftover = minutes % storedInterval;
