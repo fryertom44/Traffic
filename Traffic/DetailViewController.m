@@ -67,7 +67,6 @@ UIView *normalView;
     [self.sharedModel addObserver:self forKeyPath:@"selectedProject" options:NSKeyValueObservingOptionNew context:NULL];
     [self.sharedModel addObserver:self forKeyPath:@"selectedJobTaskAllocation" options:NSKeyValueObservingOptionNew context:NULL];
     [self.sharedModel addObserver:self forKeyPath:@"selectedJobTask" options:NSKeyValueObservingOptionNew context:NULL];
-//    [self.currentTimesheet addObserver:self forKeyPath:@"timeElapsedInterval" options:NSKeyValueObservingOptionOld context:NULL];
     self.currentTimesheet = self.sharedModel.selectedJobTaskAllocation.timesheet;
     
     [super viewWillAppear:animated];
@@ -81,7 +80,6 @@ UIView *normalView;
     [self.sharedModel removeObserver:self forKeyPath:@"selectedProject"];
     [self.sharedModel removeObserver:self forKeyPath:@"selectedJobTaskAllocation"];
     [self.sharedModel removeObserver:self forKeyPath:@"selectedJobTask"];
-//    [self.currentTimesheet removeObserver:self forKeyPath:@"timeElapsedInterval"];
     self.currentTimesheet = nil;
     
     [super viewWillDisappear:animated];
@@ -173,7 +171,7 @@ UIView *normalView;
             if (self.view != normalView) {
                 [self viewWillDisappear:TRUE];
                 self.view = normalView;
-                [self viewDidAppear:TRUE];
+                [self viewWillAppear:TRUE];
             }
         }
         [self.navigationController setToolbarHidden:TRUE animated:TRUE];
@@ -222,7 +220,6 @@ UIView *normalView;
     
     if (self.sharedModel.selectedJobTaskAllocation.timesheet!=nil) {
         [self updateTimerDisplay];
-        self.startTimeInput.text = [self fullDateStringFromDate:self.sharedModel.selectedJobTaskAllocation.timesheet.startTime];
         self.startTimeInput.text = [self fullDateStringFromDate:self.sharedModel.selectedJobTaskAllocation.timesheet.startTime];
         self.endTimeInput.text = [self fullDateStringFromDate:self.sharedModel.selectedJobTaskAllocation.timesheet.endTime];
         self.durationInput.text = [NSDate timeStringFromMinutes:self.sharedModel.selectedJobTaskAllocation.timesheet.minutes.intValue];

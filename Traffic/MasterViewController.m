@@ -90,6 +90,7 @@
 }
 
 -(void)viewDidAppear:(BOOL)animated{
+    [self.navigationController setToolbarHidden:FALSE];
     [self.sharedModel addObserver:self forKeyPath:@"isFullyLoaded" options:NSKeyValueObservingOptionNew context:NULL];
 }
 
